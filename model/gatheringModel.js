@@ -3,17 +3,15 @@
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
-var songSchema = mongoose.schema({
-    id: String,
-    booCount: Number
-});
-
 var gatheringSchema = mongoose.schema({
     key: String,
     users: [String],
     booLimit: Number,
     host: String,
-    songQueue: [songSchema]
+    songQueue: [{
+        id: String,
+        booCount: Number
+    }]
 });
 
 var gatheringModel = mongoose.model("Gathering", gatheringSchema); 
@@ -41,7 +39,7 @@ exports.delete = function(key) {
     }).exec();
 };
 
-// Join a gathering
+// Join a gathering, will not join if already present
 // @param key Key of gathering to join
 // @param user Username of user that's joining
 // @return A promise fulfilled when update is complete
@@ -59,11 +57,37 @@ exports.join = function(key, user) {
 // @return A promise fulfilled when update is complete
 exports.leave = function(key, user) {
     return gatheringModel.update({
-        key: key,
+        key: key
     }, {
         $pull: { users: user }
     }).exec();
 };
+
+// Push a song onto the queue
+// @param key Key of gathering 
+// @param song ID of song to add to the song queue
+// @return A promise fulfilled when the update is complete
+exports.pushSong = function(key, song) {
+    return gatheringModel.update({
+        key: key
+    }, {
+        $push: { songQueue: { id: song, booCount: 0 } }
+    }).exec();
+};
+
+// Pop a song from the queue
+// @param key Key of gathering
+// @param song ID of song to remove from the song queue
+// @return A promise fulfilled when the update is complete
+exports.popSong = function(key, song) {
+    return gatheringModel.update({
+        key: key
+    }, {
+        $pop: { songQueue: -1 } //remove first
+    }).exec();
+};
+
+
 
 
 

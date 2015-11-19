@@ -36,6 +36,29 @@ exports.verify = function(username, password) {
     });
 };
 
+// Add a song for a user, will not add if already present
+// @param user Username of user
+// @param song ID of song to add
+// @return A promise fulfilled when update is complete
+exports.addSong = function(user, song) {
+    return userModel.update({
+        user: user
+    }, {
+        $addToSet: { songIDs: song }
+    }).exec();
+};
+
+// Remove a song for a user
+// @param user Username of user
+// @param song ID of song to remove
+// @return A promise fulfilled when update is complete
+exports.removeSong = function(user, song) {
+    return userModel.update({
+        user: user,
+    }, {
+        $pull: { songIDs: song }
+    }).exec();
+};
 
 
 
