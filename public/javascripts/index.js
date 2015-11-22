@@ -14,12 +14,11 @@ var loadPage = function(template, data) {
 var loadHomePage = function() {
 	if (currentUser) {
 		loadPage('homepage', {currentUser : currentUser});
-		//TODO: add homepage.ejs
+		//TODO: complete homepage.ejs
 	} else {
 		loadPage('index');
 	}
 };
-
 
 $(document).ready(function() {
 	$.get('/index/account', function(response) {

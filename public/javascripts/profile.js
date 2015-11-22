@@ -1,3 +1,6 @@
+//Support more detailed profile editing (name, picture, etc.) for final?
+//TODO: Fill in add/remove song after Spotify API
+
 (function() {
 
 	var loadProfilePage = function() {
@@ -5,7 +8,7 @@
 		).done(function(response) {
 			loadPage('userProfile', { songs: response.content.songs, currentUser: currentUser })
 		}).fail(function(responseObject) {
-			loadPage('error'); // data needed?
+			loadPage('error', {currentUser : currentUser, error : responseObject});
 		});
 	};
 	
@@ -13,16 +16,16 @@
 		loadProfilePage();
 	});
 	
-	// Support more detailed profile editing (name, picture, etc.) for final?
 	
-	//TODO: Fill in after Spotify API
-	$(document).on('click', '#add-song', function(evt) {
+	
+	
+	$(document).on('click', '.add-song', function(evt) {
 	  // post to index/song
 	  // on done, load profile page
 	  // on error, load error.ejs
 	});
 
-	$(document).on('click', '#remove-song', function(evt) {
+	$(document).on('click', '.remove-song', function(evt) {
 	  // delete to index/song
 	  // on done, load profile page
 	  // on error, load error.ejs
