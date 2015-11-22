@@ -9,8 +9,7 @@ var router = express.Router();
 
 /* GET gathering page. */
 router.get('/:key', function(req, res, next) {
-    //todo: not entirely sure this is right. Help?
-    res.render('gathering', { key: req.params.name });
+    res.render('gathering', { key: req.params.key });
 });
 
 /*

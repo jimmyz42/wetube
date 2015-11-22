@@ -17,11 +17,17 @@ var userModel = mongoose.model("User", userSchema);
 // @param password Password of user to be created.
 // @return A promise containing the user created.
 exports.create = function(username, password) {
-    return userModel.create({
-        username: username,
-        password: password,
-        songIDs: []
-    }).exec();
+    return userModel.find({
+        username: username
+    }).exec().then(function(users) {
+        if(users.length > 0) throw 'username taken';
+    }).then(function() {
+        return userModel.create({
+            username: username,
+            password: password,
+            songIDs: []
+        }).exec();
+    });
 };
 
 // Create user
@@ -32,7 +38,7 @@ exports.verify = function(username, password) {
     return userModel.findOne({
         username: username
     }).exec().then(function(user) {
-        return user.password === password;
+        if(user.password !== password) throw 'password mismatch';
     });
 };
 
@@ -48,7 +54,7 @@ exports.addSong = function(user, song) {
     }).exec();
 };
 
-// Remove a song for a user
+// Remove a song for a user, if present
 // @param user Username of user
 // @param song ID of song to remove
 // @return A promise fulfilled when update is complete
