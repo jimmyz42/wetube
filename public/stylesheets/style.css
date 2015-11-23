@@ -1,6 +1,11 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background-image: url("/images/GatheringHome.jpg");
+    background-size: 1000px 850px;
+    background-repeat: repeat-x;
+    background-position: center-bottom; 
+    padding: 50px;
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: black;
 }
 
 a {
