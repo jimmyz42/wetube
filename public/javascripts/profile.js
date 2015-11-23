@@ -35,6 +35,7 @@
 	
 	 $(document).on('click', '#search-song-btn', function(evt) {
           evt.preventDefault();
+         $("#search-results").empty();
             searchString = $("#search-song-input").val();
             console.log("SEARCH STRING" + searchString);
           $.get(

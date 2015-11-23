@@ -73,10 +73,7 @@ router.post('/account', function(req, res) {
 router.get('/profile', function(req, res) {
     console.log('get profile');
     
-  /*  res.render('userProfile', { currentUser: req.session.currentUser, 
-                               songs:[{title:"Frozen", artist:"girl"}, 
-                                    {title:"Wildest Dreams", artist:"T Swizzle"}] });*/
-    res.render('userProfile', { currentUser: 'Aliceeee', 
+    res.render('userProfile', { currentUser: req.session.currentUser, 
                                songs:[{title:"Frozen", artist:"girl"}, 
                                     {title:"Wildest Dreams", artist:"T Swizzle"}] });
 });
@@ -88,6 +85,9 @@ router.get('/songs', function(req, res){
 
 /* POST add song to list */
 router.post('/song', function(req, res) {
+    console.log('post to songs');
+    console.log('body content' + req.body.content);
+    console.log('currentUser' + req.session.currentUser);
     userModel.addSong(req.session.currentUser, req.body.content);
 });
 
