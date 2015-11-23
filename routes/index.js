@@ -46,6 +46,13 @@ router.post('/login', function(req, res) {
     });
 });
 
+/* POST logout */
+router.post('/logout', function(req, res) {
+    req.session.currentUser = undefined;
+    res.status(200);
+    res.end('success');
+}); 
+
 /* GET account creation page. */
 router.get('/account', function(req, res) {
     res.render('register', { title: 'Express' });
