@@ -12,6 +12,7 @@ DELETE /songs     */
 var express = require('express');
 var userModel = require('../model/userModel');
 var spotifyUtils = require('../utils/spotifyUtils');
+var utils = require('../utils/utils');
 
 var router = express.Router();
 /* GET home page. */
@@ -30,11 +31,11 @@ router.post('/login', function(req, res) {
     .then(function() {
         console.log('matchh');
         req.session.currentUser = req.body.username;
-        res.end('success');
+        utils.sendSuccessResponse(res, { user : req.body.username });
     }).catch(function(error) {
         console.log('not matchh');
         res.status(401);
-        res.end('password mismatch');
+        utils.sendErrResponse(res, 403, 'Username or password invalid.');
     });
 });
 

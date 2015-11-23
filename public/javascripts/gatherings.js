@@ -89,7 +89,7 @@
 
 	$(document).on('click', '#members-btn', function(evt) {
 		$.get(
-			'/mygathering',
+			'/mygathering'
 		).done(function(response) {
 			loadPage('members', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
 		}).fail(function(responseObject) {
