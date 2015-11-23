@@ -11,25 +11,33 @@ DELETE /songs     */
 
 var express = require('express');
 var router = express.Router();
+var utils = require('../utils/utils');
+var spotifyUtils = require('../utils/spotifyUtils');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   res.render('index', { title: 'WeTube' });
 });
 
 /* GET login page. */
-router.get('/login', function(req, res, next) {
+router.get('/login', function(req, res) {
   res.render('login', { title: 'Express' });
 });
 
 /* GET register page. */
-router.get('/register', function(req, res, next) {
+router.get('/register', function(req, res) {
   res.render('register', { title: 'Express' });
 });
 
 /* GET profile page. */
-router.get('/profile', function(req, res, next) {
+router.get('/profile', function(req, res) {
   res.render('userProfile', { title: 'Express' });
+});
+
+/*GET /songs*/
+router.get('/song', function(req, res){
+  //  spotifyUtils.sendMatches(res, "Radioactive");
+    spotifyUtils.sendSongInfo(res, "7ED2Ow3trsqXrfDxr87OBD");
 });
 
 /*
@@ -44,7 +52,6 @@ var requireAuthentication = function(req, res, next) {
   }*/
 };
 
-// a middleware sub-stack shows request info for any type of HTTP request to /user/:id
 router.use('/songs', requireAuthentication);
 router.use('/profile', requireAuthentication);
 
