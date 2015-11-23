@@ -82,7 +82,7 @@ exports.removeSong = function(user, song) {
 // @param user Username of user
 // @return A promise of an array of songs
 exports.getSongs = function(user) {
-    return return userModel.findOne({
+    return userModel.findOne({
         username: user
     }).exec().then(function(user) {
         return user.songIDs;
