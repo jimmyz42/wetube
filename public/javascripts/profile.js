@@ -1,16 +1,6 @@
 //Support more detailed profile editing (name, picture, etc.) for final?
 
 (function() {
-
-	var loadProfilePage = function() {
-		$.get('/profile'
-		).done(function(response) {
-			loadPage('userProfile', { songs: response.content.songs, currentUser: currentUser })
-		}).fail(function(responseObject) {
-			var error = $.parseJSON(responseObject.responseText);
-			loadPage('error', {currentUser : currentUser, error : error});
-		});
-	};
     
     var createAddSongFunction = function(id){
         var clickFunction  = function(){
@@ -74,7 +64,7 @@
 		'/song',
 		{song : song}
 		).done(function(response) {
-			loadPage('userProfile', { songs: response.content.songs, currentUser: currentUser })
+			location.reload();
 		}).fail(function(responseObject) {
 			var response = $.parseJSON(responseObject.responseText);
 			$('.error').text(response.err);
