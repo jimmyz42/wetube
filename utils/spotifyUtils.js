@@ -35,7 +35,6 @@ var spotifyUtils = (function () {
     
             var firstPage = data.body.tracks.items;
             console.log('The tracks in the first page are.. (popularity in parentheses)');
-            console.log(firstPage.length);
             matchedSongs = [];
             for (var i=0; i<firstPage.length; i++){
                 track = firstPage[i];

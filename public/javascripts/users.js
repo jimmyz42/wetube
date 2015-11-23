@@ -45,5 +45,7 @@
           $('.error').text(response.err);
       });
   });  
+    
+   
   
 })();
