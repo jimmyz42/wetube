@@ -38,7 +38,18 @@ exports.verify = function(username, password) {
     return userModel.findOne({
         username: username
     }).exec().then(function(user) {
-        if(user.password !== password) throw 'password mismatch';
+        console.log(username);
+        console.log(user.password);
+        console.log(password);
+        if(user.password !== password){
+            console.log('passwordmismatch');
+            throw 'password mismatch';
+        }
+        else{
+            console.log('password matches');
+            return 'success';
+        }
+        
     });
 };
 

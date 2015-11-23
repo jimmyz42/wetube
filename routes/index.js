@@ -25,14 +25,16 @@ router.get('/login', function(req, res) {
 });
 
 /* POST login */
-router.post('/login', function(req, res, next) {
+router.post('/login', function(req, res) {
     userModel.verify(req.body.username, req.body.password)
     .then(function() {
+        console.log('matchh');
         req.session.currentUser = req.body.username;
         res.end('success');
     }).catch(function(error) {
+        console.log('not matchh');
         res.status(401);
-        res.end(error);
+        res.end('password mismatch');
     });
 });
 
