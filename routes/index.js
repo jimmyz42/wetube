@@ -78,7 +78,14 @@ router.post('/account', function(req, res) {
 
 /* GET profile page. */
 router.get('/profile', function(req, res) {
-    res.render('userProfile', { title: 'Express' });
+    console.log('get profile');
+    
+  /*  res.render('userProfile', { currentUser: req.session.currentUser, 
+                               songs:[{title:"Frozen", artist:"girl"}, 
+                                    {title:"Wildest Dreams", artist:"T Swizzle"}] });*/
+    res.render('userProfile', { currentUser: 'Aliceeee', 
+                               songs:[{title:"Frozen", artist:"girl"}, 
+                                    {title:"Wildest Dreams", artist:"T Swizzle"}] });
 });
 
 router.get('/songs', function(req, res){

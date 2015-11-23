@@ -29,7 +29,7 @@
     };
 	
 	$(document).on('click', '#profile-btn', function(evt) {
-		loadProfilePage();
+		window.location='/profile';
 	});
 	
 	
