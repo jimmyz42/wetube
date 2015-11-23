@@ -1,16 +1,11 @@
-// Currently sending errors to error.ejs, so ideally
-// error should take currentUser + ?responseObject
-// and determine the appropriate error response - 
-// namely, "no user logged in" if currentUser is 
-// undefined, else the error specified by responseObject
-
 ////TODO: Change instances of "gatheringInfo" to match actual server data
+
 (function() {
 
 	var loadGatheringPage = function() {
 		$.get('/mygathering'
 		).done(function(response) {
-			loadPage('myGathering', { gathering: response.content.gathering, currentUser: currentUser })
+			loadPage('gathering', { gathering: response.content.gathering, currentUser: currentUser })
 		}).fail(function(responseObject) {
 			var error = $.parseJSON(responseObject.responseText);
 			loadPage('error', {currentUser : currentUser, error : error});
