@@ -21,7 +21,7 @@ router.get('/', function(req, res) {
 
 /* GET login page. */
 router.get('/login', function(req, res) {
-    res.render('login', { title: 'Express' });
+    res.render('login', { title: 'WeTube' });
 });
 
 /* POST login */
@@ -43,14 +43,20 @@ router.get('/account', function(req, res) {
 
 /* POST create account */
 router.post('/account', function(req, res) {
-    userModel.create(req.body.username, req.body.password)
-    .then(function() {
+    console.log("posted");
+    p1 = userModel.create(req.body.username, req.body.password);
+    p2 = p1.then(function() {
+        console.log("and then");
         req.session.currentUser = req.body.username;
         res.end('success');
     }).catch(function(error) {
         res.status(400);
-        res.end(error);
+        res.end('error');
+        console.log(error);
     });
+    //console.log(p1);
+    //console.log(p2);
+    //console.log("exit");
 });
 
 /* GET profile page. */

@@ -5,7 +5,19 @@ DELETE /gathering/{key} - delete the gathering if host, else remove user from ga
 (POST /gathering/boo)*/
 
 var express = require('express');
+var userModel = require('../model/userModel');
+var gatheringModel = require('../model/gatheringModel');
 var router = express.Router();
+
+/* POST create gathering */
+router.post('/', function(req, res, next) {
+    gatheringModel.create(req.body.key, req.session.currentUser);
+});
+
+/* GET gathering creation page */
+router.get('/', function(req, res, next) {
+    res.render('gathering', {});
+});
 
 /* GET gathering page. */
 router.get('/:key', function(req, res, next) {

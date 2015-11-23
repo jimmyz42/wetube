@@ -19,18 +19,19 @@ var userModel = mongoose.model("User", userSchema);
 exports.create = function(username, password) {
     return userModel.find({
         username: username
-    }).exec().then(function(users) {
+    }).then(function(users) {
         if(users.length > 0) throw 'username taken';
+        else return 'okay';
     }).then(function() {
         return userModel.create({
             username: username,
             password: password,
             songIDs: []
-        }).exec();
+        });
     });
 };
 
-// Create user
+// Verify user
 // @param username Username of user.
 // @param password Password to be checked.
 // @return A promise containing true if they match, or false if not.
