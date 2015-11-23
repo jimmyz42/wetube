@@ -7,7 +7,8 @@
 		).done(function(response) {
 			loadPage('userProfile', { songs: response.content.songs, currentUser: currentUser })
 		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser, error : responseObject});
+			var error = $.parseJSON(responseObject.responseText);
+			loadPage('error', {currentUser : currentUser, error : error});
 		});
 	};
     
@@ -19,8 +20,9 @@
                 { content: id }
             ).done(function(response) {
                 $("#likedSongs").append("<p>" + id + "<p>");
+				var response = $.parseJSON(responseObject.responseText);
             }).fail(function(responseObject) {
-                $('.error').text("Sorry, something went wrong!");
+				$('.error').text(response.err);
             });
         };
         return clickFunction;
@@ -74,7 +76,8 @@
 		).done(function(response) {
 			loadPage('userProfile', { songs: response.content.songs, currentUser: currentUser })
 		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser, error : responseObject});
+			var response = $.parseJSON(responseObject.responseText);
+			$('.error').text(response.err);
 		});
 	});
 

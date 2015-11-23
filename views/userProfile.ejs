@@ -4,31 +4,21 @@
     
     <body>
         <% include partials/header %>
-        <h1>My Profile</h1>
+        <h1><%=currentUser %>'s Profile</h1>
         <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
-        <p>My Name:</p>
-        <p>Username:</p>
-        <p>Password:</p>
         <div class="error"></div>
-        <div id="likedSongs">
-            <h3>Songs I Like</h3>
-            //TODO: REPLACE WITH USING EJS TO LIST ALL SONGS
+        <div id="mySongs">
+            <h3>My Songs</h3>
+            <ol>
+			<% for(var i=0; i<members.length; i++) {%>
+			   <li><%= songs[i].title %> by <%= songs[i].artist &></li>
+			<% } %>
+			</ol>
         </div>
         
-        <p>Add a song you like:</p>
-            <input type="text" id="search-song-input">
-            <button id="search-song-btn">Search for Song</button>
-        <div id="search-results">
-        </div>
-        <div id="likedSongs">
-            <h3>Artists I Like</h3>
-            //TODO: REPLACE WITH USING EJS TO LIST ALL ARTISTS
-        </div>
-        <p>Add an artist you like:</p>
-            <input type="text" id="search-artist-input">
-            <button id="search-artist-btn">Search for Artists </button>
-        <div id="search-results">
-        </div>
-
+        <p>Add a Song!</p>
+            <div> Title : <input type="text" id="search-song-input"> </div>
+            <div> <button id="search-song-btn">Search for Song</button></div>
+        
     </body>
 </html>

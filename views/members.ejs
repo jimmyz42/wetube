@@ -4,13 +4,15 @@
     
     <body>
         <% include partials/header %>
-        <h1>List of Members</h1>
-        <p>Members in //GROUPNAME:</p>
-        <p>Host:</p>
+        <h1>Members of <%=gatheringName %></h1>
+        <p>Host: <%=host %></p>
         <p>Members:</p>
-        <p>Alice</p>
-        <p>Bob</p>
+		<ul>
+			<% for(var i=0; i<members.length; i++) {%>
+			   <li><%= members[i] %></li>
+			<% } %>
+		</ul>
         <div class="error"></div>            
-        <button id="back-gathering-btn">Back to Gathering</button>
+        <button id="mygathering-btn">Back to Gathering</button>
     </body>
 </html>
