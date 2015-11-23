@@ -17,7 +17,14 @@ var utils = require('../utils/utils');
 var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res) {
-    res.render('index', { title: 'WeTube' });
+    console.log(req.session.currentUser);
+    console.log(typeof(req.session.currentUser));
+    if (req.session.currentUser){
+        res.render('homepage', {currentUser:req.session.currentUser});
+    }
+    else{
+        res.render('index', { title: 'WeTube' });
+    }
 });
 
 /* GET login page. */

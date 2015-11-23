@@ -2,10 +2,10 @@ var ejs = require('ejs');
 
 currentUser = undefined;
 
-var loadPage = function(template, data) {
+/*var loadPage = function(template, data) {
 	data = data || {};
 	$('#main-container').html(ejs.render(template, data));
-};	
+};	*/
 
 var loadHomePage = function() {
 	if (currentUser) {

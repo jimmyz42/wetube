@@ -6,8 +6,8 @@
           '/login',
           helpers.getFormData(this)
       ).done(function(response) {
-          currentUser = response.content.user;
-          loadHomePage();
+          currentUser = response.content.username;
+          window.location = '/';
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);
           $('.error').text(response.err);
