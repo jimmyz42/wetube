@@ -8,7 +8,7 @@
 (function() {
 
 	var loadGatheringsPage = function() {
-		$.get('/gathering/gatherings'
+		$.get('/gatherings'
 		).done(function(response) {
 			loadPage('myGatherings', { gatherings: response.content.gatherings, currentUser: currentUser })
 		}).fail(function(responseObject) {
@@ -30,7 +30,7 @@
 	};
 
 	var loadCreateGatheringPage = function() {
-		$.get('/gathering/gathering'
+		$.get('/gathering'
 		).done(function(response) {
 			loadPage('createGathering', { shoutkey: response.content.shoutkey, currentUser: currentUser });	
 		}).fail(function(responseObject) {
@@ -54,7 +54,7 @@
 	$(document).on('click', '#creategathering-btn', function(evt) {
 		evt.preventDefault();
 		$.post(
-			'/gathering/gatherings',
+			'/gatherings',
 			helpers.getFormData(this) //should return name, shoutkey
 		).done(function(response) {
 			loadGatheringsPage();
@@ -67,7 +67,7 @@
 		evt.preventDefault();
 		var shoutkey = helpers.getFormData(this).shoutkey;
 		$.ajax({
-			  url: '/gathering/gathering/' + shoutkey,
+			  url: '/gathering/' + shoutkey,
 			  type: 'GET'
 		  }).done(function(response) {
 			loadPage('gathering', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
@@ -81,7 +81,7 @@
 		var gathering = $(this).parent();
 		var data = {shoutkey : gathering.data('shoutkey')};
 		$.ajax({
-			  url: '/gathering/gathering/' + shoutkey,
+			  url: '/gathering/' + shoutkey,
 			  type: 'GET'
 		  }).done(function(response) {
 			loadPage('gathering', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
@@ -95,7 +95,7 @@
 		  var gathering = $(this).parent();
 		  var shoutkey = gathering.data('shoutkey');
 		  $.ajax({
-			  url: '/gathering/gathering/' + shoutkey,
+			  url: '/gathering/' + shoutkey,
 			  type: 'DELETE'
 		  }).done(function(response) {
 			  item.remove();
@@ -109,7 +109,7 @@
 		var gathering = $(this).parent();
 		var shoutkey = {shoutkey : gathering.data('shoutkey')};
 		$.get(
-			'/gathering/gatherings',
+			'/gatherings',
 			helpers.getFormData(this) 
 		).done(function(response) {
 			loadPage('playlist', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
@@ -124,7 +124,7 @@
 		var gathering = $(this).parent();
 		var shoutkey = {shoutkey : gathering.data('shoutkey')};
 		$.get(
-			'/gathering/gatherings',
+			'/gatherings',
 			helpers.getFormData(this) 
 		).done(function(response) {
 			loadPage('members', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in

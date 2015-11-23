@@ -2,7 +2,7 @@
   $(document).on('click', '#login-btn', function(evt) {
       evt.preventDefault();
       $.post(
-          '/index/login',
+          '/login',
           helpers.getFormData(this)
       ).done(function(response) {
           currentUser = response.content.user;
@@ -22,7 +22,7 @@
       }
       delete formData['confirm'];
       $.post(
-          '/index/account',
+          '/account',
           formData
       ).done(function(response) {
 		  currentUser = response.content.user;
@@ -36,7 +36,7 @@
   $(document).on('click', '#logout-link', function(evt) {
       evt.preventDefault();
       $.post(
-          '/index/logout'
+          '/logout'
       ).done(function(response) {
           currentUser = undefined;
           loadHomePage();
