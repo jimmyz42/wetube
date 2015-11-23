@@ -5,11 +5,14 @@
     <body>
         <% include partials/header %>
         <h1>My Gathering</h1>
+        <img id="defaultGathering" src="/images/DefaultGathering.jpg" height = "150"/> 
+        <p>Host:</p>
+        <p># Boos:</p>
         <div class="error"></div>
+        
         <div id="queuedSongs">
             <h3>Queued Songs</h3>
             //TODO: REPLACE WITH USING EJS TO LIST ALL SONGS
-            <p>Shut Up and Dance</p>
         </div>
           
         <div id="gatheringMembers">
@@ -17,5 +20,9 @@
             <p>Alice</p>
             <p>Bob</p>
         </div>
+        
+        <button id="view-members-btn">View Members</button><br>
+        <button id="view-playlist-btn">View Playlist</button>
+        <p>Next Song:</p>
     </body>
 </html>

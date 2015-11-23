@@ -5,11 +5,14 @@
     <body>
         <% include partials/header %>
         <h1>My Profile</h1>
+        <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
+        <p>My Name:</p>
+        <p>Username:</p>
+        <p>Password:</p>
         <div class="error"></div>
         <div id="likedSongs">
             <h3>Songs I Like</h3>
             //TODO: REPLACE WITH USING EJS TO LIST ALL SONGS
-            <p>Shut Up and Dance</p>
         </div>
         
         <p>Add a song you like:</p>
@@ -17,7 +20,10 @@
             <button id="search-song-btn">Search for Song</button>
         <div id="search-results">
         </div>
-        
+        <div id="likedSongs">
+            <h3>Artists I Like</h3>
+            //TODO: REPLACE WITH USING EJS TO LIST ALL ARTISTS
+        </div>
         <p>Add an artist you like:</p>
             <input type="text" id="search-artist-input">
             <button id="search-artist-btn">Search for Artists </button>

@@ -1,3 +1,25 @@
-<h1><%= message %></h1>
-<h2><%= error.status %></h2>
-<pre><%= error.stack %></pre>
+<!DOCTYPE html>
+<html>
+    <% include partials/head %>
+    
+    <body>
+        <% include partials/header %>
+        <h1>Create a Gathering! </h1>
+        
+        <p>Name:</p>
+        <p>Shoutkey: Shoutkey.com/</p>
+            <input type="text" id="create-shoutkey-input"> 
+            <button id="create-shoutkey-btn">Check</button>
+        <div id="search-results">
+        </div>
+
+        <p># Boo's Threshold</p>
+            <input type="text" id="create-shoutkey-input"> 
+        <div id="search-results">
+        </div>
+        <br>
+        <img id="defaultGathering" src="/images/DefaultGathering.jpg" height = "150"/> 
+        <br><br>
+        <button id="create-gathering-btn">Create!</button>
+    </body>
+</html>
