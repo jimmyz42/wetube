@@ -10,34 +10,61 @@ POST /songs
 DELETE /songs     */
 
 var express = require('express');
+var userModel = require('../model/userModel');
 var router = express.Router();
-var utils = require('../utils/utils');
-var spotifyUtils = require('../utils/spotifyUtils');
 
 /* GET home page. */
-router.get('/', function(req, res) {
-  res.render('index', { title: 'WeTube' });
+router.get('/', function(req, res, next) {
+    res.render('index', { title: 'WeTube' });
 });
 
 /* GET login page. */
-router.get('/login', function(req, res) {
-  res.render('login', { title: 'Express' });
+router.get('/login', function(req, res, next) {
+    res.render('login', { title: 'Express' });
 });
 
-/* GET register page. */
-router.get('/register', function(req, res) {
-  res.render('register', { title: 'Express' });
+/* POST login */
+router.post('/login', function(req, res, next) {
+    userModel.verify(req.body.username, req.body.password)
+    .then(function() {
+        req.session.currentUser = req.body.username;
+        res.end('success');
+    }).catch(function(error) {
+        res.status(401);
+        res.end(error);
+    });
+});
+
+/* GET account creation page. */
+router.get('/account', function(req, res, next) {
+    res.render('register', { title: 'Express' });
+});
+
+/* POST create account */
+router.post('/account', function(req, res, next) {
+    userModel.create(req.body.username, req.body.password)
+    .then(function() {
+        req.session.currentUser = req.body.username;
+        res.end('success');
+    }).catch(function(error) {
+        res.status(400);
+        res.end(error);
+    });
 });
 
 /* GET profile page. */
-router.get('/profile', function(req, res) {
-  res.render('userProfile', { title: 'Express' });
+router.get('/profile', function(req, res, next) {
+    res.render('userProfile', { title: 'Express' });
 });
 
-/*GET /songs*/
-router.get('/song', function(req, res){
-  //  spotifyUtils.sendMatches(res, "Radioactive");
-    spotifyUtils.sendSongInfo(res, "7ED2Ow3trsqXrfDxr87OBD");
+/* POST add song to list */
+router.post('/song', function(req, res, next) {
+    userModel.addSong(req.session.currentUser, req.body.song);
+});
+
+/* DELETE delete song from list */
+router.delete('/song', function(req, res, next) {
+    userModel.removeSong(req.session.currentUser, req.body.song);
 });
 
 /*
@@ -52,6 +79,7 @@ var requireAuthentication = function(req, res, next) {
   }*/
 };
 
+// a middleware sub-stack shows request info for any type of HTTP request to /user/:id
 router.use('/songs', requireAuthentication);
 router.use('/profile', requireAuthentication);
 
