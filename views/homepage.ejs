@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html>
-    <% include partials/head %>
+    <head>
+        <% include partials/head %>
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="/javascripts/users.js"></script>
+    </head>
     
     <body>
-        <% include partials/header %>
-        <p>Create a WeTube account!</p>
-        <div class="error"></div>
-        <form id="register-form">
-            <div>Username: <input type="text" name="username" required /></div>
-            <div>Password: <input type="password" name="password" required /></div>
-            <div>Confirm password: <input type="password" name="confirm" required /></div>
-            <input type="submit" />
-        </form>
-        <p>Back to<a href="#" id="home-link"> home page</a>.</p>
+        <header>
+            <% include partials/header %>
+            <a href="" id="my-profile-link"> My Profile</a>
+            <a href="" id="MyGathering-link"> My Gathering </a>
+            <a href="" id="JoinGathering-link"> Join Gathering </a>
+        </header>
+
+        <h3>Welcome, Miri! </h3>
+
     </body>
 </html>

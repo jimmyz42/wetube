@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html>
     <% include partials/head %>
-    
+    <head>
+        <div align = "center">
+        <title><%= title %></title>
+        <img id="logo" src="/images/ColorMusic.gif"/> 
+        <img id="logo" src="/images/WeTubeLogo.png"/> 
+        <img id="logo" src="/images/ColorMusic.gif"/> 
+        <link rel='stylesheet' href='/stylesheets/style.css' />
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="/javascripts/helpers.js"></script>
+        <script src="/javascripts/index.js"></script>
+    </head>
     <body>
         <% include partials/header %>
         <div class="error"></div>
         <form id="login-form">
-            <div>Username: <input type="text" name="username" required /></div>
-            <div>Password: <input type="password" name="password" required /></div>
-            <div>Confirm password: <input type="password" name="confirm" required /></div>
+            <br>
+            <div>Username:  <input type="text" name="username" required /></div> <br>
+            <div>Password:  <input type="password" name="password" required /></div><br>
+            <div>Confirm password: <input type="password" name="confirm" required /></div> <br>
             <input type="submit" />
         </form>
-        <p>No account for WeTube yet? <a href="account" id="register-btn"> Register here!</a></p>
-    </body>
+        <p>No account for WeTube yet? <a href="/register"> Register now!</a></p>
+        <p>Back to<a href="#" id="home-link"> home page</a>.</p>
     </body>
 </html>
+
+
+
