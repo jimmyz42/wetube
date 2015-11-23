@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <% include partials/head %>
+    
+    <body>
+        <% include partials/header %>
+        <p>Create a WeTube account!</p>
+        <div class="error"></div>
+        <form id="register-form">
+            <div>Username: <input type="text" name="username" required /></div>
+            <div>Password: <input type="password" name="password" required /></div>
+            <div>Confirm password: <input type="password" name="confirm" required /></div>
+            <input type="submit" />
+        </form>
+        <p>Back to<a href="#" id="home-link"> home page</a>.</p>
+    </body>
+</html>

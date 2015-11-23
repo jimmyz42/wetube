@@ -9,8 +9,7 @@ var router = express.Router();
 
 /* GET gathering page. */
 router.get('/:key', function(req, res, next) {
-    //todo: not entirely sure this is right. Help?
-    res.render('gathering', { key: req.params.name });
+    res.render('gathering', { key: req.params.key });
 });
 
 /*
@@ -18,11 +17,11 @@ router.get('/:key', function(req, res, next) {
   Clients which are not logged in will receive a 403 error code.
 */
 var requireAuthentication = function(req, res, next) {
- /* if (!req.session.currentUser) {
-    utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
-  } else {
-    next();
-  }*/
+    if (!req.session.currentUser) {
+        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        next();
+    }
 };
 
 // Register the middleware handlers above.
