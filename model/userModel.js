@@ -78,7 +78,16 @@ exports.removeSong = function(user, song) {
     }).exec();
 };
 
-
+// Get song list for user
+// @param user Username of user
+// @return A promise of an array of songs
+exports.getSongs = function(user) {
+    return return userModel.findOne({
+        username: user
+    }).exec().then(function(user) {
+        return user.songIDs;
+    });
+};
 
 
 

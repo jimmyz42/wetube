@@ -2,16 +2,11 @@ var ejs = require('ejs');
 
 currentUser = undefined;
 
-/*var loadPage = function(template, data) {
-	data = data || {};
-	$('#main-container').html(ejs.render(template, data));
-};	*/
-
 var loadHomePage = function() {
 	if (currentUser) {
-		loadPage('homepage', {currentUser : currentUser});
+		window.location = '/homepage';
 	} else {
-		loadPage('index');
+		window.location = '/';
 	}
 };
 
@@ -25,11 +20,10 @@ $(document).ready(function() {
 });
 
 $(document).on('click', '#home-link', function(evt) {
-	evt.preventDefault();
-	loadHomePage();
+	window.location = '/homepage';
 });
 
 $(document).on('click', '#register-btn', function(evt) {
-	loadPage('register');
+	window.location = '/register';
 });
 
