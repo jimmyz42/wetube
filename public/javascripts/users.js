@@ -22,12 +22,14 @@
           return;
       }
       delete formData['confirm'];
+      console.log('about to post');
+      console.log(formData);
       $.post(
           '/account',
           formData
       ).done(function(response) {
 		  currentUser = response.content.user;
-          loadHomePage();
+          window.location = '/';
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);
           $('.error').text(response.err);

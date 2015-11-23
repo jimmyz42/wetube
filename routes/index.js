@@ -51,11 +51,11 @@ router.post('/account', function(req, res) {
     p2 = p1.then(function() {
         console.log("and then");
         req.session.currentUser = req.body.username;
-        res.end('success');
+        utils.sendSuccessResponse(res, { user : req.body.username });
     }).catch(function(error) {
         res.status(400);
         res.end('error');
-        console.log(error);
+        utils.sendErrResponse(res, 403, 'Username or password invalid.');
     });
     //console.log(p1);
     //console.log(p2);
