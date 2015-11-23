@@ -1,20 +1,15 @@
-// Currently sending errors to error.ejs, so ideally
-// error should take currentUser + ?responseObject
-// and determine the appropriate error response - 
-// namely, "no user logged in" if currentUser is 
-// undefined, else the error specified by responseObject
-
 ////TODO: Change instances of "gatheringInfo" to match actual server data
+
 (function() {
 
-	var loadGatheringsPage = function() {
-		$.get('/gatherings'
+	var loadGatheringPage = function() {
+		$.get('/mygathering'
 		).done(function(response) {
-			loadPage('myGatherings', { gatherings: response.content.gatherings, currentUser: currentUser })
+			loadPage('gathering', { gathering: response.content.gathering, currentUser: currentUser })
 		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser, error : responseObject}); 
+			var error = $.parseJSON(responseObject.responseText);
+			loadPage('error', {currentUser : currentUser, error : error});
 		});
-		//TODO: complete myGatherings.ejs
 	};
 		
 	var loadJoinGatheringPage = function() {
@@ -26,7 +21,6 @@
 		{
 			loadPage('error', {currentUser : currentUser});
 		}
-		//TODO: complete joinGathering.ejs
 	};
 
 	var loadCreateGatheringPage = function() {
@@ -34,13 +28,13 @@
 		).done(function(response) {
 			loadPage('createGathering', { shoutkey: response.content.shoutkey, currentUser: currentUser });	
 		}).fail(function(responseObject) {
-				loadPage('error', {currentUser : currentUser, error : responseObject}); 
+			var error = $.parseJSON(responseObject.responseText);
+			loadPage('error', {currentUser : currentUser, error : error});
 		});
-		//TODO: complete createGathering.ejs
 	};
 
-	$(document).on('click', '#gatherings-btn', function(evt) {
-		loadGatheringsPage();
+	$(document).on('click', '#mygathering-btn', function(evt) {
+		loadGatheringPage();
 	});
 
 	$(document).on('click', '#join-btn', function(evt) {
@@ -55,11 +49,13 @@
 		evt.preventDefault();
 		$.post(
 			'/gatherings',
-			helpers.getFormData(this) //should return name, shoutkey
+			{name : helpers.getFormData(this).name,
+			 shoutkey : $("#gatheringName").html()} 
 		).done(function(response) {
-			loadGatheringsPage();
+			loadGatheringPage();
 		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser, error : responseObject}); 
+			var error = $.parseJSON(responseObject.responseText);
+			loadPage('error', {currentUser : currentUser, error : error});
 		});
 	});
 
@@ -72,26 +68,12 @@
 		  }).done(function(response) {
 			loadPage('gathering', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
 		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser, error : responseObject}); 
+			var response = $.parseJSON(responseObject.responseText);
+			$('.error').text(response.err);
 		});
 	});
 
-
-	$(document).on('click', '.enter-gathering', function(evt) {
-		var gathering = $(this).parent();
-		var data = {shoutkey : gathering.data('shoutkey')};
-		$.ajax({
-			  url: '/gathering/' + shoutkey,
-			  type: 'GET'
-		  }).done(function(response) {
-			loadPage('gathering', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
-		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser}); 
-		});
-	});
-
-
-	$(document).on('click', '.delete-gathering', function(evt) {
+	$(document).on('click', '#delete-gathering', function(evt) {
 		  var gathering = $(this).parent();
 		  var shoutkey = gathering.data('shoutkey');
 		  $.ajax({
@@ -100,38 +82,20 @@
 		  }).done(function(response) {
 			  item.remove();
 		  }).fail(function(responseObject) {
-			  loadPage('error', {currentUser : currentUser, error : responseObject}); 
+			  var error = $.parseJSON(responseObject.responseText);
+			  loadPage('error', {currentUser : currentUser, error : error});
 		  });
 	  });
-	  
-	  
-	$(document).on('click', '.playlist-btn', function(evt) {
-		var gathering = $(this).parent();
-		var shoutkey = {shoutkey : gathering.data('shoutkey')};
-		$.get(
-			'/gatherings',
-			helpers.getFormData(this) 
-		).done(function(response) {
-			loadPage('playlist', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
-		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser, error : responseObject}); 
-		});
-		//TODO : complete playlist.ejs
-	})
 
-
-	$(document).on('click', '.members-btn', function(evt) {
-		var gathering = $(this).parent();
-		var shoutkey = {shoutkey : gathering.data('shoutkey')};
+	$(document).on('click', '#members-btn', function(evt) {
 		$.get(
-			'/gatherings',
-			helpers.getFormData(this) 
+			'/mygathering',
 		).done(function(response) {
 			loadPage('members', {gatheringInfo : response.content.gatheringInfo}) //TODO : fill in
 		}).fail(function(responseObject) {
-			loadPage('error', {currentUser : currentUser, error : responseObject}); 
+			var error = $.parseJSON(responseObject.responseText);
+			loadPage('error', {currentUser : currentUser, error : error});
 		});
-		//TODO : complete members.ejs
 	});
 
 })();

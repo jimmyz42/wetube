@@ -1,5 +1,3 @@
-// Also: I think login.ejs is obsolete
-
 var ejs = require('ejs');
 
 currentUser = undefined;
@@ -29,10 +27,6 @@ $(document).ready(function() {
 $(document).on('click', '#home-link', function(evt) {
 	evt.preventDefault();
 	loadHomePage();
-});
-
-$(document).on('click', '#login-btn', function(evt) {
-	loadPage('login');
 });
 
 $(document).on('click', '#register-btn', function(evt) {

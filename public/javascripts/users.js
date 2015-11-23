@@ -39,7 +39,7 @@
           '/logout'
       ).done(function(response) {
           currentUser = undefined;
-          loadHomePage();
+          loadPage('index');
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);
           $('.error').text(response.err);
