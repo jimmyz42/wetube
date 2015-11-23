@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 
-var gatheringSchema = mongoose.schema({
+var gatheringSchema = mongoose.Schema({
     key: String,
     users: [String],
     booLimit: Number,
@@ -23,7 +23,7 @@ var gatheringModel = mongoose.model("Gathering", gatheringSchema);
 exports.create = function(key, host) {
     return gatheringModel.create({
         key: key,
-        users: [host]
+        users: [host],
         booLimit: 2, // TODO change for final
         host: host,
         songQueue: []
