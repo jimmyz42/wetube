@@ -46,6 +46,13 @@ router.post('/login', function(req, res) {
     });
 });
 
+/* POST login */
+router.post('/logout', function(req, res) {
+    req.session.currentUser = undefined; 
+    utils.sendSuccessResponse(res, "success");
+});
+
+
 /* GET account creation page. */
 router.get('/account', function(req, res) {
     res.render('register', { title: 'Express' });
@@ -74,6 +81,9 @@ router.get('/profile', function(req, res) {
 
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
         songsArray = [];
+        if (songids.length===0){
+            res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
+        }
         for (var i=0; i<songids.length; i++){
             spotifyUtils.getSongInfo(songids[i], function(songInfo){
                 console.log('inside callback');
