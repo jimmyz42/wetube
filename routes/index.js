@@ -76,32 +76,16 @@ router.get('/profile', function(req, res) {
         songsArray = [];
         for (var i=0; i<songids.length; i++){
             spotifyUtils.getSongInfo(songids[i], function(songInfo){
-            console.log('inside callback');
-            console.log(songsArray);
-            songsArray.push(songInfo);
-            if (songsArray.length == songids.length){
-                res.render('userProfile', { currentUser: req.session.currentUser,
+                console.log('inside callback');
+                console.log(songsArray);
+                songsArray.push(songInfo);
+                if (songsArray.length == songids.length){
+                    res.render('userProfile', { currentUser: req.session.currentUser,
                                songs:songsArray });
-            }
-        });
+                }
+            });
         }
     });
-});
-
-router.get('/gathering', function(req, res){
-    res.render('gathering', {gatheringName:"gatheringName", host:"hostName", 
-                             nextSong:{title:"nexttitle", artist:"nextartist"}, 
-                            queuedSongs:[{title:"title1", artist:"artist1"}, 
-                                        {title:"title2", artist:"artist2"}]});
-});
-
-router.get('/joinGathering', function(req, res){
-    res.render('joinGathering');
-});
-
-router.get('/createGathering', function(req, res){
-    var key = (Math.random()*1e32).toString(36);
-    res.render('createGathering', { key: key });
 });
 
 router.get('/songs', function(req, res){

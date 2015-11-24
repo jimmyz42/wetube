@@ -16,7 +16,8 @@ router.post('/', function(req, res, next) {
 
 /* GET gathering creation page */
 router.get('/', function(req, res, next) {
-    res.render('gathering', {});
+    var key = (Math.random()*1e32).toString(36);
+    res.render('createGathering', { key: key });
 });
 
 /* GET gathering page, also join. */
