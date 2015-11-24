@@ -19,11 +19,7 @@
   
 	$(document).on('click', '#creategathering-btn', function(evt) {
 		evt.preventDefault();
-<<<<<<< HEAD
 		$.post(
-=======
-        $.post(
->>>>>>> 0238c689fa93747f47d7c58cfe7ef0fbb739e789
 			'/gathering',
 			{name : helpers.getFormData(this).name,
 			 key : $("#gatheringName").html()} 
