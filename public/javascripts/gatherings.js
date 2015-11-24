@@ -17,7 +17,7 @@
 		$.post(
 			'/gatherings',
 			{name : helpers.getFormData(this).name,
-			 shoutkey : $("#gatheringName").html()} 
+			 key : $("#gatheringName").html()} 
 		).done(function(response) {
 			window.location = '/gathering';
 			myGathering = $("#gatheringName").html();
@@ -28,16 +28,16 @@
 	});
 
 	$(document).on('click', '#joingathering-btn', function(evt) {
-		var shoutkey = helpers.getFormData(this).shoutkey;
-		window.location = '/gathering/' + shoutkey;
-		myGathering = shoutkey;
+		var key = helpers.getFormData(this).key;
+		window.location = '/gathering/' + key;
+		myGathering = key;
 	});
 
 	$(document).on('click', '#delete-gathering', function(evt) {
 		  var gathering = $(this).parent();
-		  var shoutkey = gathering.data('shoutkey');
+		  var key = gathering.data('key');
 		  $.delete({
-			'/gathering/' + shoutkey
+			'/gathering/' + key
 		  }).done(function(response) {
 			  window.location = '/homepage';
 			  myGathering = undefined;
