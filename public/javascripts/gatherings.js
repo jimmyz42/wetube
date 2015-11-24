@@ -31,8 +31,8 @@
 			{name : $("#gatheringName").val(),
 			 key : $("#key").html()} 
 		).done(function(response) {
-            console.log('/gathering' + response);
-			window.location = '/gathering' + response;
+            console.log('/gathering/' + response.content.key);
+			window.location = '/gathering/' + response.content.key;
 		}).fail(function(responseObject) {
             console.log(responseObject.responseText);
             console.log(responseObject);

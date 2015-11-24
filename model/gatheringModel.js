@@ -5,6 +5,7 @@ mongoose.Promise = require('bluebird');
 
 var gatheringSchema = mongoose.Schema({
     key: String,
+    name: String,
     users: [String],
     booLimit: Number,
     host: String,
@@ -17,14 +18,16 @@ var gatheringModel = mongoose.model("Gathering", gatheringSchema);
 // @param key Key of gathering, used in the URL
 // @param host Host/Creator of the gathering
 // @return A promise containing the gathering created
-exports.create = function(key, host) {
+exports.create = function(key, host, name) {
+    console.log("key model" + key + "end of key");
     return gatheringModel.create({
         key: key,
+        name:name,
         users: [host],
         booLimit: 2, // TODO change for final
         host: host,
         songQueue: []
-    }).exec();
+    });
 };
 
 // Delete a gathering

@@ -14,14 +14,15 @@ var router = express.Router();
 router.post('/', function(req, res) {
     console.log('inside router post');
     console.log(req.body.key + req.session.currentUser);
-    gatheringModel.create(req.body.key, req.session.currentUser);
+    gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
     console.log('created thing, about to send response');
-    utils.sendSuccessResponse(res, req.body.key);
+    utils.sendSuccessResponse(res, {key: req.body.key});
 });
 
 /* GET gathering creation page */
 router.get('/', function(req, res) {
     var key = (Math.random()*1e32).toString(36);
+    console.log("key" + key + "end of key");
     res.render('createGathering', { key: key });
 });
 
@@ -31,8 +32,8 @@ router.get('/:key', function(req, res) {
     gatheringModel.join(req.params.key, req.session.currentUser).then(function() {
         return gatheringModel.get(req.params.key);
     }).then(function(gathering) {
-        res.render('gathering', {gatheringName:"gatheringName", host:"hostName", key: req.params.key,
-                            currentUser: req.session.currentUser, 
+        res.render('gathering', {gatheringName:gathering.name, host:gathering.host, key: req.params.key,
+                            currentUser: req.session.currentUser, currentSongId:"33Q6ldVXuJyQmqs8BmAa0k",
                             nextSong:{title:"nexttitle", artist:"nextartist"},
                             queuedSongs:[{title:"title1", artist:"artist1"},
                                         {title:"title2", artist:"artist2"}]});
