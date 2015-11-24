@@ -23,6 +23,14 @@ router.post('/', function(req, res) {
 router.get('/', function(req, res) {
     var key = (Math.random()*1e32).toString(36);
     res.render('createGathering', { key: key });
+// GET RANDOM SONG
+    gatheringModel.get(req.params.key).then(function(gathering) {
+        var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
+        return userModel.getSongs(user);
+    }).then(function(song) {
+        // Do whatever you want with the song here...
+    });
+// END GET RANDOM SONG
 });
 
 /* GET gathering page, also join. */
