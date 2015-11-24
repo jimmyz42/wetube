@@ -1,5 +1,3 @@
-var ejs = require('ejs');
-
 currentUser = undefined;
 myGathering = undefined;
 
