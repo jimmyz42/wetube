@@ -100,9 +100,9 @@ router.get('/joinGathering', function(req, res){
 });
 
 router.get('/createGathering', function(req, res){
-    
-    res.render('createGathering', {shoutkey:"watermelon"});
-})
+    var key = (Math.random()*1e32).toString(36);
+    res.render('createGathering', { key: key });
+});
 
 router.get('/songs', function(req, res){
     console.log('songstring' + req.query.content);
