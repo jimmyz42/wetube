@@ -109,6 +109,7 @@ router.post('/song', function(req, res) {
     console.log('body content' + req.body.content);
     console.log('currentUser' + req.session.currentUser);
     userModel.addSong(req.session.currentUser, req.body.content);
+    utils.sendSuccessResponse(res, "success");
 });
 
 /* DELETE delete song from list */

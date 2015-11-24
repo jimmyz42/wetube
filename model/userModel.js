@@ -59,11 +59,15 @@ exports.verify = function(username, password) {
 // @param song ID of song to add
 // @return A promise fulfilled when update is complete
 exports.addSong = function(user, song) {
+    console.log('inside addSong');
+    console.log('user' + user);
+    console.log('song' + song);
     return userModel.update({
-        user: user
+        username: user
     }, {
         $addToSet: { songIDs: song }
-    }).exec();
+    }
+    ).exec();
 };
 
 // Remove a song for a user, if present
