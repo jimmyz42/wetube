@@ -26,10 +26,13 @@ router.get('/', function(req, res) {
 });
 
 /* GET gathering page, also join. */
-router.get('/:key', function(req, res, next) {
+router.get('/:key', function(req, res) {
+    console.log('gathering page');
     gatheringModel.join(req.params.key, req.session.currentUser).then(function() {
         return gatheringModel.get(req.params.key);
     }).then(function(gathering) {
+        console.log('heyyyy');
+        console.log(gathering);
         res.render('gathering', {gatheringName:"gatheringName", host:"hostName", key: req.params.key,
                              nextSong:{title:"nexttitle", artist:"nextartist"},
                             queuedSongs:[{title:"title1", artist:"artist1"},

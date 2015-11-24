@@ -23,13 +23,14 @@
 			<% } %>
 			</ol>
         </div>
+    
+        <iframe src="https://embed.spotify.com/?uri=spotify%3Atrack%<%=currentSong.id%>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>
 		
         <button id="members-btn">View Members</button><br>
 		
 		<%if (currentUser === host) { %>
 			<button id="end-gathering-btn">End My Gathering</button><br>
 		<% } %>
-
         
     </body>
 </html>
