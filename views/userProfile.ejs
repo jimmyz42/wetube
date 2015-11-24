@@ -9,11 +9,16 @@
         <div class="error"></div>
         <div id="mySongs">
             <h3>My Songs</h3>
-            <ol>
-			<% for(var i=0; i<songs.length; i++) {%>
-			   <li><%= songs[i].title %> by <%= songs[i].artists %></li>
-			<% } %>
-			</ol>
+            
+            <% if(songs.length > 0){ %>
+               <ol>
+                    <% for(var i=0; i<songs.length; i++) {%>
+                       <li><%= songs[i].title %> by <%= songs[i].artists %></li>
+                    <% } %>
+                </ol>
+             <% } else{ %>  
+               <h3>No liked songs yet!</h3>
+            <% } %>
         </div>
         
         <p>Add a Song!</p>

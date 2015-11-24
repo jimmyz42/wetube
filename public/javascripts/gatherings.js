@@ -4,9 +4,9 @@
 		window.location = '/gathering';
 	});*/
 
-	$(document).on('click', '#join-btn', function(evt) {
+	/*$(document).on('click', '#join-btn', function(evt) {
 		window.location = '/joinGathering';
-	});
+	});*/
 
 	$(document).on('click', '#gatherings-btn', function(evt) {
 		window.location = '/gathering';
