@@ -7,29 +7,36 @@ DELETE /gathering/{key} - delete the gathering if host, else remove user from ga
 var express = require('express');
 var userModel = require('../model/userModel');
 var gatheringModel = require('../model/gatheringModel');
+var utils = require('../utils/utils');
 var router = express.Router();
 
 /* POST create gathering */
-router.post('/', function(req, res, next) {
-    console.log("create gathering");
+router.post('/', function(req, res) {
+    console.log('inside router post');
+    console.log(req.body.key + req.session.currentUser);
     gatheringModel.create(req.body.key, req.session.currentUser);
+    console.log('created thing, about to send response');
+    utils.sendSuccessResponse(res, req.body.key);
 });
 
 /* GET gathering creation page */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
     var key = (Math.random()*1e32).toString(36);
     res.render('createGathering', { key: key });
 });
 
 /* GET gathering page, also join. */
-router.get('/:key', function(req, res, next) {
+router.get('/:key', function(req, res) {
+    console.log('gathering page');
     gatheringModel.join(req.params.key, req.session.currentUser).then(function() {
         return gatheringModel.get(req.params.key);
     }).then(function(gathering) {
         res.render('gathering', {gatheringName:"gatheringName", host:"hostName", key: req.params.key,
-                             nextSong:{title:"nexttitle", artist:"nextartist"},
+                            currentUser: req.session.currentUser, 
+                            nextSong:{title:"nexttitle", artist:"nextartist"},
                             queuedSongs:[{title:"title1", artist:"artist1"},
                                         {title:"title2", artist:"artist2"}]});
+        console.log("after gathering");
     }).catch(function(error) {
         console.log(error);
     });

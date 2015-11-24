@@ -9,8 +9,7 @@
                 '/song',
                 { content: id }
             ).done(function(response) {
-                $("#likedSongs").append("<p>" + id + "<p>");
-				var response = $.parseJSON(responseObject.responseText);
+                location.reload();
             }).fail(function(responseObject) {
 				$('.error').text(response.err);
             });
