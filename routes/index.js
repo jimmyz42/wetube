@@ -71,10 +71,12 @@ router.post('/account', function(req, res) {
 
 /* GET profile page. */
 router.get('/profile', function(req, res) {
-    console.log('get profile');
-    res.render('userProfile', { currentUser: req.session.currentUser, 
-                               songs:[{title:"Frozen", artist:"girl"}, 
+
+    userModel.getSongs(req.session.currentUser).then(function(user) { // alice don't delete me
+        res.render('userProfile', { currentUser: 'Aliceeee',
+                               songs:[{title:"Frozen", artist:"girl"},
                                     {title:"Wildest Dreams", artist:"T Swizzle"}] });
+    });
 });
 
 router.get('/gathering', function(req, res){
