@@ -21,6 +21,10 @@
 		window.location='/profile';
 	});
 	
+  $(document).on('click', '#back-main-btn', function(evt) {
+    window.location='/';
+  });
+  
 	
 	 $(document).on('click', '#search-song-btn', function(evt) {
           evt.preventDefault();

@@ -12,6 +12,11 @@
 		window.location = '/gathering';
 	});*/
 
+
+	$(document).on('click', '#back-main-btn', function(evt) {
+    	window.location='/';
+  	});
+  
 	$(document).on('click', '#create-gathering-btn', function(evt) {
 		evt.preventDefault();
         console.log("create gathering here");
