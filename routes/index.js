@@ -72,11 +72,25 @@ router.post('/account', function(req, res) {
 /* GET profile page. */
 router.get('/profile', function(req, res) {
     console.log('get profile');
-    
     res.render('userProfile', { currentUser: req.session.currentUser, 
                                songs:[{title:"Frozen", artist:"girl"}, 
                                     {title:"Wildest Dreams", artist:"T Swizzle"}] });
 });
+
+router.get('/gathering', function(req, res){
+    res.render('gathering', {gatheringName:"gatheringName", host:"hostName", 
+                             nextSong:{title:"nexttitle", artist:"nextartist"}, 
+                            queuedSongs:[{title:"title1", artist:"artist1"}, 
+                                        {title:"title2", artist:"artist2"}]});
+});
+
+router.get('/joinGathering', function(req, res){
+    res.render('joinGathering');
+});
+
+router.get('/createGathering', function(req, res){
+    res.render('createGathering', {shoutkey:"watermelon"});
+})
 
 router.get('/songs', function(req, res){
     console.log('songstring' + req.query.content);
