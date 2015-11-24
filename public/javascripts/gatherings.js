@@ -20,15 +20,17 @@
 			 shoutkey : $("#gatheringName").html()} 
 		).done(function(response) {
 			window.location = '/gathering';
+			myGathering = $("#gatheringName").html();
 		}).fail(function(responseObject) {
-			var error = $.parseJSON(responseObject.responseText);
-			loadPage('error', {currentUser : currentUser, error : error});
+			var response = $.parseJSON(responseObject.responseText);
+            $('.error').text(response.err);
 		});
 	});
 
 	$(document).on('click', '#joingathering-btn', function(evt) {
 		var shoutkey = helpers.getFormData(this).shoutkey;
 		window.location = '/gathering/' + shoutkey;
+		myGathering = shoutkey;
 	});
 
 	$(document).on('click', '#delete-gathering', function(evt) {
@@ -38,7 +40,8 @@
 			'/gathering/' + shoutkey
 		  }).done(function(response) {
 			  window.location = '/homepage';
-		  }).fail(function(responseObject) {
+			  myGathering = undefined;
+		  }).fail(function(responseObject) {	
 			  var response = $.parseJSON(responseObject.responseText);
 			  $('.error').text(response.err);
 		  });
