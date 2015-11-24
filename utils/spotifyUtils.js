@@ -38,7 +38,7 @@ var spotifyUtils = (function () {
             matchedSongs = [];
             for (var i=0; i<firstPage.length; i++){
                 track = firstPage[i];
-                console.log(i + ': ' + track.name + ' (' + track.popularity + ')');
+                console.log(i + ': ' + track.title + ' (' + track.popularity + ')');
 
                 trackArtists = [];
                 for (var j=0; j<track.artists.length;j++){
@@ -46,7 +46,7 @@ var spotifyUtils = (function () {
                 };
                 console.log(trackArtists);
                 songInfo = {
-                    name: track.name, 
+                    title: track.name, 
                     popularity:track.popularity, 
                     previewUrl:track.preview_url,
                     id:track.id,
@@ -72,7 +72,7 @@ var spotifyUtils = (function () {
     /*
     Precondition: songID is a valid spotify song ID
     Sends information about the song with the spotify songID given. 
-    Returns an object with properties name, popularity, previewUrl, id, artists, and epxlicit
+    Returns an object with properties title, popularity, previewUrl, id, artists, and epxlicit
     
     Usage:
     In the backend--
@@ -94,7 +94,7 @@ var spotifyUtils = (function () {
             };
             console.log(trackArtists);
             songInfo = {
-                name: track.name, 
+                title: track.name, 
                 popularity:track.popularity, 
                 previewUrl:track.preview_url,
                 id:track.id,
@@ -107,6 +107,30 @@ var spotifyUtils = (function () {
             console.log('error finding song');
             utils.sendErrResponse('Error in finding song');
         });
+    };
+    
+    _spotifyUtils.getSongInfo = function(songID, callback){
+            spotifyApi.getTrack(songID)
+            .then(function(data){
+                var track=data.body;
+                trackArtists = "";
+                for (var j=0; j<track.artists.length;j++){
+                    trackArtists = trackArtists + track.artists[j].name + " ";
+                };
+                songInfo = {
+                    title: track.name, 
+                    popularity:track.popularity, 
+                    previewUrl:track.preview_url,
+                    id:track.id,
+                    artists:trackArtists,
+                    //For now, not using explicit, but it could come in handy later
+          //          explicit:track.explicit
+                };
+                callback(songInfo);
+            }, function(err){
+                console.log('error finding song');
+                return "error";
+            });
     };
 
     Object.freeze(_spotifyUtils);

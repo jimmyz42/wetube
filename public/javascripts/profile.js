@@ -47,7 +47,7 @@
             
                     var link = $("<a/>", {href: matches[index].previewUrl,
                                           target:"_blank",
-                                         text: matches[index].name});
+                                         text: matches[index].title});
                     $("#search-results").append(button);
                     $("#search-results").append(link);
                     $("#search-results").append("<p> Artist(s): " + matches[index].artists + "</p>");

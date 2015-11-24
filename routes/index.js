@@ -72,10 +72,19 @@ router.post('/account', function(req, res) {
 /* GET profile page. */
 router.get('/profile', function(req, res) {
 
-    userModel.getSongs(req.session.currentUser).then(function(user) { // alice don't delete me
-        res.render('userProfile', { currentUser: 'Aliceeee',
-                               songs:[{title:"Frozen", artist:"girl"},
-                                    {title:"Wildest Dreams", artist:"T Swizzle"}] });
+    userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
+        songsArray = [];
+        for (var i=0; i<songids.length; i++){
+            spotifyUtils.getSongInfo(songids[i], function(songInfo){
+            console.log('inside callback');
+            console.log(songsArray);
+            songsArray.push(songInfo);
+            if (songsArray.length == songids.length){
+                res.render('userProfile', { currentUser: req.session.currentUser,
+                               songs:songsArray });
+            }
+        });
+        }
     });
 });
 
@@ -91,6 +100,7 @@ router.get('/joinGathering', function(req, res){
 });
 
 router.get('/createGathering', function(req, res){
+    
     res.render('createGathering', {shoutkey:"watermelon"});
 })
 
