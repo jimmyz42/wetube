@@ -104,7 +104,7 @@ router.get('/songs', function(req, res){
 });
 
 router.get('/findgathering', function(req, res){
-    res.render('joingathering', {});
+    res.render('joinGathering', {});
 });
 
 /* POST add song to list */
