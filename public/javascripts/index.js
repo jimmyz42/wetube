@@ -22,6 +22,14 @@ $(document).on('click', '#home-link', function(evt) {
 	window.location = '/homepage';
 });
 
+$(document).on('click', '#profile-btn', function(evt) {
+		window.location='/profile';
+	});
+
+$(document).on('click', '#gatherings-btn', function(evt) {
+		window.location = '/gathering';
+	});
+
 /*$(document).on('click', '#register-btn', function(evt) {
 	window.location = '/register';
 });*/

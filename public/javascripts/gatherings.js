@@ -12,10 +12,15 @@
 		window.location = '/gathering';
 	});
 
+
+	$(document).on('click', '#back-main-btn', function(evt) {
+    	window.location='/';
+  	});
+  
 	$(document).on('click', '#creategathering-btn', function(evt) {
 		evt.preventDefault();
 		$.post(
-			'/gatherings',
+			'/gathering',
 			{name : helpers.getFormData(this).name,
 			 key : $("#gatheringName").html()} 
 		).done(function(response) {
