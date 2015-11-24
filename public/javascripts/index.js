@@ -1,6 +1,5 @@
-var ejs = require('ejs');
-
 currentUser = undefined;
+myGathering = undefined;
 
 var loadHomePage = function() {
 	if (currentUser) {
