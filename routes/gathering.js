@@ -19,9 +19,27 @@ router.get('/', function(req, res, next) {
     res.render('gathering', {});
 });
 
-/* GET gathering page. */
+/* GET gathering page, also join. */
 router.get('/:key', function(req, res, next) {
-    res.render('gathering', { key: req.params.key });
+    gatheringModel.join(req.params.key, req.session.currentUser).then(function() {
+        return gatheringModel.get(req.params.key);
+    }).then(function() {
+        res.render('gathering', {gatheringName:"gatheringName", host:"hostName",
+                             nextSong:{title:"nexttitle", artist:"nextartist"},
+                            queuedSongs:[{title:"title1", artist:"artist1"},
+                                        {title:"title2", artist:"artist2"}]});
+    });
+});
+
+/* DELETE gathering, also destroy gathering if host */
+router.delete('/:key', function(req, res, next) {
+    gatheringModel.get(req.params.key).then(function(gathering) {
+        if(gathering.host === req.session.currentUser) {
+            return gatheringModel.delete(req.params.key);
+        } else {
+            return gatheringModel.leave(req.params.key, req.session.currentUser);
+        }
+    });
 });
 
 /*

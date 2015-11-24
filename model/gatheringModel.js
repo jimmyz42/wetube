@@ -87,7 +87,14 @@ exports.popSong = function(key, song) {
     }).exec();
 };
 
-
+// Get a gathering object
+// @param key Key of gathering
+// @return A promise of the gathering
+exports.get = function(key) {
+    return gatheringModel.findOne({
+        key: key
+    }).exec();
+};
 
 
 
