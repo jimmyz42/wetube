@@ -1,15 +1,15 @@
 (function() {
 
-	$(document).on('click', '#mygathering-btn', function(evt) {
+	/*$(document).on('click', '#mygathering-btn', function(evt) {
 		window.location = '/gathering';
-	});
+	});*/
 
 	$(document).on('click', '#join-btn', function(evt) {
 		window.location = '/joinGathering';
 	});
 
 	$(document).on('click', '#gatherings-btn', function(evt) {
-		window.location = '/createGathering';
+		window.location = '/gathering';
 	});
 
 	$(document).on('click', '#creategathering-btn', function(evt) {
