@@ -11,6 +11,7 @@ var router = express.Router();
 
 /* POST create gathering */
 router.post('/', function(req, res, next) {
+    console.log("create gathering");
     gatheringModel.create(req.body.key, req.session.currentUser);
 });
 

@@ -8,10 +8,7 @@ var gatheringSchema = mongoose.Schema({
     users: [String],
     booLimit: Number,
     host: String,
-    songQueue: [{
-        id: String,
-        booCount: Number
-    }]
+    songQueue: [String] //song IDs
 });
 
 var gatheringModel = mongoose.model("Gathering", gatheringSchema); 
@@ -71,7 +68,7 @@ exports.pushSong = function(key, song) {
     return gatheringModel.update({
         key: key
     }, {
-        $push: { songQueue: { id: song, booCount: 0 } }
+        $push: { songQueue: song }
     }).exec();
 };
 

@@ -14,8 +14,8 @@
 
 	$(document).on('click', '#creategathering-btn', function(evt) {
 		evt.preventDefault();
-		$.post(
-			'/gatherings',
+        $.post(
+			'/gathering',
 			{name : helpers.getFormData(this).name,
 			 key : $("#gatheringName").html()} 
 		).done(function(response) {
