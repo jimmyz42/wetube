@@ -9,6 +9,7 @@ var userModel = require('../model/userModel');
 var gatheringModel = require('../model/gatheringModel');
 var utils = require('../utils/utils');
 var router = express.Router();
+var spotifyUtils = require('../utils/spotifyUtils');
 
 /* POST create gathering */
 router.post('/', function(req, res) {
@@ -24,27 +25,64 @@ router.get('/', function(req, res) {
     var key = (Math.random()*1e32).toString(36);
     console.log("key" + key + "end of key");
     res.render('createGathering', { key: key });
-// GET RANDOM SONG
-    gatheringModel.get(req.params.key).then(function(gathering) {
-        var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
-        return userModel.getSongs(user);
-    }).then(function(song) {
-        // Do whatever you want with the song here...
-    });
-// END GET RANDOM SONG
 });
+
+var addSongs = function(req, songsToAdd){
+    // GET RANDOM SONG
+    for (var i=0; i<songsToAdd; i++){
+        gatheringModel.get(req.params.key).then(function(gathering) {
+            var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
+            return userModel.getSongs(user);
+        }).then(function(songs) {
+            var song = songs[Math.floor(Math.random()*songs.length)];
+            gatheringModel.pushSong(req.params.key, song);
+        });
+    }
+// END GET RANDOM SONG
+}
 
 /* GET gathering page, also join. */
 router.get('/:key', function(req, res) {
     console.log('gathering page');
     gatheringModel.join(req.params.key, req.session.currentUser).then(function() {
         return gatheringModel.get(req.params.key);
-    }).then(function(gathering) {
-        res.render('gathering', {gatheringName:gathering.name, host:gathering.host, key: req.params.key,
-                            currentUser: req.session.currentUser, currentSongId:"33Q6ldVXuJyQmqs8BmAa0k",
-                            nextSong:{title:"nexttitle", artist:"nextartist"},
-                            queuedSongs:[{title:"title1", artist:"artist1"},
-                                        {title:"title2", artist:"artist2"}]});
+         /**Jimmy, you're probably going to kill me for butchering the promises stuff here, but I really
+        don't understand it and this at least works... */
+    })
+        //.then(function(gathering){
+   //     gatheringModel.clearQueue(req.params.key);
+     //   return gathering;
+  //  })
+    .then(function(gathering) {
+        addSongs(req, 4);
+        return gatheringModel.get(req.params.key);
+    }).then(function(gathering){
+            console.log(gathering);
+            var songsArray = [];
+            console.log('songque' + gathering.songQueue);
+            if (gathering.songQueue.length===0){
+                res.render('gathering', {gatheringName:gathering.name, 
+                                                 host:gathering.host, key:req.params.key,
+                                currentUser: req.session.currentUser, currentSongId:"None",
+                                nextSong:{title:"None",artists:"None"},
+                                queuedSongs:[]});
+            };
+            var maxQueueDisplayed = Math.min(6, gathering.songQueue.length);
+            for (var i=0; i<maxQueueDisplayed; i++){
+                console.log('i' + i);
+                spotifyUtils.getSongInfo(gathering.songQueue[i], function(songInfo){
+                    console.log('inside callback');
+                    songsArray.push(songInfo);
+                    if (songsArray.length===maxQueueDisplayed){
+                        res.render('gathering', {gatheringName:gathering.name, 
+                                                 host:gathering.host, key:req.params.key,
+                                currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
+                                nextSong:songsArray.slice(1,2)[0],
+                                queuedSongs:songsArray.slice(2,songsArray.length)});
+                    }
+                });
+            };
+    
         console.log("after gathering");
     }).catch(function(error) {
         console.log(error);

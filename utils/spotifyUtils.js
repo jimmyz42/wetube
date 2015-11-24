@@ -110,6 +110,7 @@ var spotifyUtils = (function () {
     };
     
     _spotifyUtils.getSongInfo = function(songID, callback){
+            console.log('getting song info');
             spotifyApi.getTrack(songID)
             .then(function(data){
                 var track=data.body;

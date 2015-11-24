@@ -1,6 +1,5 @@
 (function() {
   $(document).on('submit', '#login-form', function(evt) {
-      alert("hey");
       evt.preventDefault();
       $.post(
           '/login',

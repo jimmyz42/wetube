@@ -33,6 +33,7 @@
 		).done(function(response) {
             console.log('/gathering/' + response.content.key);
 			window.location = '/gathering/' + response.content.key;
+            window.location = '/gathering/' + response.content.key;
 		}).fail(function(responseObject) {
             console.log(responseObject.responseText);
             console.log(responseObject);
@@ -71,5 +72,6 @@
 			$('.error').text(response.err);
 		});
 	});
+    
 
 })();

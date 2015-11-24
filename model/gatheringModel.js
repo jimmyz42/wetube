@@ -75,6 +75,13 @@ exports.pushSong = function(key, song) {
     }).exec();
 };
 
+exports.clearQueue = function(key){
+    return gatheringModel.update({
+        key: key
+    }, {
+        $set: { songQueue: [] }
+    }).exec();
+};
 // Pop a song from the queue
 // @param key Key of gathering
 // @param song ID of song to remove from the song queue

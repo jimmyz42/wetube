@@ -4,7 +4,6 @@
     
     var createAddSongFunction = function(id){
         var clickFunction  = function(){
-            alert(id);
             $.post(
                 '/song',
                 { content: id }
