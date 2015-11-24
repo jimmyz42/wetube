@@ -26,10 +26,13 @@ router.get('/:key', function(req, res, next) {
     gatheringModel.join(req.params.key, req.session.currentUser).then(function() {
         return gatheringModel.get(req.params.key);
     }).then(function(gathering) {
+        console.log("gathering");
         res.render('gathering', {gatheringName:"gatheringName", host:"hostName", key: req.params.key,
-                             nextSong:{title:"nexttitle", artist:"nextartist"},
+                            currentUser: req.session.currentUser, 
+                            nextSong:{title:"nexttitle", artist:"nextartist"},
                             queuedSongs:[{title:"title1", artist:"artist1"},
                                         {title:"title2", artist:"artist2"}]});
+        console.log("after gathering");
     }).catch(function(error) {
         console.log(error);
     });
