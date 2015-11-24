@@ -42,7 +42,7 @@
 	});
 
 	$(document).on('click', '#joingathering-btn', function(evt) {
-		var key = helpers.getFormData(this).key;
+		var key = $("#key").val();
 		window.location = '/gathering/' + key;
 		myGathering = key;
 	});

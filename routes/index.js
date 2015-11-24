@@ -103,6 +103,10 @@ router.get('/songs', function(req, res){
    spotifyUtils.sendMatches(res, req.query.content);
 });
 
+router.get('/findgathering', function(req, res){
+    res.render('joingathering', {});
+});
+
 /* POST add song to list */
 router.post('/song', function(req, res) {
     console.log('post to songs');
