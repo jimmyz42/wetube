@@ -30,6 +30,10 @@ $(document).on('click', '#gatherings-btn', function(evt) {
 		window.location = '/gathering';
 	});
 
+$(document).on('click', '#findgathering-btn', function(evt) {
+    	window.location='/findgathering';
+  	});
+
 /*$(document).on('click', '#register-btn', function(evt) {
 	window.location = '/register';
 });*/

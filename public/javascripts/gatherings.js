@@ -16,6 +16,10 @@
 	$(document).on('click', '#back-main-btn', function(evt) {
     	window.location='/';
   	});
+
+  	$(document).on('click', '#findgathering-btn', function(evt) {
+    	window.location='/findgathering';
+  	});
   
 	$(document).on('click', '#create-gathering-btn', function(evt) {
 		evt.preventDefault();
