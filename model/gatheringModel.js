@@ -51,6 +51,15 @@ exports.join = function(key, user) {
     }).exec();
 };
 
+/* HOW TO USE PROMISES
+/*gatheringModel.join(key, user).then(function(){
+    return gatheringModel.leave(key, user);
+}).then(function(){
+    return gatheringModel.get(key);
+}).then(function(gathering){
+    return gathering.key;
+}).then(function(key)*/
+
 // Leave a gathering
 // @param key Key of gathering to leave
 // @param user Username of user that's leaving

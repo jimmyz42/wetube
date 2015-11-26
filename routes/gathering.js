@@ -29,31 +29,24 @@ router.get('/', function(req, res) {
 
 var addSongs = function(req, songsToAdd){
     // GET RANDOM SONG
+    gatheringPromise = gatheringModel.get(req.params.key);
     for (var i=0; i<songsToAdd; i++){
-        gatheringModel.get(req.params.key).then(function(gathering) {
+        gatheringPromise.then(function(gathering) {
             var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
             return userModel.getSongs(user);
         }).then(function(songs) {
             var song = songs[Math.floor(Math.random()*songs.length)];
             gatheringModel.pushSong(req.params.key, song);
         });
-    }
+    }    
 // END GET RANDOM SONG
 }
 
 /* GET gathering page, also join. */
 router.get('/:key', function(req, res) {
     console.log('gathering page');
-    gatheringModel.join(req.params.key, req.session.currentUser).then(function() {
-        return gatheringModel.get(req.params.key);
-         /**Jimmy, you're probably going to kill me for butchering the promises stuff here, but I really
-        don't understand it and this at least works... */
-    })
-        //.then(function(gathering){
-   //     gatheringModel.clearQueue(req.params.key);
-     //   return gathering;
-  //  })
-    .then(function(gathering) {
+    gatheringModel.join(req.params.key, req.session.currentUser)
+    .then(function() {
         addSongs(req, 4);
         return gatheringModel.get(req.params.key);
     }).then(function(gathering){

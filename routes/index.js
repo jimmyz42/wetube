@@ -13,6 +13,7 @@ var express = require('express');
 var userModel = require('../model/userModel');
 var spotifyUtils = require('../utils/spotifyUtils');
 var utils = require('../utils/utils');
+var Promise = require('bluebird');
 
 var router = express.Router();
 /* GET home page. */
@@ -80,11 +81,18 @@ router.post('/account', function(req, res) {
 router.get('/profile', function(req, res) {
 
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
+        promiseArray = songids.map(spotifyUtils.getSongInfo);
+        Promise.all(promiseArray).then(function(songsArray) {
+            res.render('userProfile', { currentUser: req.session.currentUser, songs:songsArray });
+        });
+        
         songsArray = [];
         if (songids.length===0){
             res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
         }
-        for (var i=0; i<songids.length; i++){
+        
+        
+    /*    for (var i=0; i<songids.length; i++){
             spotifyUtils.getSongInfo(songids[i], function(songInfo){
                 console.log('inside callback');
                 console.log(songsArray);
@@ -94,7 +102,7 @@ router.get('/profile', function(req, res) {
                                songs:songsArray });
                 }
             });
-        }
+        }*/
     });
 });
 

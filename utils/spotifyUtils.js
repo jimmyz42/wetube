@@ -109,9 +109,9 @@ var spotifyUtils = (function () {
         });
     };
     
-    _spotifyUtils.getSongInfo = function(songID, callback){
+    _spotifyUtils.getSongInfo = function(songID){
             console.log('getting song info');
-            spotifyApi.getTrack(songID)
+            return spotifyApi.getTrack(songID)
             .then(function(data){
                 var track=data.body;
                 trackArtists = "";
@@ -127,12 +127,11 @@ var spotifyUtils = (function () {
                     //For now, not using explicit, but it could come in handy later
           //          explicit:track.explicit
                 };
-                callback(songInfo);
-            }, function(err){
-                console.log('error finding song');
-                return "error";
+                return songInfo;
             });
     };
+
+    
 
     Object.freeze(_spotifyUtils);
     return _spotifyUtils;
