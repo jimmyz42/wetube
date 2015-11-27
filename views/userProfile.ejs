@@ -13,7 +13,8 @@
             <% if(songs.length > 0){ %>
                <ol>
                     <% for(var i=0; i<songs.length; i++) {%>
-                       <li><%= songs[i].title %> by <%= songs[i].artists %></li>
+                       <li><image class="artistImage" src="/images/artist.png"/>
+                       <%= songs[i].title %> by <%= songs[i].artists %></li><br>
                     <% } %>
                 </ol>
              <% } else{ %>  

@@ -16,3 +16,9 @@ a {
     height: 90px;
     width: 200px;
 }
+
+img.artistImage {
+    height: 60px;
+    width: 60px;
+    vertical-align: top;
+}
