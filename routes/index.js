@@ -90,19 +90,6 @@ router.get('/profile', function(req, res) {
         if (songids.length===0){
             res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
         }
-        
-        
-    /*    for (var i=0; i<songids.length; i++){
-            spotifyUtils.getSongInfo(songids[i], function(songInfo){
-                console.log('inside callback');
-                console.log(songsArray);
-                songsArray.push(songInfo);
-                if (songsArray.length == songids.length){
-                    res.render('userProfile', { currentUser: req.session.currentUser,
-                               songs:songsArray });
-                }
-            });
-        }*/
     });
 });
 

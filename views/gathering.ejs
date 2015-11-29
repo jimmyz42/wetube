@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <% include partials/head %>
-    
+    <script src="/javascripts/gathering.js"></script>
     <body id="gathering-body">
         <% include partials/header %>
         <h1><%=gatheringName %></h1>
@@ -11,24 +11,18 @@
         <div class="error"></div>
 		
 		<p>Next Song:</p>
-		<div><%=nextSong.title %> by <%=nextSong.artists %></div>
+		<div><%=queuedSongs[1].title %> by <%=queuedSongs[1].artists %></div>
         
         <div id="queuedSongs">
             <h3>Queued Songs</h3>
             <ol>
-			<% for(var i=0; i<queuedSongs.length; i++) {%>
+			<% for(var i=2; i<queuedSongs.length; i++) {%>
 			   <li><%= queuedSongs[i].title %> by <%= queuedSongs[i].artists %></li>
 			<% } %>
 			</ol>
         </div>
-    
-           <% if(songIds==="None"){ %>
-               <script>
-                    location.reload();
-                </script>
-             <% } else{ %>  
-                <iframe src="https://embed.spotify.com/?uri=spotify:trackset:WeTube:<%=songIds%>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>            
-        <% } %>
+        
+        <iframe src="https://embed.spotify.com/?uri=spotify:trackset:WeTube:<%=currentSongId%>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>            
 		
         <button id="members-btn">View Members</button><br>
 		
@@ -37,5 +31,11 @@
 		<% } %>
         
 		<div> <button id="back-main-btn">Back to Main Page</button></div>
+        
+     <h2><%=currentSongLength %></h2>
+     <script>
+        var currentSongLength = <%= currentSongLength %>            
+     </script>
+        
     </body>
 </html>

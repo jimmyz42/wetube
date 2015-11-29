@@ -11,7 +11,7 @@ var gathering = require('./routes/gathering');
 
 // mongodb
 var mongoose = require('mongoose');
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/wetube');
+mongoose.connect('mongodb://localhost/wetube' || process.env.MONGOLAB_URI );
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function (callback) {

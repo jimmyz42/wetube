@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
+var userModel  = require('./userModel');
 
 var gatheringSchema = mongoose.Schema({
     key: String,
@@ -111,6 +112,52 @@ exports.get = function(key) {
         key: key
     }).exec();
 };
+
+//Pushes a random song onto the song queue
+var addSongs = function(key, numSongsToAdd){
+    // GET RANDOM SONG
+    gatheringPromise = exports.get(key);
+    for (var i=0; i<numSongsToAdd; i++){
+        gatheringPromise.then(function(gathering) {
+            var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
+            return userModel.getSongs(user);
+        }).then(function(songs) {
+            var song = songs[Math.floor(Math.random()*songs.length)];
+            console.log('pushing song number ' + i);
+            exports.pushSong(key, song);
+        });
+    }
+    return gatheringPromise;
+};
+
+//If the queue has songs, pops the first song and adds a new random one. 
+//If the queue is empty, adds 6 random songs. 
+//
+exports.maintainSongQueue  = function(key){
+    
+    var gatheringPromise = exports.get(key);
+    return gatheringPromise.then(function(gathering){
+        if (gathering.songQueue.length >0){
+            console.log('popping');
+            exports.popSong(key);
+            return gathering.songQueue.length - 1;
+        };
+        return gathering.songQueue.length;
+    }).then(function(currentQueueLength){
+        promiseArray = [];
+        for (var i=0; i<6-currentQueueLength; i++){
+            promiseArray.push(gatheringPromise.then(function(gathering) {
+                var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
+                return userModel.getSongs(user);
+            }).then(function(songs) {
+                var song = songs[Math.floor(Math.random()*songs.length)];
+                console.log('pushing song number ' + i);
+                exports.pushSong(key, song);
+            }));  
+        }
+        return Promise.all(promiseArray);
+    });
+}; 
 
 
 

@@ -42,14 +42,53 @@ var addSongs = function(req, songsToAdd){
 // END GET RANDOM SONG
 }
 
-/* GET gathering page, also join. */
+/* GET gathering page, also join. 
+
+If queue is not empty:
+Pop from front of queue (that was the last song played), 
+Push one more onto end of queue. 
+Play the first on the queue. 
+
+If queue is empty:
+Push 6 onto the queue (Let's maintain like 6 or something, so currently playing, next, and 4 upcoming)
+
+currentSongId is the song id of the first song in the queue
+
+*/
 router.get('/:key', function(req, res) {
     console.log('gathering page');
     gatheringModel.join(req.params.key, req.session.currentUser)
-    .then(function() {
-        addSongs(req, 4);
+    .then(function(){
+        console.log('1');
+        return gatheringModel.maintainSongQueue(req.params.key);
+    }).then(function() {
+        console.log('2');
         return gatheringModel.get(req.params.key);
     }).then(function(gathering){
+        console.log('3' + gathering);
+        promiseArray = gathering.songQueue.map(spotifyUtils.getSongInfo);
+        Promise.all(promiseArray).then(function(songsArray){
+            res.render('gathering', {gatheringName:gathering.name, 
+                                                 host:gathering.host, key:req.params.key,
+                                currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
+                                queuedSongs:songsArray});
+        });
+    }).catch(function(error) {
+        console.log(error);
+    });
+});
+    
+        /*userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
+        promiseArray = songids.map(spotifyUtils.getSongInfo);
+        Promise.all(promiseArray).then(function(songsArray) {
+            res.render('userProfile', { currentUser: req.session.currentUser, songs:songsArray });
+        });
+        
+        songsArray = [];
+        if (songids.length===0){
+            res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
+        }
+    });
             console.log(gathering);
             var songsArray = [];
             var songIds = "";
@@ -76,13 +115,8 @@ router.get('/:key', function(req, res) {
                                 queuedSongs:songsArray.slice(2,songsArray.length)});
                     }
                 });
-            };
-    
-        console.log("after gathering");
-    }).catch(function(error) {
-        console.log(error);
-    });
-});
+            };*/
+      
 
 /* DELETE gathering, also destroy gathering if host */
 router.delete('/:key', function(req, res, next) {
