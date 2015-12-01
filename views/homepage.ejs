@@ -13,7 +13,12 @@
             <h3>Welcome, <%=currentUser %>! </h3>
 
             <button id="profile-btn"> My Profile <br>
-            <button id="mygathering-btn"> Create Gathering  <br>
+            
+            <% if (isHost) { %>
+            <button id="mygathering-link"> My Gathering  <br>
+            <% } else{ %>  
+            <button id="create-gathering-link"> Create Gathering  <br>
+            <% } %>
             <button id="findgathering-btn"> Join Gathering <br>
 
         </header>

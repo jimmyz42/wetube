@@ -11,6 +11,7 @@ DELETE /songs     */
 
 var express = require('express');
 var userModel = require('../model/userModel');
+var gatheringModel = require('../model/gatheringModel');
 var spotifyUtils = require('../utils/spotifyUtils');
 var utils = require('../utils/utils');
 var Promise = require('bluebird');
@@ -21,7 +22,9 @@ router.get('/', function(req, res) {
     console.log(req.session.currentUser);
     console.log(typeof(req.session.currentUser));
     if (req.session.currentUser){
-        res.render('homepage', {currentUser:req.session.currentUser});
+        gatheringModel.getHostGathering(req.session.currentUser).then(function(gathering){
+            res.render('homepage', {currentUser:req.session.currentUser, isHost: (gathering!==null)});
+        })
     }
     else{
         res.render('index', { title: 'WeTube' });
@@ -86,16 +89,27 @@ router.get('/profile', function(req, res) {
             res.render('userProfile', { currentUser: req.session.currentUser, songs:songsArray });
         });
         
-        songsArray = [];
+       /* songsArray = [];
         if (songids.length===0){
             res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
-        }
+        }*/
     });
 });
 
 router.get('/songs', function(req, res){
     console.log('songstring' + req.query.content);
    spotifyUtils.sendMatches(res, req.query.content);
+});
+
+/**
+GET request to mygathering
+Sends a response with the key of the gathering that the current user is a member of, and an 
+error otherwise
+**/
+router.get('/mygathering', function(req, res){
+    gatheringModel.getHostGathering(req.session.currentUser).then(function(gathering){
+        utils.sendSuccessResponse(res, {key: gathering.key});
+    });
 });
 
 router.get('/findgathering', function(req, res){

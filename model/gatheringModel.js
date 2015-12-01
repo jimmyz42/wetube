@@ -113,6 +113,14 @@ exports.get = function(key) {
     }).exec();
 };
 
+//@return A promise of the gathering that the user hosts
+exports.getHostGathering = function(username){
+    console.log('get host gathering for ' + username);
+    return gatheringModel.findOne({
+        host:username
+    }).exec();
+};
+
 //Pushes a random song onto the song queue
 var addSongs = function(key, numSongsToAdd){
     // GET RANDOM SONG

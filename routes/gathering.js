@@ -78,45 +78,6 @@ router.get('/:key', function(req, res) {
         console.log(error);
     });
 });
-    
-        /*userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
-        promiseArray = songids.map(spotifyUtils.getSongInfo);
-        Promise.all(promiseArray).then(function(songsArray) {
-            res.render('userProfile', { currentUser: req.session.currentUser, songs:songsArray });
-        });
-        
-        songsArray = [];
-        if (songids.length===0){
-            res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
-        }
-    });
-            console.log(gathering);
-            var songsArray = [];
-            var songIds = "";
-            console.log('songque' + gathering.songQueue);
-            if (gathering.songQueue.length===0){
-                res.render('gathering', {gatheringName:gathering.name, 
-                                                 host:gathering.host, key:req.params.key,
-                                currentUser: req.session.currentUser, songIds:"None",
-                                nextSong:{title:"None",artists:"None"},
-                                queuedSongs:[]});
-            };
-            var maxQueueDisplayed = Math.min(6, gathering.songQueue.length);
-            for (var i=0; i<maxQueueDisplayed; i++){
-                console.log('i' + i);
-                songIds = songIds + gathering.songQueue[i] + ",";
-                spotifyUtils.getSongInfo(gathering.songQueue[i], function(songInfo){
-                    console.log('inside callback');
-                    songsArray.push(songInfo);
-                    if (songsArray.length===maxQueueDisplayed){
-                        res.render('gathering', {gatheringName:gathering.name, 
-                                                 host:gathering.host, key:req.params.key,
-                                currentUser: req.session.currentUser, songIds:songIds,
-                                nextSong:songsArray.slice(1,2)[0],
-                                queuedSongs:songsArray.slice(2,songsArray.length)});
-                    }
-                });
-            };*/
       
 
 /* DELETE gathering, also destroy gathering if host */
