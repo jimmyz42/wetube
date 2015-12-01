@@ -70,6 +70,7 @@ router.get('/:key', function(req, res) {
         Promise.all(promiseArray).then(function(songsArray){
             res.render('gathering', {gatheringName:gathering.name, 
                                                  host:gathering.host, key:req.params.key,
+                                currentSongLength: songsArray[0].duration,
                                 currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
                                 queuedSongs:songsArray});
         });
@@ -119,13 +120,17 @@ router.get('/:key', function(req, res) {
       
 
 /* DELETE gathering, also destroy gathering if host */
-router.delete('/:key', function(req, res, next) {
+router.delete('/:key', function(req, res) {
     gatheringModel.get(req.params.key).then(function(gathering) {
         if(gathering.host === req.session.currentUser) {
             return gatheringModel.delete(req.params.key);
         } else {
             return gatheringModel.leave(req.params.key, req.session.currentUser);
         }
+    }).then(function(){
+        utils.sendSuccessResponse(res, 'successfully deleted');
+    }).catch(function(){
+        utils.sendErrResponse(res, 500, 'err');
     });
 });
 

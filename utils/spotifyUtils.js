@@ -124,6 +124,7 @@ var spotifyUtils = (function () {
                     previewUrl:track.preview_url,
                     id:track.id,
                     artists:trackArtists,
+                    duration: track.duration_ms
                     //For now, not using explicit, but it could come in handy later
           //          explicit:track.explicit
                 };

@@ -48,20 +48,22 @@
 		myGathering = key;
 	});
 
-	/*$(document).on('click', '#delete-gathering', function(evt) {
-		  var gathering = $(this).parent();
-		  var key = gathering.data('key');
-		  $.delete({
-			'/gathering/' + key
-		  }).done(function(response) {
-			  window.location = '/homepage';
+	$(document).on('click', '#end-gathering-btn', function(evt) {
+        var gathering = $(this).parent();
+        var key = gathering.data('key');
+        $.ajax({
+          url: window.location.pathname,
+          type: 'DELETE'
+        }).done(function(response) {
+            console.log('done deleting gathering');
+			  window.location = '/';
 			  myGathering = undefined;
 		  }).fail(function(responseObject) {	
 			  var response = $.parseJSON(responseObject.responseText);
 			  $('.error').text(response.err);
 		  });
 	  });
-*/
+
 	$(document).on('click', '#members-btn', function(evt) {
 		$.get(
 			'/gathering'

@@ -2,6 +2,7 @@
 <html>
     <% include partials/head %>
     <script src="/javascripts/gathering.js"></script>
+
     <body id="gathering-body">
         <% include partials/header %>
         <h1><%=gatheringName %></h1>
@@ -21,21 +22,22 @@
 			<% } %>
 			</ol>
         </div>
-        
+
+        <div id="holderdiv" clas="iframe_wrap">
         <iframe src="https://embed.spotify.com/?uri=spotify:trackset:WeTube:<%=currentSongId%>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>            
-		
+        <div id="testframe"></div>
+        </div>
+        
         <button id="members-btn">View Members</button><br>
 		
 		<%if (currentUser === host) { %>
 			<button id="end-gathering-btn">End My Gathering</button><br>
 		<% } %>
         
-		<div> <button id="back-main-btn">Back to Main Page</button></div>
+		<button id="back-main-btn">Back to Main Page</button>
         
-     <h2><%=currentSongLength %></h2>
-     <script>
-        var currentSongLength = <%= currentSongLength %>            
-     </script>
-        
+     <h2 id="songLength"><%=currentSongLength %></h2>
+    
+    <button class="testbutton">Test Button</button>
     </body>
 </html>
