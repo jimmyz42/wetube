@@ -49,8 +49,6 @@
 	});
 
 	$(document).on('click', '#end-gathering-btn', function(evt) {
-        var gathering = $(this).parent();
-        var key = gathering.data('key');
         $.ajax({
           url: window.location.pathname,
           type: 'DELETE'
