@@ -78,7 +78,6 @@ router.get('/:key', function(req, res) {
         console.log(error);
     });
 });
-      
 
 /* DELETE gathering, also destroy gathering if host */
 router.delete('/:key', function(req, res) {

@@ -97,9 +97,11 @@ router.get('/profile', function(req, res) {
 });
 
 router.get('/songs', function(req, res){
-    console.log('songstring' + req.query.content);
+   console.log('songstring' + req.query.content);
    spotifyUtils.sendMatches(res, req.query.content);
 });
+
+
 
 /**
 GET request to mygathering
@@ -110,6 +112,14 @@ router.get('/mygathering', function(req, res){
     gatheringModel.getHostGathering(req.session.currentUser).then(function(gathering){
         utils.sendSuccessResponse(res, {key: gathering.key});
     });
+});
+
+router.get('/members', function(req, res){
+   gatheringModel.getGathering(req.session.currentUser).then(function(gathering){
+		res.render('members', {gatheringName: gathering.name, 
+								host: gathering.host,
+								members: gathering.users});
+	});	
 });
 
 router.get('/findgathering', function(req, res){

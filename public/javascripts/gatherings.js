@@ -75,15 +75,10 @@
 	  });
 
 	$(document).on('click', '#members-btn', function(evt) {
-		$.get(
-			'/gathering'
-		).done(function(response) {
-			window.location = '/members';
-		}).fail(function(responseObject) {
-			var response = $.parseJSON(responseObject.responseText);
-			$('.error').text(response.err);
-		});
+		window.location = '/members';
 	});
+
+	
         
 
 })();
