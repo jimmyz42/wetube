@@ -55,9 +55,18 @@
 			{name : $("#gatheringName").val(),
 			 key : $("#key").html()} 
 		).done(function(response) {
-            console.log('/gathering/' + response.content.key);
-			window.location = '/gathering/' + response.content.key;
-            window.location = '/gathering/' + response.content.key;
+	
+			if(response.content.created)
+			{
+
+				console.log('/gathering/' + response.content.key);
+				window.location = '/gathering/' + response.content.key;
+				window.location = '/gathering/' + response.content.key;
+			}
+			else
+			{
+				alert('Before creating a gathering, pick some songs you like!');
+			}
 		}).fail(function(responseObject) {
             console.log(responseObject.responseText);
             console.log(responseObject);
