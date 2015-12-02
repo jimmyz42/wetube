@@ -128,9 +128,17 @@ router.get('/mygathering', function(req, res){
 
 router.get('/members', function(req, res){
    gatheringModel.getGathering(req.session.currentUser).then(function(gathering){
-		res.render('members', {gatheringName: gathering.name, 
-								host: gathering.host,
-								members: gathering.users});
+		if(gathering)
+		{
+			res.render('members', {gatheringName: gathering.name, 
+									host: gathering.host,
+									members: gathering.users});
+		}
+		else
+		{
+			res.render('membersnone', {user: req.session.currentUser});
+		}
+		
 	});	
 });
 

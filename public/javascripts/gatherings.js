@@ -15,6 +15,18 @@
               $('.error').text(response.err);
           });
 	});
+	
+	$(document).on('click', '#mygathering-btn', function(evt) {
+		$.get(
+              '/mygathering'
+          ).done(function(response) {
+            var gatheringKey = response.content.key;
+            window.location = '/gathering/' + gatheringKey;
+          }).fail(function(responseObject) {
+              var response = $.parseJSON(responseObject.responseText);
+              $('.error').text(response.err);
+          });
+	});
 
 	/*$(document).on('click', '#join-btn', function(evt) {
 		window.location = '/joinGathering';

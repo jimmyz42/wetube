@@ -57,26 +57,36 @@ currentSongId is the song id of the first song in the queue
 */
 router.get('/:key', function(req, res) {
     console.log('gathering page');
-    gatheringModel.join(req.params.key, req.session.currentUser)
-    .then(function(){
-        console.log('1');
-        return gatheringModel.maintainSongQueue(req.params.key);
-    }).then(function() {
-        console.log('2');
-        return gatheringModel.get(req.params.key);
-    }).then(function(gathering){
-        console.log('3' + gathering);
-        promiseArray = gathering.songQueue.map(spotifyUtils.getSongInfo);
-        Promise.all(promiseArray).then(function(songsArray){
-            res.render('gathering', {gatheringName:gathering.name, 
-                                                 host:gathering.host, key:req.params.key,
-                                currentSongLength: songsArray[0].duration,
-                                currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
-                                queuedSongs:songsArray});
-        });
-    }).catch(function(error) {
-        console.log(error);
-    });
+	gatheringModel.get(req.params.key)
+	.then(function(gathering) {
+		if(gathering)
+		{
+			gatheringModel.join(req.params.key, req.session.currentUser)
+			.then(function(){
+				console.log('1');
+				return gatheringModel.maintainSongQueue(req.params.key);
+			}).then(function() {
+				console.log('2');
+				return gatheringModel.get(req.params.key);
+			}).then(function(gathering){
+				console.log('3' + gathering);
+				promiseArray = gathering.songQueue.map(spotifyUtils.getSongInfo);
+				Promise.all(promiseArray).then(function(songsArray){
+					res.render('gathering', {gatheringName:gathering.name, 
+														 host:gathering.host, key:req.params.key,
+										currentSongLength: songsArray[0].duration,
+										currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
+										queuedSongs:songsArray});
+				});
+			}).catch(function(error) {
+				console.log(error);
+			});
+		}
+		else
+		{
+			res.render('invalidGathering', {key:req.params.key,});
+		}  
+	});
 });
 
 /* DELETE gathering, also destroy gathering if host */
