@@ -55,7 +55,6 @@
 			{name : $("#gatheringName").val(),
 			 key : $("#key").html()} 
 		).done(function(response) {
-	
 			if(response.content.created)
 			{
 
