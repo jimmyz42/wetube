@@ -76,6 +76,16 @@
 
 	$(document).on('click', '#members-btn', function(evt) {
 		window.location = '/members';
+		/*
+		$.get(
+			'/mygathering'
+		).done(function(response) {
+			window.location = '/members';
+		}).fail(function(responseObject) {
+			var response = $.parseJSON(responseObject.responseText);
+			$('.error').text(response.err);
+		});
+		*/
 	});
 
 	

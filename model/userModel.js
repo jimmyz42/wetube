@@ -94,6 +94,26 @@ exports.getSongs = function(user) {
 };
 
 
+// Check whether a username is available
+// @param user Username of user
+// @return true if name is unused
+exports.usernameFree = function(uname) {
+    return userModel.findOne({
+        username: uname
+    }).exec().then(function(user) {
+		console.log('found a user');
+        if(user)
+		{
+			console.log('taken?');
+			return false;
+		}
+		else
+		{	
+			return true;
+		}
+    });
+};
+
 
 
 
