@@ -28,6 +28,18 @@
           });
 	});
 
+    $(document).on('click', '#gathering-invite', function(evt) {
+        console.log('hi');
+        $.post('/email', {
+            email: $('input[name="invitee"]').val(),
+            key: $('input[name="key"]').val()
+        }).done(function(response) {
+            alert('Your friends should receive an email shortly');
+        }).fail(function(err) {
+            console.log(err);
+        });
+    });
+
 	/*$(document).on('click', '#join-btn', function(evt) {
 		window.location = '/joinGathering';
 	});*/
