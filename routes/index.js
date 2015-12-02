@@ -15,6 +15,7 @@ var gatheringModel = require('../model/gatheringModel');
 var spotifyUtils = require('../utils/spotifyUtils');
 var utils = require('../utils/utils');
 var Promise = require('bluebird');
+var sendgrid = require('sendgrid')('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');
 
 var router = express.Router();
 /* GET home page. */
@@ -29,6 +30,22 @@ router.get('/', function(req, res) {
     else{
         res.render('index', { title: 'WeTube' });
     }
+});
+
+/* POST email */
+router.post('/email', function(req, res) { //change to post
+    sendgrid.send({
+        to: req.body.email.split(','),
+        from: req.session.currentUser+'@wetube.com',
+        fromname: req.session.currentUser+' (WeTube)',
+        subject: req.session.currentUser+' has invited you to join their gathering on WeTube!',
+        text: 'Please join my gathering at http://mit-wetube.herokuapp.com/'+req.body.key
+    }, function(err, json) {
+        if(err) console.log(err);
+        console.log(json);
+        res.status(200);
+        res.end('success');
+    });
 });
 
 /* GET login page. */

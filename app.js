@@ -1,10 +1,10 @@
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
+var bodyParser = require('body-parser');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var gathering = require('./routes/gathering');
