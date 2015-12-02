@@ -65,16 +65,28 @@ router.get('/account', function(req, res) {
 /* POST create account */
 router.post('/account', function(req, res) {
     console.log("posted");
-    p1 = userModel.create(req.body.username, req.body.password);
-    p2 = p1.then(function() {
-        console.log("and then");
-        req.session.currentUser = req.body.username;
-        utils.sendSuccessResponse(res, { user : req.body.username });
-    }).catch(function(error) {
-        res.status(400);
-        res.end('error');
-        utils.sendErrResponse(res, 403, 'Username or password invalid.');
-    });
+	console.log('attempted username' + req.body.username);
+	userModel.usernameFree(req.body.username).then(function(free)
+	{  
+		if (free)
+		{
+			console.log("free equals" + free);
+			p1 = userModel.create(req.body.username, req.body.password);
+			p2 = p1.then(function() {
+				console.log("and then");
+				req.session.currentUser = req.body.username;
+				utils.sendSuccessResponse(res, { user : req.body.username, created : true });
+			}).catch(function(error) {
+				res.status(400);
+				res.end('error');
+				utils.sendErrResponse(res, 403, 'Username or password invalid.');
+			});
+		}
+		else
+		{
+			utils.sendSuccessResponse(res, { user : req.body.username, created : false });
+		}
+	});
     //console.log(p1);
     //console.log(p2);
     //console.log("exit");
@@ -97,9 +109,11 @@ router.get('/profile', function(req, res) {
 });
 
 router.get('/songs', function(req, res){
-    console.log('songstring' + req.query.content);
+   console.log('songstring' + req.query.content);
    spotifyUtils.sendMatches(res, req.query.content);
 });
+
+
 
 /**
 GET request to mygathering
@@ -110,6 +124,22 @@ router.get('/mygathering', function(req, res){
     gatheringModel.getHostGathering(req.session.currentUser).then(function(gathering){
         utils.sendSuccessResponse(res, {key: gathering.key});
     });
+});
+
+router.get('/members', function(req, res){
+   gatheringModel.getGathering(req.session.currentUser).then(function(gathering){
+		if(gathering)
+		{
+			res.render('members', {gatheringName: gathering.name, 
+									host: gathering.host,
+									members: gathering.users});
+		}
+		else
+		{
+			res.render('membersnone', {user: req.session.currentUser});
+		}
+		
+	});	
 });
 
 router.get('/findgathering', function(req, res){

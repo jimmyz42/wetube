@@ -15,9 +15,18 @@ var spotifyUtils = require('../utils/spotifyUtils');
 router.post('/', function(req, res) {
     console.log('inside router post');
     console.log(req.body.key + req.session.currentUser);
-    gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
+	userModel.getSongs(req.session.currentUser).then(function(songIDs){
+	created = false;
+	if(songIDs.length > 0)
+	{
+		console.log("SONG IDS LENGTH" + songIDs.length);
+		gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
+		created = true;
+	}
+	console.log(created);
     console.log('created thing, about to send response');
-    utils.sendSuccessResponse(res, {key: req.body.key});
+    utils.sendSuccessResponse(res, {key: req.body.key, created: created});
+	});
 });
 
 /* GET gathering creation page */
@@ -83,7 +92,6 @@ router.get('/:key', function(req, res) {
         console.log(error);
     });
 });
-      
 
 /* DELETE gathering, also destroy gathering if host */
 router.delete('/:key', function(req, res) {

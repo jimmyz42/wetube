@@ -121,6 +121,14 @@ exports.getHostGathering = function(username){
     }).exec();
 };
 
+//@return A promise of the gathering that the user is part of
+exports.getGathering = function(username){
+    console.log('get gathering with' + username);
+    return gatheringModel.findOne({
+        users: {$eq: username}
+    }).exec();
+};
+
 //Pushes a random song onto the song queue
 var addSongs = function(key, numSongsToAdd){
     // GET RANDOM SONG
@@ -190,8 +198,6 @@ exports.maintainSongQueue  = function(key){
         return Promise.all(promiseArray);
     });
 };
-
-
 
 
 

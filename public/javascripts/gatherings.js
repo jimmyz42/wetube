@@ -15,6 +15,18 @@
               $('.error').text(response.err);
           });
 	});
+	
+	$(document).on('click', '#mygathering-btn', function(evt) {
+		$.get(
+              '/mygathering'
+          ).done(function(response) {
+            var gatheringKey = response.content.key;
+            window.location = '/gathering/' + gatheringKey;
+          }).fail(function(responseObject) {
+              var response = $.parseJSON(responseObject.responseText);
+              $('.error').text(response.err);
+          });
+	});
 
 	/*$(document).on('click', '#join-btn', function(evt) {
 		window.location = '/joinGathering';
@@ -43,9 +55,17 @@
 			{name : $("#gatheringName").val(),
 			 key : $("#key").html()} 
 		).done(function(response) {
-            console.log('/gathering/' + response.content.key);
-			window.location = '/gathering/' + response.content.key;
-            window.location = '/gathering/' + response.content.key;
+			if(response.content.created)
+			{
+
+				console.log('/gathering/' + response.content.key);
+				window.location = '/gathering/' + response.content.key;
+				window.location = '/gathering/' + response.content.key;
+			}
+			else
+			{
+				alert('Before creating a gathering, pick some songs you like!');
+			}
 		}).fail(function(responseObject) {
             console.log(responseObject.responseText);
             console.log(responseObject);
@@ -75,19 +95,21 @@
 	  });
 
 	$(document).on('click', '#members-btn', function(evt) {
+		window.location = '/members';
+		/*
 		$.get(
-			'/gathering'
+			'/mygathering'
 		).done(function(response) {
 			window.location = '/members';
 		}).fail(function(responseObject) {
 			var response = $.parseJSON(responseObject.responseText);
 			$('.error').text(response.err);
 		});
+		*/
 	});
     
     $(document).on('click', '#rechoose-songs-btn', function(evt) {
 		location.reload();
-	});
-        
+	});        
 
 })();
