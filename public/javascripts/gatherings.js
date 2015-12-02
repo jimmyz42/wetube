@@ -84,6 +84,10 @@
 			$('.error').text(response.err);
 		});
 	});
+    
+    $(document).on('click', '#rechoose-songs-btn', function(evt) {
+		location.reload();
+	});
         
 
 })();

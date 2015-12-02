@@ -45,12 +45,12 @@ var addSongs = function(req, songsToAdd){
 /* GET gathering page, also join. 
 
 If queue is not empty:
-Pop from front of queue (that was the last song played), 
+Pop 10 from front of queue (that was the last song played), 
 Push one more onto end of queue. 
 Play the first on the queue. 
 
 If queue is empty:
-Push 6 onto the queue (Let's maintain like 6 or something, so currently playing, next, and 4 upcoming)
+Push 10 onto the queue (Let's maintain like 6 or something, so currently playing, next, and 4 upcoming)
 
 currentSongId is the song id of the first song in the queue
 
@@ -68,9 +68,14 @@ router.get('/:key', function(req, res) {
         console.log('3' + gathering);
         promiseArray = gathering.songQueue.map(spotifyUtils.getSongInfo);
         Promise.all(promiseArray).then(function(songsArray){
+            var tracksString = "";
+            for (var i=0; i<gathering.songQueue.length; i++){
+                tracksString = tracksString + gathering.songQueue[i] + ",";
+            }
+            console.log(tracksString);
             res.render('gathering', {gatheringName:gathering.name, 
                                                  host:gathering.host, key:req.params.key,
-                                currentSongLength: songsArray[0].duration,
+                                trackids: tracksString,
                                 currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
                                 queuedSongs:songsArray});
         });

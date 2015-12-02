@@ -69,6 +69,55 @@ var spotifyUtils = (function () {
         });
     };
     
+     /*
+    Searches for artists whose names match the searchString. 
+    Returns an array of potential matches. Each potential match is a javascript object with 
+    properties name, popularity, and id. 
+    Currently returns the top 20 matches. We can trim this down if wanted. Also sorts by popularity.
+    
+    Usage: 
+    
+    In the router--
+    spotifyUtils.sendArtistMatches(res, "Imagine Dragons");
+    
+    In the frontend javascript--
+    $.get('...', function(response) {
+        var matches = response.content.songs;
+        for (var index=0; index<matches.length; index++){
+            console.log(matches[index]);
+        };
+	});
+    */
+    _spotifyUtils.sendArtistMatches = function(searchString){
+        spotifyApi.searchArtists(searchString)
+        .then(function(data) {
+            var firstPage = data.body.artists.items;
+            console.log('The tracks in the first page are.. (popularity in parentheses)');
+            matchedArtists = [];
+            for (var i=0; i<firstPage.length; i++){
+                artist = firstPage[i];
+                console.log(i + ': ' + artist.name + ' (' + artist.popularity + ')');
+                artistInfo = {
+                    name: artist.name, 
+                    popularity:artist.popularity, 
+                    id:track.id,
+                };
+                console.log(songInfo);
+                for (property in songInfo){
+                    console.log(property + ": " + songInfo[property]);
+                };
+                matchedArtists.push(songInfo);
+            };
+            
+            matchedArtists.sort(function(artist1, artist2){
+                return artist2.popularity - artist1.popularity;
+            });
+            utils.sendSuccessResponse(res, { artists : matchedArtists });
+        }, function(err) {
+            console.error(err);
+        });
+    };
+    
     /*
     Precondition: songID is a valid spotify song ID
     Sends information about the song with the spotify songID given. 
@@ -132,6 +181,24 @@ var spotifyUtils = (function () {
             });
     };
 
+    /**
+    Returns a promise of the top 8 songs by an artist
+    **/
+    _spotifyUtils.getTopTracksForArtist = function(artistid){
+        // Get an artist's top tracks
+        spotifyApi.getArtistTopTracks(artistid, 'US')
+        .then(function(data) {
+            var trackInfos = [];
+            var tracks = data.body.tracks;
+            for (var i=0; i<tracks.length; i++){
+                trackInfos.push({id:tracks[i].id, popularity:tracks[i].popularity})
+            }
+            trackInfos.sort(function(track1, track2){
+                return track2.popularity - track1.popularity;
+            });
+            return trackInfos.splice(0, 8);
+        });
+    };
     
 
     Object.freeze(_spotifyUtils);

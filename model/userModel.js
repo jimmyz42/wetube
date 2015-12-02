@@ -36,12 +36,14 @@ exports.create = function(username, password) {
 // @param password Password to be checked.
 // @return A promise containing true if they match, or false if not.
 exports.verify = function(username, password) {
+    console.log('inside verify');
+    console.log(username + password);
     return userModel.findOne({
         username: username
     }).exec().then(function(user) {
-        console.log(username);
-        console.log(user.password);
-        console.log(password);
+        console.log('user' + username);
+        console.log('password' + user.password);
+        console.log('attempted password' + password);
         if(user.password !== password){
             console.log('passwordmismatch');
             throw 'password mismatch';

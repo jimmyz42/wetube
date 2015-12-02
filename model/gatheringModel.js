@@ -138,7 +138,7 @@ var addSongs = function(key, numSongsToAdd){
     return gatheringPromise;
 };
 
-//If the queue has songs, pops the first song and adds a new random one. 
+/*//If the queue has songs, pops the first song and adds a new random one. 
 //If the queue is empty, adds 6 random songs. 
 //
 exports.maintainSongQueue  = function(key){
@@ -165,8 +165,31 @@ exports.maintainSongQueue  = function(key){
         }
         return Promise.all(promiseArray);
     });
-}; 
+};*/ 
 
+//Pops any songs currently in the queue, and adds 10 songs 
+exports.maintainSongQueue  = function(key){
+    var gatheringPromise = exports.get(key);
+    return gatheringPromise.then(function(){
+        return gatheringModel.update({
+        key: key
+        }, {
+        songQueue: [] //remove first
+        }).exec()
+    }).then(function(){
+        promiseArray = [];
+        for (var i=0; i<10; i++){
+            promiseArray.push(gatheringPromise.then(function(gathering) {
+                var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
+                return userModel.getSongs(user);
+            }).then(function(songs) {
+                var song = songs[Math.floor(Math.random()*songs.length)];
+                exports.pushSong(key, song);
+            }));  
+        }
+        return Promise.all(promiseArray);
+    });
+};
 
 
 

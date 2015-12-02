@@ -10,24 +10,22 @@
         <p>Host : <%=host %></p>
 		<p>Key : <%=key %></p>
         <div class="error"></div>
-		
-		<p>Next Song:</p>
-		<div><%=queuedSongs[1].title %> by <%=queuedSongs[1].artists %></div>
         
         <div id="queuedSongs">
             <h3>Queued Songs</h3>
             <ol>
-			<% for(var i=2; i<queuedSongs.length; i++) {%>
+			<% for(var i=0; i<queuedSongs.length; i++) {%>
 			   <li><%= queuedSongs[i].title %> by <%= queuedSongs[i].artists %></li>
 			<% } %>
 			</ol>
         </div>
 
         <div id="holderdiv" clas="iframe_wrap">
-        <iframe src="https://embed.spotify.com/?uri=spotify:trackset:WeTube:<%=currentSongId%>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>            
+        <iframe src="https://embed.spotify.com/?uri=spotify:trackset:WeTube:<%=trackids%>" width="300" height="80" frameborder="0" allowtransparency="true"></iframe>            
         <div id="testframe"></div>
         </div>
         
+        <button id="rechoose-songs-btn">Rechoose songs</button>
         <button id="members-btn">View Members</button><br>
 		
 		<%if (currentUser === host) { %>
@@ -35,9 +33,6 @@
 		<% } %>
         
 		<button id="back-main-btn">Back to Main Page</button>
-        
-     <h2 id="songLength"><%=currentSongLength %></h2>
-    
-    <button class="testbutton">Test Button</button>
+            
     </body>
 </html>

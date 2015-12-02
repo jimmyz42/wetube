@@ -9,16 +9,7 @@
         alert('holder div clicked') 
     });
 */
-    $( document ).ready(function() {
-        var time = parseInt($("#songLength").html());
-        setTimeout(function(){ 
-            location.reload(); 
-        }, parseInt($("#songLength").html()));
-    });
-    
     window.onbeforeunload  = function(evt) {
-        alert('hey');
-        alert((!($("#end-gathering-btn").length)));
         if (!($("#end-gathering-btn").length)){
             alert('deleting');
              $.ajax({
