@@ -58,8 +58,8 @@ currentSongId is the song id of the first song in the queue
 router.get('/:key', function(req, res) {
     console.log('gathering page');
 	gatheringModel.get(req.params.key)
-	.then(function(gathering) {
-		if(gathering)
+	.then(function(thisgathering) {
+		if(thisgathering)
 		{
 			gatheringModel.join(req.params.key, req.session.currentUser)
 			.then(function(){
@@ -84,7 +84,7 @@ router.get('/:key', function(req, res) {
 		}
 		else
 		{
-			res.render('invalidGathering', {key:req.params.key,});
+			res.render('invalidGathering', {key:req.params.key});
 		}  
 	});
 });
