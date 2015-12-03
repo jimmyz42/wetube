@@ -16,7 +16,6 @@ body {
   background: rgba(255,255,255,.9);
   background-position: bottom;
   /*border: solid 2px;*/
-  border-image-source: url("/images/BoarderImage.png");
   border: dotted 2px #FFAEB9;
 }
 
