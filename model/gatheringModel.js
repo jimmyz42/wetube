@@ -185,13 +185,32 @@ exports.maintainSongQueue  = function(key){
         songQueue: [] //remove first
         }).exec()
     }).then(function(){
+        console.log('cleared queue');
         promiseArray = [];
-        for (var i=0; i<10; i++){
+        for (var i=0; i<20; i++){
             promiseArray.push(gatheringPromise.then(function(gathering) {
+                console.log('gatheirng obj' + gathering);
                 var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
-                return userModel.getSongs(user);
-            }).then(function(songs) {
-                var song = songs[Math.floor(Math.random()*songs.length)];
+                return userModel.getUser(user);
+            }).then(function(user) {
+                /**
+                User has A liked artists and S liked songs. 
+                Artists count twice as much as songs, so we're more likely to choose a song by artist, 
+                and a single track
+                **/
+                console.log('user obj' + user);
+                var songs = user.songIDs;
+                var artists = user.artists;
+                var rand = Math.floor(Math.random() * (artists.length*3+songs.length))
+                if (rand < songs.length){
+                    //Probability of this is S/(2A+S)
+                    var song = songs[rand];
+                }
+                else{
+                    //Probability of this is 2A/(2A+S)
+                    var artist = artists[Math.floor((rand-songs.length)/3)];
+                    var song = artist.topTracks[Math.floor(Math.random()*artist.topTracks.length)];
+                }
                 exports.pushSong(key, song);
             }));  
         }

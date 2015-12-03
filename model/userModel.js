@@ -141,6 +141,16 @@ exports.getArtists = function(user) {
     });
 };
 
+/**
+Gets the user object with username user
+@param user Username of user
+@return A promise of the user
+**/
+exports.getUser = function(user){
+    return userModel.findOne({
+        username:user
+    }).exec();
+}
 
 // Check whether a username is available
 // @param user Username of user
