@@ -17,11 +17,30 @@ var utils = require('../utils/utils');
 var Promise = require('bluebird');
 var sendgrid = require('sendgrid')('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');
 
+
+/*
+  Require authentication on ALL access to /gathering/*
+  Clients which are not logged in will receive a 403 error code.
+*/
+var requireAuthentication = function(req, res, next) {
+    if (!req.session.currentUser) {
+        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        next();
+    }
+};
+
 var router = express.Router();
+
+// a middleware sub-stack shows request info for any type of HTTP request to /user/:id
+router.use('/songs', requireAuthentication);
+router.use('/song', requireAuthentication);
+router.use('/artist', requireAuthentication);
+router.use('/profile', requireAuthentication);
+router.use('/artists', requireAuthentication);
+
 /* GET home page. */
 router.get('/', function(req, res) {
-    console.log(req.session.currentUser);
-    console.log(typeof(req.session.currentUser));
     if (req.session.currentUser){
         gatheringModel.getHostGathering(req.session.currentUser).then(function(gathering){
             res.render('homepage', {currentUser:req.session.currentUser, isHost: (gathering!==null)});
@@ -39,7 +58,7 @@ router.post('/email', function(req, res) { //change to post
         from: req.session.currentUser+'@wetube.com',
         fromname: req.session.currentUser+' (WeTube)',
         subject: req.session.currentUser+' has invited you to join their gathering on WeTube!',
-        text: 'Please join my gathering at http://mit-wetube.herokuapp.com/'+req.body.key
+        text: 'Please join my gathering at http://mit-wetube.herokuapp.com/gathering/'+req.body.key
     }, function(err, json) {
         if(err) console.log(err);
         console.log(json);
@@ -48,20 +67,13 @@ router.post('/email', function(req, res) { //change to post
     });
 });
 
-/* GET login page. */
-router.get('/login', function(req, res) {
-    res.render('login', { title: 'WeTube' });
-});
-
 /* POST login */
 router.post('/login', function(req, res) {
     userModel.verify(req.body.username, req.body.password)
     .then(function() {
-        console.log('matchh');
         req.session.currentUser = req.body.username;
         utils.sendSuccessResponse(res, { user : req.body.username });
     }).catch(function(error) {
-        console.log('not matchh');
         res.status(401);
         utils.sendErrResponse(res, 403, 'Username or password invalid.');
     });
@@ -81,8 +93,6 @@ router.get('/account', function(req, res) {
 
 /* POST create account */
 router.post('/account', function(req, res) {
-    console.log("posted");
-	console.log('attempted username' + req.body.username);
 	userModel.usernameFree(req.body.username).then(function(free)
 	{  
 		if (free)
@@ -128,7 +138,6 @@ router.get('/profile', function(req, res) {
 });
 
 router.get('/songs', function(req, res){
-   console.log('songstring' + req.query.content);
    spotifyUtils.sendMatches(res, req.query.content);
 });
 
@@ -170,9 +179,6 @@ router.get('/findgathering', function(req, res){
 
 /* POST add song to list */
 router.post('/song', function(req, res) {
-    console.log('post to songs');
-    console.log('body content' + req.body.content);
-    console.log('currentUser' + req.session.currentUser);
     userModel.addSong(req.session.currentUser, req.body.content).then(function(){
         utils.sendSuccessResponse(res, "success");
     });
@@ -180,9 +186,6 @@ router.post('/song', function(req, res) {
 
 /* POST add artist to list */
 router.post('/artist', function(req, res) {
-    console.log('post to songs');
-    console.log('body content' + req.body.content);
-    console.log('currentUser' + req.session.currentUser);
     userModel.addArtist(req.session.currentUser, req.body.content).then(function(){
         utils.sendSuccessResponse(res, "success");
     });
@@ -206,21 +209,5 @@ router.delete('/artist', function(req, res) {
         utils.sendErrResponse(res, 500, "error")
     })
 });
-
-/*
-  Require authentication on ALL access to /gathering/*
-  Clients which are not logged in will receive a 403 error code.
-*/
-var requireAuthentication = function(req, res, next) {
-  /*  if (!req.session.currentUser) {
-        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
-    } else {
-        next();
-    }*/
-};
-
-// a middleware sub-stack shows request info for any type of HTTP request to /user/:id
-router.use('/songs', requireAuthentication);
-router.use('/profile', requireAuthentication);
 
 module.exports = router;

@@ -24,9 +24,11 @@
                 <div> <button id="search-artist-btn">Search for Artist</button></div>
             </td>
           </tr>
-            <tr>
-                <td><div id="search-results"></div></td>
-                </tr>
+       </table>
+      <div id="search-results">
+      </div>
+      <div> <button id="back-main-btn">Back to Main Page</button></div>
+      <table>
           <tr>
               <td><h3>My Songs</h3>
               </td>
@@ -40,11 +42,10 @@
                   <ol>
                      <% for(var i=0; i<songs.length; i++) {%>
                      <li data-id="<%=songs[i].id%>">
-                        <div class="liked" data-id="<%=songs[i].id%>">
+                        <div data-id="<%=songs[i].id%>">
                         <image class="artistImage" src=<%=songs[i].albumArtUrl%>></image>
-                        <button class="remove-song" id="remove-<%=songs[i].id%>">Remove</button>
-
                         <%= songs[i].title%> by <%= songs[i].artists %>
+                        <button class="remove-song" id="remove-<%=songs[i].id%>">Remove</button>
                          </div>
                      </li>
                      <br>
@@ -61,10 +62,10 @@
                   <ol>
                      <% for(var i=0; i<artists.length; i++) {%>
                      <li>
-                     <div class="liked" data-id="<%=artists[i].id%>">
+                     <div data-id="<%=artists[i].id%>">
                          <image class="artistImage" src=<%=artists[i].imageUrl%>></image>
-                      <button class="remove-artist" id="remove-<%=artists[i].id%>">Remove</button>
                         <%= artists[i].name %> 
+                         <button class="remove-artist" id="remove-<%=artists[i].id%>">Remove</button>
                     </div>
                      </li>
                      <br>
@@ -77,7 +78,6 @@
             </td>
          </tr>
       </table>
-     <div> <button id="back-main-btn">Back to Main Page</button></div>
        </div>
    </body>
 </html>

@@ -34,7 +34,6 @@ var spotifyUtils = (function () {
         .then(function(data){
     
             var firstPage = data.body.tracks.items;
-            console.log('The tracks in the first page are.. (popularity in parentheses)');
             matchedSongs = [];
             for (var i=0; i<firstPage.length; i++){
                 track = firstPage[i];
@@ -44,7 +43,6 @@ var spotifyUtils = (function () {
                 for (var j=0; j<track.artists.length;j++){
                     trackArtists.push(track.artists[j].name);
                 };
-                console.log(trackArtists);
                 songInfo = {
                     title: track.name, 
                     popularity:track.popularity, 
@@ -52,9 +50,8 @@ var spotifyUtils = (function () {
                     id:track.id,
                     artists:trackArtists
                 };
-                console.log(songInfo);
                 for (property in songInfo){
-                    console.log(property + ": " + songInfo[property]);
+                   // console.log(property + ": " + songInfo[property]);
                 };
                 matchedSongs.push(songInfo);
             };
@@ -95,7 +92,6 @@ var spotifyUtils = (function () {
             matchedArtists = [];
             for (var i=0; i<firstPage.length; i++){
                 artist = firstPage[i];
-                console.log(i + ': ' + artist.name + ' (' + artist.popularity + ')');
                 if (artist.images.length > 0){
                     var imageUrl = artist.images[artist.images.length-1].url;
                 }
@@ -108,9 +104,8 @@ var spotifyUtils = (function () {
                     id:artist.id,
                     imageUrl:imageUrl
                 };
-                console.log(artistInfo);
                 for (property in artistInfo){
-                    console.log(property + ": " + artistInfo[property]);
+                    //console.log(property + ": " + artistInfo[property]);
                 };
                 matchedArtists.push(artistInfo);
             };
@@ -142,12 +137,10 @@ var spotifyUtils = (function () {
         spotifyApi.getTrack(songID)
         .then(function(data){
             var track=data.body;
-            console.log(track);
             trackArtists = [];
             for (var j=0; j<track.artists.length;j++){
                 trackArtists.push(track.artists[j].name);
             };
-            console.log(trackArtists);
             songInfo = {
                 title: track.name, 
                 popularity:track.popularity, 
@@ -177,7 +170,6 @@ var spotifyUtils = (function () {
                 if (track.album.images.length > 0){
                     albumArtUrl = track.album.images[track.album.images.length-1].url;
                 }
-                console.log('albumArtUrl' + albumArtUrl);
                 songInfo = {
                     title: track.name, 
                     previewUrl:track.preview_url,
@@ -191,7 +183,6 @@ var spotifyUtils = (function () {
     
     /**artistObj is an object with property id and property topTracks **/
     _spotifyUtils.getArtistInfo = function(artistObj){
-        console.log('getting song info');
         var artistID = artistObj.id;
         return spotifyApi.getArtist(artistID)
         .then(function(data){

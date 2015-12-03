@@ -5,9 +5,13 @@
 
     <body id="gathering-body">
         <% include partials/header %>
+        <div class="content-box" style="width:50%">
         <h1><%=gatheringName %></h1>
+<!--
         <img id="defaultGathering" src="/images/DefaultGathering.jpg" height = "150"/> 
+-->
         <p>Host : <%=host %></p>
+        <label>Emails:</label>
         <input type="hidden" name="key" value="<%=key%>" />
         <input type="text" name="invitee"/>
         <button type="button" id="gathering-invite">Invite!</button>
@@ -29,13 +33,13 @@
         </div>
         
         <button id="rechoose-songs-btn">Rechoose songs</button>
-        <button id="members-btn">View Members</button><br>
+        <button id="members-btn">View Members</button>
 		
 		<%if (currentUser === host) { %>
 			<button id="end-gathering-btn">End My Gathering</button><br>
 		<% } %>
         
 		<button id="back-main-btn">Back to Main Page</button>
-            
+        </div>   
     </body>
 </html>

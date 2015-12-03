@@ -11,6 +11,24 @@ var utils = require('../utils/utils');
 var router = express.Router();
 var spotifyUtils = require('../utils/spotifyUtils');
 
+/*
+  Require authentication on ALL access to /gathering/*
+  Clients which are not logged in will receive a 403 error code.
+*/
+var requireAuthentication = function(req, res, next) {
+    console.log('REQUIRING AUTHENTICATION')
+    if (!req.session.currentUser) {
+        res.render('index', { title: 'WeTube' });
+    //    utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
+    } else {
+        console.log('next');
+        next();
+    }
+};
+
+// Register the middleware handlers above.
+router.all('*', requireAuthentication);
+
 /* POST create gathering */
 router.post('/', function(req, res) {
     console.log('inside router post');
@@ -108,20 +126,7 @@ router.delete('/:key', function(req, res) {
     });
 });
 
-/*
-  Require authentication on ALL access to /gathering/*
-  Clients which are not logged in will receive a 403 error code.
-*/
-var requireAuthentication = function(req, res, next) {
-    if (!req.session.currentUser) {
-        utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
-    } else {
-        next();
-    }
-};
 
-// Register the middleware handlers above.
-router.all('*', requireAuthentication);
 
 module.exports = router;
 

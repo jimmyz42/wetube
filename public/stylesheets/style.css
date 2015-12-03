@@ -11,9 +11,9 @@ body {
     text-shadow: white 0px 0px 2px;
 }
 
-#content-box {
+.content-box {
   padding: 20px;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.7);
   background-position: bottom;
   /*border: solid 2px;*/
   border-image-source: url("/images/BoarderImage.png");
@@ -35,6 +35,22 @@ img.artistImage {
     vertical-align: top;
 }
 
-#searchtable{
-    width:50% 
+
+button:not(.add-button){
+    margin:2%;
+    padding:.5%;
 }
+
+.song-link{
+    margin:1%;
+}
+
+.liked{
+    position: relative
+}
+
+.liked .remove-song, .remove-artist{
+    position: absolute;
+    top:30%;
+}
+

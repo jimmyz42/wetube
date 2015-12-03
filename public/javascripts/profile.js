@@ -53,20 +53,24 @@
                 $("#search-results").append("<p>Sorry, no matches found!</p>");
             }
             else{
-                $("#search-results").append("<h2>Choose which song you want: (Click on the link to hear a preview.)</h2>");
+                $("#search-results").append("<h3>Choose which song you want: (Click on the link to hear a preview.)</h3>");
                 for (var index=0; index<Math.min(matches.length, 5); index++){
                     console.log(matches[index]);
                         
                     var button = $("<button/>", {id: matches[index].id, 
+                                                 class:'add-button',
                                                 text: 'Add Song', 
                                                 click: createAddSongFunction(matches[index].id)});
             
                     var link = $("<a/>", {href: matches[index].previewUrl,
+                                          class:"song-link",
                                           target:"_blank",
                                          text: matches[index].title});
                     $("#search-results").append(button);
                     $("#search-results").append(link);
-                    $("#search-results").append("<p> Artist(s): " + matches[index].artists + "</p>");
+                    $("#search-results").append("Artist(s): " + matches[index].artists);
+                    $("#search-results").append("<br>");
+
                 };
             }
           }).fail(function(responseObject) {
@@ -89,19 +93,25 @@
                 $("#search-results").append("<p>Sorry, no matches found!</p>");
             }
             else{
-                $("#search-results").append("<h2>Choose which artist you want: </h2>");
+                $("#search-results").append("<h3>Choose which artist you want: </h3>");
                 for (var index=0; index<Math.min(matches.length, 5); index++){
                     console.log(matches[index]);
-                        
+                    var holderdiv = $("<div/>", {class:"search-results-div"});
                     var button = $("<button/>", {id: matches[index].id, 
-                                                text: 'Add Artist', 
+                                                text: 'Add Artist',
+                                                 class:'add-button',
                                                 click: createAddArtistFunction(matches[index].id)});
             
-                    var link = $("<img/>", {src: matches[index].imageUrl, class:"artistImage"});
-                    $("#search-results").append(button);
+                    var link = $("<img/>", {src: matches[index].imageUrl, class:"artistImage song-link"});
+                 /*   $("#search-results").append(button);
+                    $("#search-results").append("  " + matches[index].name);
                     $("#search-results").append(link);
-                    $("#search-results").append("<p> Artist Name: " + matches[index].name + "</p>");
-                };
+                    $("#search-results").append("<br>");*/
+                    $("#search-results").append(holderdiv);
+                    holderdiv.append(link);
+                    holderdiv.append(button);
+                    holderdiv.append("  " + matches[index].name);
+                }
             }
           }).fail(function(responseObject) {
               var response = $.parseJSON(responseObject.responseText);
