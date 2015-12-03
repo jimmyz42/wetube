@@ -3,9 +3,21 @@ body {
     background-size: 1000px 850px;
     background-repeat: repeat-x;
     background-position: center-bottom; 
+    background-origin: content-box;
     padding: 50px;
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     color: black;
+    font-weight: normal;
+    text-shadow: white 0px 0px 2px;
+}
+
+#content-box {
+  padding: 20px;
+  background: rgba(255,255,255,.9);
+  background-position: bottom;
+  /*border: solid 2px;*/
+  border-image-source: url("/images/BoarderImage.png");
+  border: dotted 2px #FFAEB9;
 }
 
 a {

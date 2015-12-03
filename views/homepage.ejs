@@ -6,10 +6,12 @@
         <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="/javascripts/users.js"></script>
     </head>
-    
+
+    <div id="content-box">
     <body>
         <header>
             <% include partials/header %>
+            
             <h3>Welcome, <%=currentUser %>! </h3>
 
             <button id="profile-btn"> My Profile <br>
@@ -17,8 +19,10 @@
             <button id="findgathering-btn"> Join Gathering <br>
 
         </header>
+    
 
 
 
     </body>
+    </div>
 </html>
