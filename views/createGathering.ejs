@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html>
+<div id="content-box">
+      <div align = "center">
     <% include partials/head %>
     
     <body>
         <% include partials/header %>
         <h1>Create a Gathering! </h1>
-            <div> Key : <div id="key"><%=key %></div></div>
-			<div> Name : <input type="text" id="gatheringName"> </input></div>
+            <div> Key : <div id="key"><%=key %></div></div><br>
+			<div> Name of the Gathering: <input type="text" id="gatheringName"> </input></div>
 
         <br>
         <img id="defaultGathering" src="/images/DefaultGathering.jpg" height = "150"/> 
@@ -15,4 +17,5 @@
         <br><br>
         <div> <button id="back-main-btn">Back to Main Page</button></div>
     </body>
+</div>
 </html>
