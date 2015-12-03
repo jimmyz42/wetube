@@ -113,6 +113,22 @@ exports.get = function(key) {
     }).exec();
 };
 
+//@return A promise of the gathering that the user hosts
+exports.getHostGathering = function(username){
+    console.log('get host gathering for ' + username);
+    return gatheringModel.findOne({
+        host:username
+    }).exec();
+};
+
+//@return A promise of the gathering that the user is part of
+exports.getGathering = function(username){
+    console.log('get gathering with' + username);
+    return gatheringModel.findOne({
+        users: {$eq: username}
+    }).exec();
+};
+
 //Pushes a random song onto the song queue
 var addSongs = function(key, numSongsToAdd){
     // GET RANDOM SONG
@@ -130,7 +146,7 @@ var addSongs = function(key, numSongsToAdd){
     return gatheringPromise;
 };
 
-//If the queue has songs, pops the first song and adds a new random one. 
+/*//If the queue has songs, pops the first song and adds a new random one. 
 //If the queue is empty, adds 6 random songs. 
 //
 exports.maintainSongQueue  = function(key){
@@ -157,10 +173,50 @@ exports.maintainSongQueue  = function(key){
         }
         return Promise.all(promiseArray);
     });
-}; 
+};*/ 
 
-
-
+//Pops any songs currently in the queue, and adds 10 songs 
+exports.maintainSongQueue  = function(key){
+    var gatheringPromise = exports.get(key);
+    return gatheringPromise.then(function(){
+        return gatheringModel.update({
+        key: key
+        }, {
+        songQueue: [] //remove first
+        }).exec()
+    }).then(function(){
+        console.log('cleared queue');
+        promiseArray = [];
+        for (var i=0; i<20; i++){
+            promiseArray.push(gatheringPromise.then(function(gathering) {
+                console.log('gatheirng obj' + gathering);
+                var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
+                return userModel.getUser(user);
+            }).then(function(user) {
+                /**
+                User has A liked artists and S liked songs. 
+                Artists count twice as much as songs, so we're more likely to choose a song by artist, 
+                and a single track
+                **/
+                console.log('user obj' + user);
+                var songs = user.songIDs;
+                var artists = user.artists;
+                var rand = Math.floor(Math.random() * (artists.length*3+songs.length))
+                if (rand < songs.length){
+                    //Probability of this is S/(2A+S)
+                    var song = songs[rand];
+                }
+                else{
+                    //Probability of this is 2A/(2A+S)
+                    var artist = artists[Math.floor((rand-songs.length)/3)];
+                    var song = artist.topTracks[Math.floor(Math.random()*artist.topTracks.length)];
+                }
+                exports.pushSong(key, song);
+            }));  
+        }
+        return Promise.all(promiseArray);
+    });
+};
 
 
 

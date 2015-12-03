@@ -15,9 +15,18 @@ var spotifyUtils = require('../utils/spotifyUtils');
 router.post('/', function(req, res) {
     console.log('inside router post');
     console.log(req.body.key + req.session.currentUser);
-    gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
+	userModel.getSongs(req.session.currentUser).then(function(songIDs){
+	created = false;
+	if(songIDs.length > 0)
+	{
+		console.log("SONG IDS LENGTH" + songIDs.length);
+		gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
+		created = true;
+	}
+	console.log(created);
     console.log('created thing, about to send response');
-    utils.sendSuccessResponse(res, {key: req.body.key});
+    utils.sendSuccessResponse(res, {key: req.body.key, created: created});
+	});
 });
 
 /* GET gathering creation page */
@@ -45,12 +54,12 @@ var addSongs = function(req, songsToAdd){
 /* GET gathering page, also join. 
 
 If queue is not empty:
-Pop from front of queue (that was the last song played), 
+Pop 10 from front of queue (that was the last song played), 
 Push one more onto end of queue. 
 Play the first on the queue. 
 
 If queue is empty:
-Push 6 onto the queue (Let's maintain like 6 or something, so currently playing, next, and 4 upcoming)
+Push 10 onto the queue (Let's maintain like 6 or something, so currently playing, next, and 4 upcoming)
 
 currentSongId is the song id of the first song in the queue
 
@@ -68,8 +77,14 @@ router.get('/:key', function(req, res) {
         console.log('3' + gathering);
         promiseArray = gathering.songQueue.map(spotifyUtils.getSongInfo);
         Promise.all(promiseArray).then(function(songsArray){
+            var tracksString = "";
+            for (var i=0; i<gathering.songQueue.length; i++){
+                tracksString = tracksString + gathering.songQueue[i] + ",";
+            }
+            console.log(tracksString);
             res.render('gathering', {gatheringName:gathering.name, 
                                                  host:gathering.host, key:req.params.key,
+                                trackids: tracksString,
                                 currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
                                 queuedSongs:songsArray});
         });
@@ -77,55 +92,19 @@ router.get('/:key', function(req, res) {
         console.log(error);
     });
 });
-    
-        /*userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
-        promiseArray = songids.map(spotifyUtils.getSongInfo);
-        Promise.all(promiseArray).then(function(songsArray) {
-            res.render('userProfile', { currentUser: req.session.currentUser, songs:songsArray });
-        });
-        
-        songsArray = [];
-        if (songids.length===0){
-            res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
-        }
-    });
-            console.log(gathering);
-            var songsArray = [];
-            var songIds = "";
-            console.log('songque' + gathering.songQueue);
-            if (gathering.songQueue.length===0){
-                res.render('gathering', {gatheringName:gathering.name, 
-                                                 host:gathering.host, key:req.params.key,
-                                currentUser: req.session.currentUser, songIds:"None",
-                                nextSong:{title:"None",artists:"None"},
-                                queuedSongs:[]});
-            };
-            var maxQueueDisplayed = Math.min(6, gathering.songQueue.length);
-            for (var i=0; i<maxQueueDisplayed; i++){
-                console.log('i' + i);
-                songIds = songIds + gathering.songQueue[i] + ",";
-                spotifyUtils.getSongInfo(gathering.songQueue[i], function(songInfo){
-                    console.log('inside callback');
-                    songsArray.push(songInfo);
-                    if (songsArray.length===maxQueueDisplayed){
-                        res.render('gathering', {gatheringName:gathering.name, 
-                                                 host:gathering.host, key:req.params.key,
-                                currentUser: req.session.currentUser, songIds:songIds,
-                                nextSong:songsArray.slice(1,2)[0],
-                                queuedSongs:songsArray.slice(2,songsArray.length)});
-                    }
-                });
-            };*/
-      
 
 /* DELETE gathering, also destroy gathering if host */
-router.delete('/:key', function(req, res, next) {
+router.delete('/:key', function(req, res) {
     gatheringModel.get(req.params.key).then(function(gathering) {
         if(gathering.host === req.session.currentUser) {
             return gatheringModel.delete(req.params.key);
         } else {
             return gatheringModel.leave(req.params.key, req.session.currentUser);
         }
+    }).then(function(){
+        utils.sendSuccessResponse(res, 'successfully deleted');
+    }).catch(function(){
+        utils.sendErrResponse(res, 500, 'err');
     });
 });
 

@@ -1,8 +1,44 @@
 (function() {
 
-	$(document).on('click', '#mygathering-btn', function(evt) {
+    $(document).on('click', '#create-gathering-link', function(evt) {
 		window.location = '/gathering';
 	});
+    
+    $(document).on('click', '#mygathering-link', function(evt) {
+		$.get(
+              '/mygathering'
+          ).done(function(response) {
+            var gatheringKey = response.content.key;
+            window.location = '/gathering/' + gatheringKey;
+          }).fail(function(responseObject) {
+              var response = $.parseJSON(responseObject.responseText);
+              $('.error').text(response.err);
+          });
+	});
+	
+	$(document).on('click', '#mygathering-btn', function(evt) {
+		$.get(
+              '/mygathering'
+          ).done(function(response) {
+            var gatheringKey = response.content.key;
+            window.location = '/gathering/' + gatheringKey;
+          }).fail(function(responseObject) {
+              var response = $.parseJSON(responseObject.responseText);
+              $('.error').text(response.err);
+          });
+	});
+
+    $(document).on('click', '#gathering-invite', function(evt) {
+        console.log('hi');
+        $.post('/email', {
+            email: $('input[name="invitee"]').val(),
+            key: $('input[name="key"]').val()
+        }).done(function(response) {
+            alert('Your friends should receive an email shortly');
+        }).fail(function(err) {
+            console.log(err);
+        });
+    });
 
 	/*$(document).on('click', '#join-btn', function(evt) {
 		window.location = '/joinGathering';
@@ -31,9 +67,17 @@
 			{name : $("#gatheringName").val(),
 			 key : $("#key").html()} 
 		).done(function(response) {
-            console.log('/gathering/' + response.content.key);
-			window.location = '/gathering/' + response.content.key;
-            window.location = '/gathering/' + response.content.key;
+			if(response.content.created)
+			{
+
+				console.log('/gathering/' + response.content.key);
+				window.location = '/gathering/' + response.content.key;
+				window.location = '/gathering/' + response.content.key;
+			}
+			else
+			{
+				alert('Before creating a gathering, pick some songs you like!');
+			}
 		}).fail(function(responseObject) {
             console.log(responseObject.responseText);
             console.log(responseObject);
@@ -48,30 +92,36 @@
 		myGathering = key;
 	});
 
-	/*$(document).on('click', '#delete-gathering', function(evt) {
-		  var gathering = $(this).parent();
-		  var key = gathering.data('key');
-		  $.delete({
-			'/gathering/' + key
-		  }).done(function(response) {
-			  window.location = '/homepage';
+	$(document).on('click', '#end-gathering-btn', function(evt) {
+        $.ajax({
+          url: window.location.pathname,
+          type: 'DELETE'
+        }).done(function(response) {
+            console.log('done deleting gathering');
+			  window.location = '/';
 			  myGathering = undefined;
 		  }).fail(function(responseObject) {	
 			  var response = $.parseJSON(responseObject.responseText);
 			  $('.error').text(response.err);
 		  });
 	  });
-*/
+
 	$(document).on('click', '#members-btn', function(evt) {
+		window.location = '/members';
+		/*
 		$.get(
-			'/gathering'
+			'/mygathering'
 		).done(function(response) {
 			window.location = '/members';
 		}).fail(function(responseObject) {
 			var response = $.parseJSON(responseObject.responseText);
 			$('.error').text(response.err);
 		});
+		*/
 	});
-        
+    
+    $(document).on('click', '#rechoose-songs-btn', function(evt) {
+		location.reload();
+	});        
 
 })();

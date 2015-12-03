@@ -69,6 +69,61 @@ var spotifyUtils = (function () {
         });
     };
     
+     /*
+    Searches for artists whose names match the searchString. 
+    Returns an array of potential matches. Each potential match is a javascript object with 
+    properties name, popularity, and id. 
+    Currently returns the top 20 matches. We can trim this down if wanted. Also sorts by popularity.
+    
+    Usage: 
+    
+    In the router--
+    spotifyUtils.sendArtistMatches(res, "Imagine Dragons");
+    
+    In the frontend javascript--
+    $.get('...', function(response) {
+        var matches = response.content.songs;
+        for (var index=0; index<matches.length; index++){
+            console.log(matches[index]);
+        };
+	});
+    */
+    _spotifyUtils.sendArtistMatches = function(res, searchString){
+        spotifyApi.searchArtists(searchString, {limit: 10, offset: 0})
+        .then(function(data) {
+            var firstPage = data.body.artists.items;
+            matchedArtists = [];
+            for (var i=0; i<firstPage.length; i++){
+                artist = firstPage[i];
+                console.log(i + ': ' + artist.name + ' (' + artist.popularity + ')');
+                if (artist.images.length > 0){
+                    var imageUrl = artist.images[artist.images.length-1].url;
+                }
+                else{
+                    var imageUrl = "/images/defaultArtist.png";
+                }
+                artistInfo = {
+                    name: artist.name, 
+                    popularity:artist.popularity, 
+                    id:artist.id,
+                    imageUrl:imageUrl
+                };
+                console.log(artistInfo);
+                for (property in artistInfo){
+                    console.log(property + ": " + artistInfo[property]);
+                };
+                matchedArtists.push(artistInfo);
+            };
+            
+            matchedArtists.sort(function(artist1, artist2){
+                return artist2.popularity - artist1.popularity;
+            });
+            utils.sendSuccessResponse(res, { artists : matchedArtists });
+        }, function(err) {
+            console.error(err);
+        });
+    };
+    
     /*
     Precondition: songID is a valid spotify song ID
     Sends information about the song with the spotify songID given. 
@@ -118,19 +173,63 @@ var spotifyUtils = (function () {
                 for (var j=0; j<track.artists.length;j++){
                     trackArtists = trackArtists + track.artists[j].name + " ";
                 };
+                var albumArtUrl = "/images/defaultArtist.png";
+                if (track.album.images.length > 0){
+                    albumArtUrl = track.album.images[track.album.images.length-1].url;
+                }
+                console.log('albumArtUrl' + albumArtUrl);
                 songInfo = {
                     title: track.name, 
-                    popularity:track.popularity, 
                     previewUrl:track.preview_url,
                     id:track.id,
                     artists:trackArtists,
-                    //For now, not using explicit, but it could come in handy later
-          //          explicit:track.explicit
+                    albumArtUrl:albumArtUrl
                 };
                 return songInfo;
             });
     };
+    
+    /**artistObj is an object with property id and property topTracks **/
+    _spotifyUtils.getArtistInfo = function(artistObj){
+        console.log('getting song info');
+        var artistID = artistObj.id;
+        return spotifyApi.getArtist(artistID)
+        .then(function(data){
+            var artist=data.body;
+            if (artist.images.length > 0){
+                    var imageUrl = artist.images[artist.images.length-1].url;
+            }
+            else{
+                var imageUrl = "/images/defaultArtist.png";
+            }
+            var songInfo = {
+                name: artist.name, 
+                imageUrl:imageUrl,
+                id:artist.id,
+            };
+            return songInfo;
+        });
+    };
 
+    /**
+    Returns a promise of the ids of top 8 songs by an artist
+    **/
+    _spotifyUtils.getTopTracksForArtist = function(artistid){
+        // Get an artist's top tracks
+        return spotifyApi.getArtistTopTracks(artistid, 'US')
+        .then(function(data) {
+            var trackInfos = [];
+            var tracks = data.body.tracks;
+            for (var i=0; i<tracks.length; i++){
+                trackInfos.push({id:tracks[i].id, popularity:tracks[i].popularity})
+            }
+            trackInfos.sort(function(track1, track2){
+                return track2.popularity - track1.popularity;
+            });
+            var trackids = trackInfos.map(function(trackInfo){return trackInfo.id});
+            return trackids.splice(0, 8);
+        });
+    };
     
 
     Object.freeze(_spotifyUtils);

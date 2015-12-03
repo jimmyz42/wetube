@@ -27,8 +27,17 @@
           '/account',
           formData
       ).done(function(response) {
-		  currentUser = response.content.user;
-          window.location = '/';
+		console.log('foobar');
+		if (response.content.created === false)
+		{
+		  $('.error').text('Sorry, that usename is taken. Please choose another one.');
+          return;
+		}
+		else
+		{
+			currentUser = response.content.user;
+			window.location = '/';
+		}
       }).fail(function(responseObject) {
           var response = $.parseJSON(responseObject.responseText);
           $('.error').text(response.err);

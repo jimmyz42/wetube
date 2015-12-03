@@ -1,13 +1,13 @@
 currentUser = undefined;
 myGathering = undefined;
 
-var loadHomePage = function() {
+/*var loadHomePage = function() {
 	if (currentUser) {
 		window.location = '/homepage';
 	} else {
 		window.location = '/';
 	}
-};
+};*/
 
 /*$(document).ready(function() {
 	$.get('/account', function(response) {
@@ -18,9 +18,9 @@ var loadHomePage = function() {
 	});
 });*/
 
-$(document).on('click', '#home-link', function(evt) {
-	window.location = '/homepage';
-});
+/*$(document).on('click', '#home-link', function(evt) {
+	window.location = '/';
+});*/
 
 $(document).on('click', '#profile-btn', function(evt) {
 		window.location='/profile';
