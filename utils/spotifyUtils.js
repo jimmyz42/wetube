@@ -6,7 +6,9 @@ var spotifyUtils = (function () {
     var _spotifyUtils = {};
 
     var spotifyApi = new SpotifyWebApi({
-      redirectUri : 'http://www.spotify.com'
+      redirectUri : 'http://www.spotify.com', 
+        clientId : '5936eea86d9f4634b00534b79dde8b4c',
+    clientSecret : '8e1ca161f7ca4b1d844509cf89903b01',
     });
     
     /*

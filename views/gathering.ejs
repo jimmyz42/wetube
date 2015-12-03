@@ -17,7 +17,7 @@
         <input type="hidden" name="key" value="<%=key%>" />
         <p>Invite more friends! :) <br>Send an invitation link to their email. </p>
         <input type="text" name="invitee"/>
-        <button type="button" id="gathering-invite">Invite!</button>
+        <button class="btn btn-default" type="button" id="gathering-invite">Invite!</button>
 		<p>Key : <%=key %></p>
         <div class="error"></div>
         <div id="queuedSongs">
@@ -34,13 +34,13 @@
         <div id="testframe"></div>
         </div>
         <br><br>
-        <button id="rechoose-songs-btn">Rechoose songs</button>
-        <button id="members-btn">View Members</button>
+        <button class="btn btn-default" id="rechoose-songs-btn">Rechoose songs</button>
+        <button class="btn btn-default" id="members-btn">View Members</button>
 		<%if (currentUser === host) { %>
-			<button id="end-gathering-btn">End My Gathering</button><br>
+			<button class="btn btn-default" id="end-gathering-btn">End My Gathering</button><br>
 		<% } %>
         <br>
-		<button id="back-main-btn">Back to Main Page</button>
+		<button class="btn btn-default" id="back-main-btn">Back to Main Page</button>
         </div>   
     </body>
 </div>

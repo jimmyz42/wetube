@@ -58,7 +58,7 @@
                     console.log(matches[index]);
                         
                     var button = $("<button/>", {id: matches[index].id, 
-                                                 class:'add-button',
+                                                 class:'add-button btn btn-default',
                                                 text: 'Add Song', 
                                                 click: createAddSongFunction(matches[index].id)});
             
@@ -99,7 +99,7 @@
                     var holderdiv = $("<div/>", {class:"search-results-div"});
                     var button = $("<button/>", {id: matches[index].id, 
                                                 text: 'Add Artist',
-                                                 class:'add-button',
+                                                 class:'add-button btn btn-default',
                                                 click: createAddArtistFunction(matches[index].id)});
             
                     var link = $("<img/>", {src: matches[index].imageUrl, class:"artistImage song-link"});
