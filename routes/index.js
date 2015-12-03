@@ -96,15 +96,17 @@ router.post('/account', function(req, res) {
 router.get('/profile', function(req, res) {
 
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
-        promiseArray = songids.map(spotifyUtils.getSongInfo);
+        var promiseArray = songids.map(spotifyUtils.getSongInfo);
         Promise.all(promiseArray).then(function(songsArray) {
-            res.render('userProfile', { currentUser: req.session.currentUser, songs:songsArray });
+            userModel.getArtists(req.session.currentUser).then(function(artists){
+                var artistPromiseArray = artists.map(spotifyUtils.getArtistInfo);
+                Promise.all(artistPromiseArray).then(function(artistsArray){
+                    res.render('userProfile', { currentUser: req.session.currentUser, 
+                                               artists:artistsArray,
+                                               songs:songsArray });
+                })
+            })
         });
-        
-       /* songsArray = [];
-        if (songids.length===0){
-            res.render('userProfile', {currentUser:req.session.currentUser, songs:[]});
-        }*/
     });
 });
 
@@ -113,7 +115,10 @@ router.get('/songs', function(req, res){
    spotifyUtils.sendMatches(res, req.query.content);
 });
 
-
+router.get('/artists', function(req, res){
+   console.log('artiststring' + req.query.content);
+   spotifyUtils.sendArtistMatches(res, req.query.content);
+});
 
 /**
 GET request to mygathering
@@ -151,13 +156,38 @@ router.post('/song', function(req, res) {
     console.log('post to songs');
     console.log('body content' + req.body.content);
     console.log('currentUser' + req.session.currentUser);
-    userModel.addSong(req.session.currentUser, req.body.content);
-    utils.sendSuccessResponse(res, "success");
+    userModel.addSong(req.session.currentUser, req.body.content).then(function(){
+        utils.sendSuccessResponse(res, "success");
+    });
+});
+
+/* POST add artist to list */
+router.post('/artist', function(req, res) {
+    console.log('post to songs');
+    console.log('body content' + req.body.content);
+    console.log('currentUser' + req.session.currentUser);
+    userModel.addArtist(req.session.currentUser, req.body.content).then(function(){
+        utils.sendSuccessResponse(res, "success");
+    });
 });
 
 /* DELETE delete song from list */
 router.delete('/song', function(req, res) {
-    userModel.removeSong(req.session.currentUser, req.body.song);
+    console.log(req.body.song);
+    userModel.removeSong(req.session.currentUser, req.body.song).then(function(){
+        utils.sendSuccessResponse(res, "success");
+    }).catch(function(){
+        utils.sendErrResponse(res, 500, "error")
+    })
+});
+
+/* DELETE delete song from list */
+router.delete('/artist', function(req, res) {
+    userModel.removeArtist(req.session.currentUser, req.body.artist).then(function(){
+        utils.sendSuccessResponse(res, "success")
+    }).catch(function(){
+        utils.sendErrResponse(res, 500, "error")
+    })
 });
 
 /*

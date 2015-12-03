@@ -15,6 +15,20 @@
         };
         return clickFunction;
     };
+    
+    var createAddArtistFunction = function(id){
+        var clickFunction  = function(){
+            $.post(
+                '/artist',
+                { content: id }
+            ).done(function(response) {
+                location.reload();
+            }).fail(function(responseObject) {
+				$('.error').text(response.err);
+            });
+        };
+        return clickFunction;
+    };
 	
 	$(document).on('click', '#profile-btn', function(evt) {
 		window.location='/profile';
@@ -60,13 +74,64 @@
               $('.error').text(response.err);
           });
     });
+    
+     $(document).on('click', '#search-artist-btn', function(evt) {
+          evt.preventDefault();
+         $("#search-results").empty();
+            searchString = $("#search-artist-input").val();
+            console.log("SEARCH STRING" + searchString);
+          $.get(
+              '/artists',
+              {content:searchString}
+          ).done(function(response) {
+            var matches = response.content.artists;
+            if (matches.length===0){
+                $("#search-results").append("<p>Sorry, no matches found!</p>");
+            }
+            else{
+                $("#search-results").append("<h2>Choose which artist you want: </h2>");
+                for (var index=0; index<Math.min(matches.length, 5); index++){
+                    console.log(matches[index]);
+                        
+                    var button = $("<button/>", {id: matches[index].id, 
+                                                text: 'Add Artist', 
+                                                click: createAddArtistFunction(matches[index].id)});
+            
+                    var link = $("<img/>", {src: matches[index].imageUrl, class:"artistImage"});
+                    $("#search-results").append(button);
+                    $("#search-results").append(link);
+                    $("#search-results").append("<p> Artist Name: " + matches[index].name + "</p>");
+                };
+            }
+          }).fail(function(responseObject) {
+              var response = $.parseJSON(responseObject.responseText);
+              $('.error').text(response.err);
+          });
+    });
 
 	$(document).on('click', '.remove-song', function(evt) {
 	  var song = $(this).parent().data('id');
-	  $.delete(
-		'/song',
-		{song : song}
-		).done(function(response) {
+        console.log(song)
+	   $.ajax({
+            url: '/song',
+            type: 'DELETE',
+            data: {song : song},
+        }).done(function(response) {
+			location.reload();
+		}).fail(function(responseObject) {
+			var response = $.parseJSON(responseObject.responseText);
+			$('.error').text(response.err);
+		});
+	});
+    
+    $(document).on('click', '.remove-artist', function(evt) {
+        var artist = $(this).parent().data('id');
+        console.log(artist);
+        $.ajax({
+            url: '/artist',
+            type: 'DELETE',
+            data: {artist : artist},
+        }).done(function(response) {
 			location.reload();
 		}).fail(function(responseObject) {
 			var response = $.parseJSON(responseObject.responseText);

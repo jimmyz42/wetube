@@ -1,32 +1,76 @@
 <!DOCTYPE html>
 <html>
-    <% include partials/head %>
-    
-    <body>
-        <% include partials/header %>
-        <h1><%=currentUser %>'s Profile</h1>
-        <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
-        <div class="error"></div>
-        <div id="mySongs">
-            <h3>My Songs</h3>
-            
-            <% if(songs.length > 0){ %>
-               <ol>
-                    <% for(var i=0; i<songs.length; i++) {%>
-                       <li><image class="artistImage" src="/images/artist.png"/>
-                       <%= songs[i].title %> by <%= songs[i].artists %></li><br>
-                    <% } %>
-                </ol>
-             <% } else{ %>  
-               <h3>No liked songs yet!</h3>
-            <% } %>
-        </div>
-        
-        <p>Add a Song!</p>
-            <div> Title : <input type="text" id="search-song-input"> </div><br>
-            <div> <button id="search-song-btn">Search for Song</button></div>
-        <div id="search-results">
-        </div><br>
-        <div> <button id="back-main-btn">Back to Main Page</button></div>
-    </body>
+   <% include partials/head %>
+   <body>
+      <% include partials/header %>
+      <h1><%=currentUser %>'s Profile</h1>
+      <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
+      <div class="error"></div>
+        <table id="searchtable">
+            <tr>
+            <td>
+                <p>Add a Favorite Song!</p>
+                <div> Title : <input type="text" id="search-song-input"> </div>
+                <br>
+                <div> <button id="search-song-btn">Search for Song</button></div>
+            </td>
+            <td>
+                <p>Add a Favorite Artist!</p>
+                <div> Name : <input type="text" id="search-artist-input"> </div>
+                <br>
+                <div> <button id="search-artist-btn">Search for Artist</button></div>
+            </td>
+          </tr>
+       </table>
+      <div id="search-results">
+      </div>
+      <br>
+      <div> <button id="back-main-btn">Back to Main Page</button></div>
+      <table>
+         <tr>
+            <td>
+               <div id="mySongs">
+                  <h3>My Songs</h3>
+                  <% if(songs.length > 0){ %>
+                  <ol>
+                     <% for(var i=0; i<songs.length; i++) {%>
+                     <li>
+                        <div data-id="<%=songs[i].id%>">
+                        <image class="artistImage" src=<%=songs[i].albumArtUrl%>></image>
+                        <%= songs[i].title %> by <%= songs[i].artists %>
+                        <button class="remove-song" id="remove-<%=songs[i].id%>">Remove</button>
+                         </div>
+                     </li>
+                     <br>
+                     <% } %>
+                  </ol>
+                  <% } else{ %>  
+                  <h3>No liked songs yet!</h3>
+                  <% } %>
+               </div>
+            </td>
+            <td>
+               <div id="myArtists">
+                  <h3>My Artists</h3>
+                  <% if(artists.length > 0){ %>
+                  <ol>
+                     <% for(var i=0; i<artists.length; i++) {%>
+                     <li>
+                     <div data-id="<%=artists[i].id%>">
+                         <image class="artistImage" src=<%=artists[i].imageUrl%>></image>
+                        <%= artists[i].name %> 
+                         <button class="remove-artist" id="remove-<%=artists[i].id%>">Remove</button>
+                    </div>
+                     </li>
+                     <br>
+                     <% } %>
+                  </ol>
+                  <% } else{ %>  
+                  <h3>No liked artists yet!</h3>
+                  <% } %>
+               </div>
+            </td>
+         </tr>
+      </table>
+   </body>
 </html>

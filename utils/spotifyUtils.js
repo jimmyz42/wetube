@@ -88,25 +88,31 @@ var spotifyUtils = (function () {
         };
 	});
     */
-    _spotifyUtils.sendArtistMatches = function(searchString){
-        spotifyApi.searchArtists(searchString)
+    _spotifyUtils.sendArtistMatches = function(res, searchString){
+        spotifyApi.searchArtists(searchString, {limit: 10, offset: 0})
         .then(function(data) {
             var firstPage = data.body.artists.items;
-            console.log('The tracks in the first page are.. (popularity in parentheses)');
             matchedArtists = [];
             for (var i=0; i<firstPage.length; i++){
                 artist = firstPage[i];
                 console.log(i + ': ' + artist.name + ' (' + artist.popularity + ')');
+                if (artist.images.length > 0){
+                    var imageUrl = artist.images[artist.images.length-1].url;
+                }
+                else{
+                    var imageUrl = "/images/defaultArtist.png";
+                }
                 artistInfo = {
                     name: artist.name, 
                     popularity:artist.popularity, 
-                    id:track.id,
+                    id:artist.id,
+                    imageUrl:imageUrl
                 };
-                console.log(songInfo);
-                for (property in songInfo){
-                    console.log(property + ": " + songInfo[property]);
+                console.log(artistInfo);
+                for (property in artistInfo){
+                    console.log(property + ": " + artistInfo[property]);
                 };
-                matchedArtists.push(songInfo);
+                matchedArtists.push(artistInfo);
             };
             
             matchedArtists.sort(function(artist1, artist2){
@@ -167,26 +173,50 @@ var spotifyUtils = (function () {
                 for (var j=0; j<track.artists.length;j++){
                     trackArtists = trackArtists + track.artists[j].name + " ";
                 };
+                var albumArtUrl = "/images/defaultArtist.png";
+                if (track.album.images.length > 0){
+                    albumArtUrl = track.album.images[track.album.images.length-1].url;
+                }
+                console.log('albumArtUrl' + albumArtUrl);
                 songInfo = {
                     title: track.name, 
-                    popularity:track.popularity, 
                     previewUrl:track.preview_url,
                     id:track.id,
                     artists:trackArtists,
-                    duration: track.duration_ms
-                    //For now, not using explicit, but it could come in handy later
-          //          explicit:track.explicit
+                    albumArtUrl:albumArtUrl
                 };
                 return songInfo;
             });
     };
+    
+    /**artistObj is an object with property id and property topTracks **/
+    _spotifyUtils.getArtistInfo = function(artistObj){
+        console.log('getting song info');
+        var artistID = artistObj.id;
+        return spotifyApi.getArtist(artistID)
+        .then(function(data){
+            var artist=data.body;
+            if (artist.images.length > 0){
+                    var imageUrl = artist.images[artist.images.length-1].url;
+            }
+            else{
+                var imageUrl = "/images/defaultArtist.png";
+            }
+            var songInfo = {
+                name: artist.name, 
+                imageUrl:imageUrl,
+                id:artist.id,
+            };
+            return songInfo;
+        });
+    };
 
     /**
-    Returns a promise of the top 8 songs by an artist
+    Returns a promise of the ids of top 8 songs by an artist
     **/
     _spotifyUtils.getTopTracksForArtist = function(artistid){
         // Get an artist's top tracks
-        spotifyApi.getArtistTopTracks(artistid, 'US')
+        return spotifyApi.getArtistTopTracks(artistid, 'US')
         .then(function(data) {
             var trackInfos = [];
             var tracks = data.body.tracks;
@@ -196,7 +226,8 @@ var spotifyUtils = (function () {
             trackInfos.sort(function(track1, track2){
                 return track2.popularity - track1.popularity;
             });
-            return trackInfos.splice(0, 8);
+            var trackids = trackInfos.map(function(trackInfo){return trackInfo.id});
+            return trackids.splice(0, 8);
         });
     };
     

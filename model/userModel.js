@@ -2,12 +2,19 @@
 
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
+var spotifyUtils = require('../utils/spotifyUtils');
 
 // A list of users, with their favorite songs
+/**
+artistsIDs are the spotify ids of artists they like
+allSongIDs are the spotify ids of songs they like, plus the top 8 track ids
+by artists they like 
+**/
 var userSchema = mongoose.Schema({
     username: String,
     password: String,
-    songIDs: [String]
+    songIDs: [String],
+    artists: [{id:String, topTracks:[String]}] 
 });
 
 var userModel = mongoose.model("User", userSchema);
@@ -68,8 +75,24 @@ exports.addSong = function(user, song) {
         username: user
     }, {
         $addToSet: { songIDs: song }
-    }
-    ).exec();
+    }).exec();
+};
+
+// Add a artist for a user, will not add if already present
+// @param user Username of user
+// @param artist ID of artist to add
+// @return A promise fulfilled when update is complete
+exports.addArtist = function(user, artistid) {
+    console.log('user' + user);
+    console.log('song' + artist);
+    return spotifyUtils.getTopTracksForArtist(artistid).then(function(topTrackIds){
+        return userModel.update({
+            username: user
+        }, {
+            $addToSet: {artists: {id:artistid, topTracks:topTrackIds}}
+        }
+        ).exec();
+    });
 };
 
 // Remove a song for a user, if present
@@ -78,13 +101,25 @@ exports.addSong = function(user, song) {
 // @return A promise fulfilled when update is complete
 exports.removeSong = function(user, song) {
     return userModel.update({
-        user: user,
+        username: user,
     }, {
         $pull: { songIDs: song }
     }).exec();
 };
 
-// Get song list for user
+// Remove a artist for a user, if present
+// @param user Username of user
+// @param artist ID of artist to remove
+// @return A promise fulfilled when update is complete
+exports.removeArtist = function(user, artistid) {
+    return userModel.update({
+        username: user,
+    }, {
+        $pull: { artists: {id:artistid} }
+    }).exec();
+};
+
+// Get liked songs list for user
 // @param user Username of user
 // @return A promise of an array of songs
 exports.getSongs = function(user) {
@@ -92,6 +127,17 @@ exports.getSongs = function(user) {
         username: user
     }).exec().then(function(user) {
         return user.songIDs;
+    });
+};
+
+// Get artist list for user
+// @param user Username of user
+// @return A promise of an array of artist
+exports.getArtists = function(user) {
+    return userModel.findOne({
+        username: user
+    }).exec().then(function(user) {
+        return user.artists;
     });
 };
 
