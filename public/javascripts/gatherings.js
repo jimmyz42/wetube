@@ -107,7 +107,9 @@
 	  });
 
 	$(document).on('click', '#members-btn', function(evt) {
-		window.location = '/members';
+		console.log('hi');
+        $('#membersModal').modal();
+        //window.location = '/members';
 		/*
 		$.get(
 			'/mygathering'

@@ -13,7 +13,6 @@
         <img id="defaultGathering" src="/images/DefaultGathering.jpg" height = "150"/> 
 -->
         <p>Host : <%=host %></p>
-        <label>Emails:</label>
         <input type="hidden" name="key" value="<%=key%>" />
         <p>Invite more friends! :) <br>Send an invitation link to their email. </p>
         <input type="text" name="invitee"/>
@@ -35,7 +34,29 @@
         </div>
         <br><br>
         <button class="btn btn-default" id="rechoose-songs-btn">Rechoose songs</button>
+        
         <button class="btn btn-default" id="members-btn">View Members</button>
+        <div id="membersModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h2>Members</h2>
+                    </div>
+                    <div class="modal-body">
+                        <% for(var i=0; i<members.length; i++) { %>
+                            <p><%= members[i] %></p>
+                        <% } %>
+                    </div>
+                    <div class="modal-footer">
+                        <p>Invite more friends! :) <br>Send an invitation link to their email. </p>
+                        <input type="text" name="invitee"/>
+                        <button class="btn btn-default" type="button" id="gathering-invite">Invite!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 		<%if (currentUser === host) { %>
 			<button class="btn btn-default" id="end-gathering-btn">End My Gathering</button><br>
 		<% } %>

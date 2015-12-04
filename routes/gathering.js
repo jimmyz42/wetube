@@ -101,7 +101,7 @@ router.get('/:key', function(req, res) {
             }
             console.log(tracksString);
             res.render('gathering', {gatheringName:gathering.name, 
-                                                 host:gathering.host, key:req.params.key,
+                                                 host:gathering.host, members:gathering.users, key:req.params.key,
                                 trackids: tracksString,
                                 currentUser: req.session.currentUser, currentSongId:gathering.songQueue[0],
                                 queuedSongs:songsArray});
