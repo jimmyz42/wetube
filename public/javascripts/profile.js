@@ -73,6 +73,7 @@
 
                 };
             }
+            $('#searchModal').modal();
           }).fail(function(responseObject) {
               var response = $.parseJSON(responseObject.responseText);
               $('.error').text(response.err);
@@ -113,6 +114,7 @@
                     holderdiv.append("  " + matches[index].name);
                 }
             }
+            $('#searchModal').modal();
           }).fail(function(responseObject) {
               var response = $.parseJSON(responseObject.responseText);
               $('.error').text(response.err);
