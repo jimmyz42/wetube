@@ -18,6 +18,14 @@ body {
   border: dotted 2px #FFAEB9;
 }
 
+table {
+  table-layout: fixed;
+}
+
+td {
+  width: 50%;
+}
+
 a {
   color: #00B7FF;
 }
