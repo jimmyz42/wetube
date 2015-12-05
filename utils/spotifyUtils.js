@@ -4,9 +4,14 @@ var utils = require('./utils');
 var spotifyUtils = (function () {
 
     var _spotifyUtils = {};
+    
+    var scopes = ['user-read-private', 'playlist-read-private', 'playlist-modify-public', 
+             'playlist-modify-private'];
+    
+    var state = 'lala';
 
     var spotifyApi = new SpotifyWebApi({
-      redirectUri : 'http://www.spotify.com', 
+      redirectUri : 'http://localhost:3000/callback', 
         clientId : '5936eea86d9f4634b00534b79dde8b4c',
     clientSecret : '8e1ca161f7ca4b1d844509cf89903b01',
     });
@@ -39,7 +44,7 @@ var spotifyUtils = (function () {
             matchedSongs = [];
             for (var i=0; i<firstPage.length; i++){
                 track = firstPage[i];
-                console.log(i + ': ' + track.title + ' (' + track.popularity + ')');
+              //  console.log(i + ': ' + track.title + ' (' + track.popularity + ')');
 
                 trackArtists = [];
                 for (var j=0; j<track.artists.length;j++){
@@ -160,7 +165,7 @@ var spotifyUtils = (function () {
     };
     
     _spotifyUtils.getSongInfo = function(songID){
-            console.log('getting song info');
+         //   console.log('getting song info');
             return spotifyApi.getTrack(songID)
             .then(function(data){
                 var track=data.body;
@@ -224,7 +229,102 @@ var spotifyUtils = (function () {
         });
     };
     
-
+    _spotifyUtils.getAuthorizeURL = function(){
+        return spotifyApi.createAuthorizeURL(scopes, state);
+    }
+    
+    /*
+    Returns a promise of when all the setting of stuff is complete
+    */
+    _spotifyUtils.setAuthorizeInfo = function(code, state){
+        /* Get the access token! */
+        return spotifyApi.authorizationCodeGrant(code)
+        .then(function(data) {
+            console.log('The token expires in ' + data.body['expires_in']);
+            console.log('The access token is ' + data.body['access_token']);
+            console.log('The refresh token is ' + data.body['refresh_token']);
+      
+            // Set the access token on the API object to use it in later calls
+            spotifyApi.setAccessToken(data.body['access_token']);
+            spotifyApi.setRefreshToken(data.body['refresh_token']);
+            
+            var tokenExpirationEpoch = data.body['expires_in'];
+            setInterval(function() {
+                // Refresh token and print the new time to expiration.
+                spotifyApi.refreshAccessToken()
+                .then(function(data) {
+                    tokenExpirationEpoch = (new Date().getTime() / 1000) + data.body['expires_in'];
+                    console.log('Refreshed token.');
+                  }, function(err) {
+                    console.log('Could not refresh the token!', err.message);
+                  });
+            }, tokenExpirationEpoch/2);
+      
+        });
+    };
+    
+    /**
+    Returns a promise of an array, where each element is a "playlist object"
+    A playlist object has properties as follows:
+        {name: name of Playlist, 
+         id: id of Playlist, 
+         ownerid: id of the owner}
+    **/
+    
+    /**For now, is just {name, id} **/
+    _spotifyUtils.getPlaylistInfo = function(){
+          // Get the authenticated user
+        return spotifyApi.getMe()
+        .then(function(data) {
+            console.log('Some information about the authenticated user', data.body);
+            return spotifyUserId = data.body.id;
+        }).then(function(userID){
+            return spotifyApi.getUserPlaylists(userID);
+        }).then(function(data){
+            console.log('data');
+            console.log(data.body);
+            var playlistArray = data.body.items;
+            var playlists = [];
+            for (var i=0; i<playlistArray.length; i++){
+                playlists.push({id:playlistArray[i].id, name:playlistArray[i].name, 
+                                ownerid: playlistArray[i].owner.id});
+            }
+            return playlists;
+        });
+    };
+    
+    /**
+    Returns a promise of an array, where each element is a "playlist object"
+    A playlist object has properties as follows:
+        {name: name of Playlist, 
+         id: id of Playlist, 
+         tracks: [{id: 'trackid', title:'title', artists:'artists'}]}
+    **/
+    
+    /**For now, is just {name, id} **/
+    _spotifyUtils.getPlaylistTracks = function(playlistObj){
+        // Get a playlist
+        console.log('inside get playlistTracks, playlistObj is');
+        console.log(playlistObj);
+        var ownerID = playlistObj.ownerID;
+        var playlistID = playlistObj.playlistID;
+        return spotifyApi.getPlaylistTracks(ownerID, playlistID)
+        .then(function(data) {
+       //     console.log('Some information about this playlist', data.body);
+            console.log('data');
+            var trackObjs = data.body.items;
+            var trackIDs = [];
+            for (var i=0; i<trackObjs.length; i++){
+                if (trackObjs[i].track.id){
+                    trackIDs.push(trackObjs[i].track.id)
+                }
+            };
+            console.log(trackIDs);
+            return trackIDs;
+        });
+    };
+    
+    
     Object.freeze(_spotifyUtils);
     return _spotifyUtils;
 
