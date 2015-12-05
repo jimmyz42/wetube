@@ -17,7 +17,6 @@ var utils = require('../utils/utils');
 var Promise = require('bluebird');
 var sendgrid = require('sendgrid')('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');
 
-
 /*
   Require authentication on ALL access to /gathering/*
   Clients which are not logged in will receive a 403 error code.
@@ -49,6 +48,16 @@ router.get('/', function(req, res) {
     else{
         res.render('index', { title: 'WeTube' });
     }
+});
+
+/* POST upload profile image */
+router.post('/upload', function(req, res) {
+    console.log(req.files);
+    console.log(__dirname);
+    req.files.file.mv('/images/user/'+req.session.currentUser, function(err) {
+        if(err) res.end(''+err);
+        res.end('success');
+    });
 });
 
 /* POST email */

@@ -43,6 +43,9 @@
           evt.preventDefault();
          $("#search-results").empty();
             searchString = $("#search-song-input").val();
+            if(searchString.length === 0) {
+                $('.error').text('Please enter a song name!');
+            }
             console.log("SEARCH STRING" + searchString);
           $.get(
               '/songs',
@@ -84,6 +87,9 @@
           evt.preventDefault();
          $("#search-results").empty();
             searchString = $("#search-artist-input").val();
+            if(searchString.length === 0) {
+                $('.error').text('Please enter an artist name!');
+            }
             console.log("SEARCH STRING" + searchString);
           $.get(
               '/artists',
