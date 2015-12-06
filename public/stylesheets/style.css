@@ -41,6 +41,42 @@ img.artistImage {
     vertical-align: top;
 }
 
+div.profile {
+    position: relative;
+    width: 200px;
+    height: 200px;
+}
+
+div.outer {
+    background: rgba(255, 255, 255, 0.5);
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    border-radius: 100px;
+}
+
+img.profile {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+}
+
+span.profile {
+    vertical-align: middle;
+    text-align: center;
+    font-size: 20pt;
+    display: table-cell;
+    position: absolute;
+    left: 20px;
+    top: 60px;
+}
+
+div.outer:hover {
+    opacity: 1;
+}
 
 button:not(.add-button){
     margin:2%;

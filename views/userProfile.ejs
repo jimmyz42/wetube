@@ -10,9 +10,15 @@
 <!--
       <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
 -->
+    <div class="profile">
+      <img class="profile" src="/images/user/<%=currentUser%>.jpg">
+      <div class="outer">
+        <span class="profile">Change Picture</span>
+      </div>
+    </div>
     <form action="/upload" method="post" enctype="multipart/form-data">
       <input type="file" name="file">
-      <input type="submit" name="submit" value="submit">
+      <input type="submit" name="submit" value="Upload!">
     </form>
       <div class="error"></div>
     <div id="searchModal" class="modal fade" role="dialog">

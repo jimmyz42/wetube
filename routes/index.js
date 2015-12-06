@@ -16,6 +16,19 @@ var spotifyUtils = require('../utils/spotifyUtils');
 var utils = require('../utils/utils');
 var Promise = require('bluebird');
 var sendgrid = require('sendgrid')('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');
+var multer = require('multer');
+
+//var upload = multer({ dest: __dirname+'/../public/images/user/' });
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, __dirname+'/../public/images/user/');
+    },
+    filename: function(req, file, cb) {
+        cb(null, req.session.currentUser+'.jpg');
+    }
+});
+var upload = multer({ storage: storage });
+
 
 /*
   Require authentication on ALL access to /gathering/*
@@ -51,13 +64,12 @@ router.get('/', function(req, res) {
 });
 
 /* POST upload profile image */
-router.post('/upload', function(req, res) {
-    console.log(req.files);
+router.post('/upload', upload.single('file'), function(req, res) {
+    console.log(req.file);
     console.log(__dirname);
-    req.files.file.mv('/images/user/'+req.session.currentUser, function(err) {
-        if(err) res.end(''+err);
-        res.end('success');
-    });
+    res.status(200);
+    res.send(req.file);
+    res.end();    
 });
 
 /* POST email */
