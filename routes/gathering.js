@@ -93,8 +93,8 @@ router.get('/:key', function(req, res) {
         return gatheringModel.get(req.params.key);
     }).then(function(gathering){
         console.log('3' + gathering);
-        promiseArray = gathering.songQueue.map(spotifyUtils.getSongInfo);
-        Promise.all(promiseArray).then(function(songsArray){
+        spotifyUtils.getSongsInfo(gathering.songQueue)
+        .then(function(songsArray){
             var tracksString = "";
             for (var i=0; i<gathering.songQueue.length; i++){
                 tracksString = tracksString + gathering.songQueue[i] + ",";

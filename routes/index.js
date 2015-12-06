@@ -120,20 +120,23 @@ router.post('/account', function(req, res) {
 
 /* GET profile page. */
 router.get('/profile', function(req, res) {
-
+    console.log('get profile');
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
-        var promiseArray = songids.map(spotifyUtils.getSongInfo);
-        Promise.all(promiseArray).then(function(songsArray) {
-            userModel.getArtists(req.session.currentUser).then(function(artists){
-                var artistPromiseArray = artists.map(spotifyUtils.getArtistInfo);
-                Promise.all(artistPromiseArray).then(function(artistsArray){
+        console.log(songids);
+        spotifyUtils.getSongsInfo(songids)
+            .then(function(songsArray) {
+                console.log(songsArray);
+                userModel.getArtists(req.session.currentUser)
+                .then(function(artists){
+                spotifyUtils.getArtistsInfo(artists)
+                .then(function(artistsArray){
                     res.render('userProfile', { currentUser: req.session.currentUser, 
                                                artists:artistsArray,
                                                authlink: spotifyUtils.getAuthorizeURL(),
                                                songs:songsArray });
                 })
             })
-        });
+        }); 
     });
 });
 

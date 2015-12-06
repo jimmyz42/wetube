@@ -188,6 +188,43 @@ var spotifyUtils = (function () {
             });
     };
     
+    _spotifyUtils.getSongsInfo = function(songIDs){
+        if (songIDs.length===0){
+            return new Promise(function(resolve, reject) {
+                resolve([]);
+            });
+        }
+        console.log('getting tracks');
+        return spotifyApi.getTracks(songIDs)
+            .then(function(data){
+                var tracks=data.body.tracks;
+                console.log('1');
+                var trackInfos = [];
+                for (var i=0; i<tracks.length; i++){
+                    console.log('.');
+                    console.log(tracks[i]);
+                    var track = tracks[i];
+                    var trackArtists = "";
+                    for (var j=0; j<track.artists.length;j++){
+                        trackArtists = trackArtists + track.artists[j].name + " ";
+                    };
+                    var albumArtUrl = "/images/defaultArtist.png";
+                    if (track.album.images.length > 0){
+                        albumArtUrl = track.album.images[track.album.images.length-1].url;
+                    }
+                    var songInfo = {
+                        title: track.name, 
+                        previewUrl:track.preview_url,
+                        id:track.id,
+                        artists:trackArtists,
+                        albumArtUrl:albumArtUrl
+                    };
+                    trackInfos.push(songInfo);
+                };
+                return trackInfos;
+            });
+    };
+    
     /**artistObj is an object with property id and property topTracks **/
     _spotifyUtils.getArtistInfo = function(artistObj){
         var artistID = artistObj.id;
@@ -200,13 +237,45 @@ var spotifyUtils = (function () {
             else{
                 var imageUrl = "/images/defaultArtist.png";
             }
-            var songInfo = {
+            var artistInfo = {
                 name: artist.name, 
                 imageUrl:imageUrl,
                 id:artist.id,
             };
-            return songInfo;
+            return artistInfo;
         });
+    };
+    
+    _spotifyUtils.getArtistsInfo = function(artistOjbs){
+        if (artistOjbs.length ===0){
+            return new Promise(function(resolve, reject) {
+                resolve([]);
+            });
+        }
+        var artistIDs = artistOjbs.map(function(artistObj){
+                                      return artistObj.id});
+        return spotifyApi.getArtists(artistIDs)
+        .then(function(data){
+            var artists=data.body.artists;
+            var artistInfos = [];
+                for (var i=0; i<artists.length; i++){
+                    var artist = artists[i];
+                    var trackArtists = "";
+                    if (artist.images.length > 0){
+                    var imageUrl = artist.images[artist.images.length-1].url;
+                    }
+                    else{
+                        var imageUrl = "/images/defaultArtist.png";
+                    }
+                    var artistInfo = {
+                        name: artist.name, 
+                        imageUrl:imageUrl,
+                        id:artist.id,
+                    };
+                    artistInfos.push(artistInfo);
+                };
+                return artistInfos;
+        })
     };
 
     /**
