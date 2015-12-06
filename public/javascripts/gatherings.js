@@ -61,22 +61,29 @@
 		evt.preventDefault();
         console.log("create gathering here");
         console.log($("#gatheringName").val());
-        console.log($("#key").html());
+        console.log($("#key").val());
 		$.post(
 			'/gathering',
 			{name : $("#gatheringName").val(),
-			 key : $("#key").html()} 
+			 key : $("#key").val()} 
 		).done(function(response) {
 			if(response.content.created)
 			{
-
 				console.log('/gathering/' + response.content.key);
 				window.location = '/gathering/' + response.content.key;
 				window.location = '/gathering/' + response.content.key;
 			}
 			else
 			{
-				alert('Before creating a gathering, pick some songs you like!');
+				
+				if(response.content.keyFree)
+				{
+					alert('Before creating a gathering, pick some songs you like!');
+				}
+				else
+				{
+					alert('Sorry! That key is in use. Please choose a different one.');
+				}		
 			}
 		}).fail(function(responseObject) {
             console.log(responseObject.responseText);
