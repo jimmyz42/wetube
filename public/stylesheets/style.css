@@ -54,7 +54,22 @@ button:not(.add-button){
     position: relative
 }
 
-.liked .remove-song, .remove-artist{
+.search-results-div{
+    position: relative;
+    align:left;
+}
+
+#search-results{
+    align:left;
+}
+
+.add-button{
+    position: absolute;
+    top:30%;
+    float:right;
+}
+
+.liked .remove-song, .remove-artist .add-button{
     position: absolute;
     top:30%;
 }

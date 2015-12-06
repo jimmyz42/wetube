@@ -122,10 +122,10 @@ router.post('/account', function(req, res) {
 router.get('/profile', function(req, res) {
     console.log('get profile');
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
-        console.log(songids);
+    //    console.log(songids);
         spotifyUtils.getSongsInfo(songids)
             .then(function(songsArray) {
-                console.log(songsArray);
+      //          console.log(songsArray);
                 userModel.getArtists(req.session.currentUser)
                 .then(function(artists){
                 spotifyUtils.getArtistsInfo(artists)
@@ -175,12 +175,22 @@ router.post('/import', function(req, res){
 });
 
 router.get('/songs', function(req, res){
-   spotifyUtils.sendMatches(res, req.query.content);
+   spotifyUtils.getTrackMatches(req.query.content).then(function(matchedSongs){
+       utils.sendSuccessResponse(res, { songs : matchedSongs });
+   }).catch(function(err){
+       console.log('error finding matches');
+        utils.sendErrResponse('Error in finding matches');
+   });
 });
 
 router.get('/artists', function(req, res){
-   console.log('artiststring' + req.query.content);
-   spotifyUtils.sendArtistMatches(res, req.query.content);
+    spotifyUtils.getArtistMatches(req.query.content).then(function(matchedSongs){
+         utils.sendSuccessResponse(res, { artists : matchedArtists });
+   }).catch(function(err){
+       console.log('error finding matches');
+        console.log(érr);
+        utils.sendErrResponse('Error in finding matches');
+   });
 });
 
 /**

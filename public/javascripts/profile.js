@@ -53,10 +53,11 @@
                 $("#search-results").append("<p>Sorry, no matches found!</p>");
             }
             else{
-                $("#search-results").append("<h3>Choose which song you want: (Click on the link to hear a preview.)</h3>");
-                for (var index=0; index<Math.min(matches.length, 5); index++){
+                $("#search-results").append("<h3>Choose which song you want:</h3")
+                $("#search-results").append("<p>(Click on the link to hear a preview.)<p>");
+                for (var index=0; index<Math.min(matches.length, 8); index++){
                     console.log(matches[index]);
-                        
+                    var holderdiv = $("<div/>", {class:"search-results-div"});
                     var button = $("<button/>", {id: matches[index].id, 
                                                  class:'add-button btn btn-default',
                                                 text: 'Add Song', 
@@ -66,11 +67,13 @@
                                           class:"song-link",
                                           target:"_blank",
                                          text: matches[index].title});
-                    $("#search-results").append(button);
-                    $("#search-results").append(link);
-                    $("#search-results").append("Artist(s): " + matches[index].artists);
+                    var img = $("<img/>", {src: matches[index].albumArtUrl, class:"artistImage song-link"});
+                    $("#search-results").append(holderdiv);  
+                    holderdiv.append(img);
+                    holderdiv.append(button);
+                    holderdiv.append(link);
+                    holderdiv.append("Artist(s): " + matches[index].artists);
                     $("#search-results").append("<br>");
-
                 };
             }
             $('#searchModal').modal();
