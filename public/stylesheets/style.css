@@ -117,3 +117,7 @@ button:not(.add-button){
   height: 45px;
   width: 120px;
 }
+
+.error{
+    color: red
+}

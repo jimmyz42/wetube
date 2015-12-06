@@ -34,11 +34,13 @@ router.post('/', function(req, res) {
     console.log(req.body.key + req.session.currentUser);
 	gatheringModel.keyFree(req.body.key).then(function(isFree)
 	{
-		userModel.getSongs(req.session.currentUser).then(function(songIDs){
+		userModel.getUser(req.session.currentUser).then(function(user){
 		created = false;
+        var songIDs = user.songIDs;
+        var artists = user.artists;
 		if(isFree)
 		{
-			if(songIDs.length > 0)
+			if(songIDs.length > 0 || artists.length > 0)
 			{
 				console.log("SONG IDS LENGTH" + songIDs.length);
 				gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
@@ -62,6 +64,12 @@ Render the gathering page, passing in the song ids on the queue, and information
 currentSongId is the song id of the first song in the queue
 */
 router.get('/:key', function(req, res) {
+    gatheringModel.keyFree(req.params.key).then(function(isFree){
+        if (isFree){
+            console.log('KEY DOES NOT EXIST');
+            res.render('error', {error:'Gathering does not exist'});
+        }
+    });
     gatheringModel.join(req.params.key, req.session.currentUser)
     .then(function(){
         return gatheringModel.maintainSongQueue(req.params.key);

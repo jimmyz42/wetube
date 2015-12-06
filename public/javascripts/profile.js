@@ -72,10 +72,11 @@
     //an image of the album art
 	 $(document).on('click', '#search-song-btn', function(evt) {
           evt.preventDefault();
+         $('#song-error').text('');
          $("#search-results").empty();
             searchString = $("#search-song-input").val();
             if(searchString.length === 0) {
-                $('.error').text('Please enter a song name!');
+                $('#song-error').text('Please enter a song name!');
             }
           $.get(
               '/songs',
@@ -112,7 +113,7 @@
             $('#searchModal').modal();
           }).fail(function(responseObject) {
               var response = $.parseJSON(responseObject.responseText);
-              $('.error').text(response.err);
+              $('#song-error').text(response.err);
           });
     });
     
@@ -121,9 +122,10 @@
      $(document).on('click', '#search-artist-btn', function(evt) {
           evt.preventDefault();
          $("#search-results").empty();
+            $('#artist-error').text('');
             searchString = $("#search-artist-input").val();
             if(searchString.length === 0) {
-                $('.error').text('Please enter an artist name!');
+                $('#artist-error').text('Please enter an artist name!');
             }
             console.log("SEARCH STRING" + searchString);
           $.get(
@@ -154,7 +156,7 @@
             $('#searchModal').modal();
           }).fail(function(responseObject) {
               var response = $.parseJSON(responseObject.responseText);
-              $('.error').text(response.err);
+              $('#artist-error').text(response.err);
           });
     });
 
