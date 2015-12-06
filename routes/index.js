@@ -1,5 +1,4 @@
-/*GET / - WeTube Homepage
-GET /login - Login Page
+/*GET / - WeTube Homepage (or login page)
 POST /login - Log in to WeTube
 GET /account - Create account page
 POST /account - Create new Account
@@ -50,7 +49,9 @@ router.use('/artist', requireAuthentication);
 router.use('/profile', requireAuthentication);
 router.use('/artists', requireAuthentication);
 
-/* GET home page. */
+/* GET home page.
+If logged in, renders homgepage
+Else, renders login page*/
 router.get('/', function(req, res) {
     if (req.session.currentUser){
         gatheringModel.getHostGathering(req.session.currentUser).then(function(gathering){
@@ -71,7 +72,8 @@ router.post('/upload', upload.single('file'), function(req, res) {
     res.end();    
 });
 
-/* POST email */
+/* POST email 
+Sends email to people to invite them to a gathering */
 router.post('/email', function(req, res) { //change to post
     sendgrid.send({
         to: req.body.email.split(','),
@@ -87,7 +89,8 @@ router.post('/email', function(req, res) { //change to post
     });
 });
 
-/* POST login */
+/* POST login 
+Checks that password is correct, and logs in the current user*/
 router.post('/login', function(req, res) {
     userModel.verify(req.body.username, req.body.password)
     .then(function() {
@@ -99,19 +102,21 @@ router.post('/login', function(req, res) {
     });
 });
 
-/* POST login */
+/* POST logout
+Logs out the current user */
 router.post('/logout', function(req, res) {
     req.session.currentUser = undefined; 
     utils.sendSuccessResponse(res, "success");
 });
-
 
 /* GET account creation page. */
 router.get('/account', function(req, res) {
     res.render('register', { title: 'Express' });
 });
 
-/* POST create account */
+/* POST create account 
+Register a new user
+If username is already taken, sends a response that says it was not created*/
 router.post('/account', function(req, res) {
 	userModel.usernameFree(req.body.username).then(function(free)
 	{  
@@ -134,19 +139,14 @@ router.post('/account', function(req, res) {
 			utils.sendSuccessResponse(res, { user : req.body.username, created : false });
 		}
 	});
-    //console.log(p1);
-    //console.log(p2);
-    //console.log("exit");
 });
 
 /* GET profile page. */
 router.get('/profile', function(req, res) {
     console.log('get profile');
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
-    //    console.log(songids);
         spotifyUtils.getSongsInfo(songids)
             .then(function(songsArray) {
-      //          console.log(songsArray);
                 userModel.getArtists(req.session.currentUser)
                 .then(function(artists){
                 spotifyUtils.getArtistsInfo(artists)
@@ -172,17 +172,20 @@ router.get('/callback', function(req, res){
     });
 });
     
+//Gets the page that shows all the user's playlist names, so they 
+//can choose ones to import from
 router.get('/import', function(req, res){
     spotifyUtils.getPlaylistInfo().then(function(myPlaylists){
           res.render('importplaylist', {playlists:myPlaylists});
     });
 });
 
-
+//Imports from the playlists 
+//req.body.content, when parsed, is an array of playlist objects, that have properties
+//  ownerID and playlistID
+//Adds all the songs in these playlists to the user's liked songs list
 router.post('/import', function(req, res){
     var playlistObjs = JSON.parse(req.body.content);
-    console.log('post import content req');
-    console.log(playlistObjs);
     var promiseArray = playlistObjs.map(spotifyUtils.getPlaylistTracks);
     Promise.reduce(promiseArray, function(total, tracks) {
         return total.concat(tracks);
@@ -195,21 +198,24 @@ router.post('/import', function(req, res){
     });
 });
 
+//Get songs 
+//Searches for songs that match the searchstring in req.query.content
+//Sends back an array of matches objects
 router.get('/songs', function(req, res){
    spotifyUtils.getTrackMatches(req.query.content).then(function(matchedSongs){
        utils.sendSuccessResponse(res, { songs : matchedSongs });
    }).catch(function(err){
-       console.log('error finding matches');
         utils.sendErrResponse('Error in finding matches');
    });
 });
 
+//Get artists 
+//Searches for artists that match the searchstring in req.query.content
+//Sends back an array of match objects
 router.get('/artists', function(req, res){
     spotifyUtils.getArtistMatches(req.query.content).then(function(matchedSongs){
          utils.sendSuccessResponse(res, { artists : matchedArtists });
    }).catch(function(err){
-       console.log('error finding matches');
-        console.log(érr);
         utils.sendErrResponse('Error in finding matches');
    });
 });

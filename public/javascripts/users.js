@@ -1,4 +1,6 @@
 (function() {
+
+    //Post login request for the user
   $(document).on('submit', '#login-form', function(evt) {
       evt.preventDefault();
       $.post(
@@ -13,6 +15,8 @@
       });
   });
 
+    //Post register request for the user
+    //Gives errors if username is already taken
   $(document).on('submit', '#register-form', function(evt) {
       evt.preventDefault();
       var formData = helpers.getFormData(this);
@@ -27,7 +31,6 @@
           '/account',
           formData
       ).done(function(response) {
-		console.log('foobar');
 		if (response.content.created === false)
 		{
 		  $('.error').text('Sorry, that usename is taken. Please choose another one.');
@@ -44,6 +47,7 @@
       });
   });
 
+    //Post a request and logs out the current user
   $(document).on('click', '#logout-link', function(evt) {
       evt.preventDefault();
       $.post(

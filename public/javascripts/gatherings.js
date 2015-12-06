@@ -1,9 +1,15 @@
 (function() {
 
+    /**
+    Brings the user to the page to create a new gathering
+    **/
     $(document).on('click', '#create-gathering-link', function(evt) {
 		window.location = '/gathering';
 	});
     
+    /**
+    Brings the user to the page of the gathering they are currently a host of
+    **/
     $(document).on('click', '#mygathering-link', function(evt) {
 		$.get(
               '/mygathering'
@@ -16,6 +22,7 @@
           });
 	});
 	
+ /*   
 	$(document).on('click', '#mygathering-btn', function(evt) {
 		$.get(
               '/mygathering'
@@ -26,8 +33,9 @@
               var response = $.parseJSON(responseObject.responseText);
               $('.error').text(response.err);
           });
-	});
+	});*/
 
+    //Post to send emails to the emails inputted
     $(document).on('click', '#gathering-invite', function(evt) {
         console.log('hi');
         $.post('/email', {
@@ -40,23 +48,17 @@
         });
     });
 
-	/*$(document).on('click', '#join-btn', function(evt) {
-		window.location = '/joinGathering';
-	});*/
-
-	/*$(document).on('click', '#gatherings-btn', function(evt) {
-		window.location = '/gathering';
-	});*/
-
-
+    //Go back to main page
 	$(document).on('click', '#back-main-btn', function(evt) {
     	window.location='/';
   	});
 
+ /*   //Go to join gathering page
   	$(document).on('click', '#findgathering-btn', function(evt) {
     	window.location='/findgathering';
-  	});
+  	});*/
   
+    //Post to create a new gathering with the key inputted
 	$(document).on('click', '#create-gathering-btn', function(evt) {
 		evt.preventDefault();
         console.log("create gathering here");
@@ -75,7 +77,6 @@
 			}
 			else
 			{
-				
 				if(response.content.keyFree)
 				{
 					alert('Before creating a gathering, pick some songs you like!');
@@ -93,12 +94,15 @@
 		});
 	});
 
+    //Join the gatheirng of the key inputted
 	$(document).on('click', '#joingathering-btn', function(evt) {
 		var key = $("#key").val();
 		window.location = '/gathering/' + key;
 		myGathering = key;
 	});
 
+    //Assumes this is the host (since only host will have this button)
+    //Deletes the gathering
 	$(document).on('click', '#end-gathering-btn', function(evt) {
         $.ajax({
           url: window.location.pathname,
@@ -113,6 +117,7 @@
 		  });
 	  });
 
+    //Opens the modal that shows the members
 	$(document).on('click', '#members-btn', function(evt) {
 		console.log('hi');
         $('#membersModal').modal();
@@ -129,6 +134,7 @@
 		*/
 	});
     
+    //Chooses new songs
     $(document).on('click', '#rechoose-songs-btn', function(evt) {
 		location.reload();
 	});        

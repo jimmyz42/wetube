@@ -1,8 +1,7 @@
-/****Authentication middleware to make sure they’re signed in***
-POST /gathering - create a gathering with key as a form param
+/*POST /gathering - create a gathering with key as a form param
 GET /gathering/{key} - GET the gathering, also join the gathering
 DELETE /gathering/{key} - delete the gathering if host, else remove user from gathering with onbeforeload
-(POST /gathering/boo)*/
+*/
 
 var express = require('express');
 var userModel = require('../model/userModel');
@@ -16,7 +15,6 @@ var spotifyUtils = require('../utils/spotifyUtils');
   Clients which are not logged in will receive a 403 error code.
 */
 var requireAuthentication = function(req, res, next) {
-    console.log('REQUIRING AUTHENTICATION')
     if (!req.session.currentUser) {
         res.render('index', { title: 'WeTube' });
     //    utils.sendErrResponse(res, 403, 'Must be logged in to use this feature.');
@@ -29,7 +27,8 @@ var requireAuthentication = function(req, res, next) {
 // Register the middleware handlers above.
 router.all('*', requireAuthentication);
 
-/* POST create gathering */
+/* POST to create a new gathering in the database
+//@param req.body.key is the key of the new gathering*/
 router.post('/', function(req, res) {
     console.log('inside router post');
     console.log(req.body.key + req.session.currentUser);
@@ -57,45 +56,18 @@ router.get('/', function(req, res) {
     res.render('createGathering');
 });
 
-var addSongs = function(req, songsToAdd){
-    // GET RANDOM SONG
-    gatheringPromise = gatheringModel.get(req.params.key);
-    for (var i=0; i<songsToAdd; i++){
-        gatheringPromise.then(function(gathering) {
-            var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
-            return userModel.getSongs(user);
-        }).then(function(songs) {
-            var song = songs[Math.floor(Math.random()*songs.length)];
-            gatheringModel.pushSong(req.params.key, song);
-        });
-    }    
-// END GET RANDOM SONG
-}
-
 /* GET gathering page, also join. 
-
-If queue is not empty:
-Pop 10 from front of queue (that was the last song played), 
-Push one more onto end of queue. 
-Play the first on the queue. 
-
-If queue is empty:
-Push 10 onto the queue (Let's maintain like 6 or something, so currently playing, next, and 4 upcoming)
-
+Empty the current queue and push 15 new songs onto it
+Render the gathering page, passing in the song ids on the queue, and information about them
 currentSongId is the song id of the first song in the queue
-
 */
 router.get('/:key', function(req, res) {
-    console.log('gathering page');
     gatheringModel.join(req.params.key, req.session.currentUser)
     .then(function(){
-        console.log('1');
         return gatheringModel.maintainSongQueue(req.params.key);
     }).then(function() {
-        console.log('2');
         return gatheringModel.get(req.params.key);
     }).then(function(gathering){
-        console.log('3' + gathering);
         spotifyUtils.getSongsInfo(gathering.songQueue)
         .then(function(songsArray){
             var tracksString = "";
@@ -114,7 +86,9 @@ router.get('/:key', function(req, res) {
     });
 });
 
-/* DELETE gathering, also destroy gathering if host */
+/* DELETE gathering, 
+//If not host, remove the current user from the gathering members
+//If host, also destroy gathering in database */
 router.delete('/:key', function(req, res) {
     gatheringModel.get(req.params.key).then(function(gathering) {
         if(gathering.host === req.session.currentUser) {
@@ -128,8 +102,6 @@ router.delete('/:key', function(req, res) {
         utils.sendErrResponse(res, 500, 'err');
     });
 });
-
-
 
 module.exports = router;
 

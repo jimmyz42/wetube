@@ -1,22 +1,16 @@
+/**
+Javascript file specifically for a gathering page. 
+When a user closes the window, they are no longer part of the gathering
+**/
 
 (function() {
-
-   /* $(document).on('click', '#testframe', function(evt) {
-    	alert('test frame rectangle clicked');
-  	});
-    
-    $("#holderdiv").bind('click', function(evt){
-        alert('holder div clicked') 
-    });
-*/
     window.onbeforeunload  = function(evt) {
         if (!($("#end-gathering-btn").length)){
-            alert('deleting');
+            //This is not a host, so we remove the user from the gathering
              $.ajax({
                 url: window.location.pathname,
                 type: 'DELETE'
             }).done(function(response) {
-                console.log('done deleting gathering');
                 myGathering = undefined;
                 return "You've left the gathering";
             }).fail(function(responseObject) {	

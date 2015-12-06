@@ -7,9 +7,11 @@ var fs = require('fs');
 
 // A list of users, with their favorite songs
 /**
-artistsIDs are the spotify ids of artists they like
-allSongIDs are the spotify ids of songs they like, plus the top 8 track ids
-by artists they like 
+username is a unique identifier for each user (it serves as the _id here)
+password is the hash of the person's password
+songIDs is an array of the spotify ids of songs they like
+artists is an array of artist objects, which have property id (the spotify id of the artist), and 
+    topTracks, which is an array of spotify ids of their top songs
 **/
 var userSchema = mongoose.Schema({
     username: String,
@@ -46,23 +48,15 @@ exports.create = function(username, password) {
 // @param password Password to be checked.
 // @return A promise containing true if they match, or false if not.
 exports.verify = function(username, password) {
-    console.log('inside verify');
-    console.log(username + password);
     return userModel.findOne({
         username: username
     }).exec().then(function(user) {
-        console.log('user' + username);
-        console.log('password' + user.password);
-        console.log('attempted password' + password);
         if(user.password !== password){
-            console.log('passwordmismatch');
             throw 'password mismatch';
         }
         else{
-            console.log('password matches');
             return 'success';
         }
-        
     });
 };
 
@@ -71,9 +65,6 @@ exports.verify = function(username, password) {
 // @param song ID of song to add
 // @return A promise fulfilled when update is complete
 exports.addSong = function(user, song) {
-    console.log('inside addSong');
-    console.log('user' + user);
-    console.log('song' + song);
     return userModel.update({
         username: user
     }, {
@@ -83,12 +74,9 @@ exports.addSong = function(user, song) {
 
 // Add an array of songs for a user, will not add if already present
 // @param user Username of user
-// @param song ID of song to add
+// @param songs IDs of songs to add
 // @return A promise fulfilled when update is complete
 exports.addSongs = function(user, songs) {
-    console.log('inside addSong');
-    console.log('user' + user);
-    console.log('song' + songs);
     return userModel.update({
         username: user
     }, {
@@ -97,13 +85,11 @@ exports.addSongs = function(user, songs) {
 };
 
 
-// Add a artist for a user, will not add if already present
+// Add an artist for a user, will not add if already present
 // @param user Username of user
 // @param artist ID of artist to add
 // @return A promise fulfilled when update is complete
 exports.addArtist = function(user, artistid) {
-    console.log('user' + user);
-    console.log('song' + artist);
     return spotifyUtils.getTopTracksForArtist(artistid).then(function(topTrackIds){
         return userModel.update({
             username: user
@@ -178,10 +164,8 @@ exports.usernameFree = function(uname) {
     return userModel.findOne({
         username: uname
     }).exec().then(function(user) {
-		console.log('found a user');
         if(user)
 		{
-			console.log('taken?');
 			return false;
 		}
 		else

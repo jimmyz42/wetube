@@ -1,5 +1,9 @@
 (function() {
     
+    /**
+    When you click the button to import, send a post request
+    with the playlist ids of all the checked playlists
+    **/
     $(document).on('submit', '#import-playlist-form', function(evt){
         evt.preventDefault();
         var checkedBoxes = $('input[name="playlist"]:checked');
@@ -7,8 +11,6 @@
         for (var i=0; i<checkedBoxes.length; i++){
             checkedValues.push({playlistID:$(checkedBoxes[i]).val(), ownerID:$(checkedBoxes[i]).data('ownerid')});
         }
-        console.log('checked values');
-        console.log(checkedValues);
         alert(checkedValues[0].ownerID + checkedValues[0].playlistID);
         $.post(
             '/import',

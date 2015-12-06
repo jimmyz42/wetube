@@ -2,6 +2,9 @@
 
 (function() {
     
+    //Create the on-click function for an add-song button
+    //@param id the spotify id of the song 
+    //@return a function that posts a request to add the song to the user's liked songs
     var createAddSongFunction = function(id){
         var clickFunction  = function(){
             $.post(
@@ -16,6 +19,9 @@
         return clickFunction;
     };
     
+    //Create the on-click function for an add-artist button
+    //@param id the spotify id of the artist
+    //@return a function that posts a request to add the artist to the user's liked artists
     var createAddArtistFunction = function(id){
         var clickFunction  = function(){
             $.post(
@@ -30,18 +36,15 @@
         return clickFunction;
     };
 	
-	$(document).on('click', '#profile-btn', function(evt) {
+/*	$(document).on('click', '#profile-btn', function(evt) {
 		window.location='/profile';
-	});
-	
-  $(document).on('click', '#back-main-btn', function(evt) {
-    window.location='/';
-  });
+	});*/
 
     $(document).on('click', 'div.profile', function(evt) {
         $('#pictureModal').modal();
     });
 
+    //Upload image to the profile picture
     $(document).on('click', '#uploadSubmit', function(evt) {
         evt.preventDefault();
         var file = $('input[name="file"]')[0].files[0];
@@ -65,6 +68,8 @@
         }
     });
 	
+    //Search for a song using spotify api, and display results with links to song preview, artists, and 
+    //an image of the album art
 	 $(document).on('click', '#search-song-btn', function(evt) {
           evt.preventDefault();
          $("#search-results").empty();
@@ -72,7 +77,6 @@
             if(searchString.length === 0) {
                 $('.error').text('Please enter a song name!');
             }
-            console.log("SEARCH STRING" + searchString);
           $.get(
               '/songs',
               {content:searchString}
@@ -112,6 +116,8 @@
           });
     });
     
+      //Search for an artist using spotify api, and display results with artists and 
+    //an image, and a button to add that artist
      $(document).on('click', '#search-artist-btn', function(evt) {
           evt.preventDefault();
          $("#search-results").empty();
@@ -139,10 +145,6 @@
                                                 click: createAddArtistFunction(matches[index].id)});
             
                     var link = $("<img/>", {src: matches[index].imageUrl, class:"artistImage song-link"});
-                 /*   $("#search-results").append(button);
-                    $("#search-results").append("  " + matches[index].name);
-                    $("#search-results").append(link);
-                    $("#search-results").append("<br>");*/
                     $("#search-results").append(holderdiv);
                     holderdiv.append(link);
                     holderdiv.append(button);
@@ -156,6 +158,7 @@
           });
     });
 
+    //Remove a liked song from the current user's liked list
 	$(document).on('click', '.remove-song', function(evt) {
 	  var song = $(this).parent().data('id');
         console.log(song)
@@ -171,6 +174,7 @@
 		});
 	});
     
+    //Remove a liked artist from the current user's liked list
     $(document).on('click', '.remove-artist', function(evt) {
         var artist = $(this).parent().data('id');
         console.log(artist);

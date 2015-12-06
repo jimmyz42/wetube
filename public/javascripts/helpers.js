@@ -20,15 +20,3 @@ var helpers = (function() {
 	return _helpers;
 
 })();
-
-$(document).on('click', '#testStuff', function(evt) {
-    alert("clicked on test Stuff");
-    $.get('/song', function(response) {
-        alert(response.content.songs);
-        var matches = response.content.songs;
-    /*    for (var index=0; index<matches.length; index++){
-            console.log(matches[index]);
-        };*/
-        console.log(response.content.songInfo);
-	});
-});

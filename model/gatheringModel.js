@@ -4,11 +4,17 @@ var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 var userModel  = require('./userModel');
 
+/**
+key is unique for a gathering, a string by which to get the gathering page
+name is name, to display the gathering by
+users is an array of the usernames of people in the gathering
+host is the username of the person who created the gathering (and has power to end it)
+songQueue is an array of spotify song ids
+**/
 var gatheringSchema = mongoose.Schema({
     key: String,
     name: String,
     users: [String],
-    booLimit: Number,
     host: String,
     songQueue: [String] //song IDs
 });
@@ -25,7 +31,6 @@ exports.create = function(key, host, name) {
         key: key,
         name:name,
         users: [host],
-        booLimit: 2, // TODO change for final
         host: host,
         songQueue: []
     });
@@ -51,15 +56,6 @@ exports.join = function(key, user) {
         $addToSet: { users: user }
     }).exec();
 };
-
-/* HOW TO USE PROMISES
-/*gatheringModel.join(key, user).then(function(){
-    return gatheringModel.leave(key, user);
-}).then(function(){
-    return gatheringModel.get(key);
-}).then(function(gathering){
-    return gathering.key;
-}).then(function(key)*/
 
 // Leave a gathering
 // @param key Key of gathering to leave
@@ -115,7 +111,6 @@ exports.get = function(key) {
 
 //@return A promise of the gathering that the user hosts
 exports.getHostGathering = function(username){
-    console.log('get host gathering for ' + username);
     return gatheringModel.findOne({
         host:username
     }).exec();
@@ -123,13 +118,15 @@ exports.getHostGathering = function(username){
 
 //@return A promise of the gathering that the user is part of
 exports.getGathering = function(username){
-    console.log('get gathering with' + username);
     return gatheringModel.findOne({
         users: {$eq: username}
     }).exec();
 };
 
-//Pushes a random song onto the song queue
+//Pushes a number of random songs onto the song queue
+//@param key key of the gathering
+//@param numSongsToAdd the number of songs to add
+//@return a promise when the update is complete
 var addSongs = function(key, numSongsToAdd){
     // GET RANDOM SONG
     gatheringPromise = exports.get(key);
@@ -139,43 +136,15 @@ var addSongs = function(key, numSongsToAdd){
             return userModel.getSongs(user);
         }).then(function(songs) {
             var song = songs[Math.floor(Math.random()*songs.length)];
-            console.log('pushing song number ' + i);
             exports.pushSong(key, song);
         });
     }
     return gatheringPromise;
 };
 
-/*//If the queue has songs, pops the first song and adds a new random one. 
-//If the queue is empty, adds 6 random songs. 
-//
-exports.maintainSongQueue  = function(key){
-    
-    var gatheringPromise = exports.get(key);
-    return gatheringPromise.then(function(gathering){
-        if (gathering.songQueue.length >0){
-            console.log('popping');
-            exports.popSong(key);
-            return gathering.songQueue.length - 1;
-        };
-        return gathering.songQueue.length;
-    }).then(function(currentQueueLength){
-        promiseArray = [];
-        for (var i=0; i<6-currentQueueLength; i++){
-            promiseArray.push(gatheringPromise.then(function(gathering) {
-                var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
-                return userModel.getSongs(user);
-            }).then(function(songs) {
-                var song = songs[Math.floor(Math.random()*songs.length)];
-                console.log('pushing song number ' + i);
-                exports.pushSong(key, song);
-            }));  
-        }
-        return Promise.all(promiseArray);
-    });
-};*/ 
-
-//Pops any songs currently in the queue, and adds 10 songs 
+//Pops any songs currently in the queue, and adds 20 songs 
+//@param key of the gathering
+//@return promise when the update is complete
 exports.maintainSongQueue  = function(key){
     var gatheringPromise = exports.get(key);
     return gatheringPromise.then(function(){
@@ -185,20 +154,17 @@ exports.maintainSongQueue  = function(key){
         songQueue: [] //remove first
         }).exec()
     }).then(function(){
-        console.log('cleared queue');
         promiseArray = [];
         for (var i=0; i<20; i++){
             promiseArray.push(gatheringPromise.then(function(gathering) {
-                console.log('gatheirng obj' + gathering);
                 var user = gathering.users[Math.floor(Math.random()*gathering.users.length)];
                 return userModel.getUser(user);
             }).then(function(user) {
                 /**
                 User has A liked artists and S liked songs. 
-                Artists count twice as much as songs, so we're more likely to choose a song by artist, 
+                Artists count three times as much as songs, so we're more likely to choose a song by artist, 
                 and a single track
                 **/
-                console.log('user obj' + user);
                 var songs = user.songIDs;
                 var artists = user.artists;
                 var rand = Math.floor(Math.random() * (artists.length*3+songs.length))
@@ -218,6 +184,9 @@ exports.maintainSongQueue  = function(key){
     });
 };
 
+//Tells if the key is available
+//@param k the key
+//@return a promise of if the key is available or not
 exports.keyFree = function(k) {
     return gatheringModel.findOne({
         key: k

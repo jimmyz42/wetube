@@ -6,11 +6,14 @@ var spotifyUtils = (function () {
 
     var _spotifyUtils = {};
     
+    //Permissions we need to access user's Spotify playlists
     var scopes = ['user-read-private', 'playlist-read-private', 'playlist-modify-public', 
              'playlist-modify-private'];
     
     var state = 'state';
 
+    //create a new object with this info
+    //TODO: CHANGE REDIRECT URI TO DEPLOYED VERSION
     var spotifyApi = new SpotifyWebApi({
       redirectUri : 'http://localhost:3000/callback', 
         clientId : '5936eea86d9f4634b00534b79dde8b4c',
@@ -64,22 +67,9 @@ var spotifyUtils = (function () {
     
     /*
     Searches for songs whose names match the searchString. 
-    Returns an array of potential matches. Each potential match is a javascript object with 
-    properties name, artist, popularity, previewUrl, and id. 
+    Returns a promise of an array of potential matches. Each potential match is a javascript object with 
+    properties name, artist, popularity, previewUrl, albumArtUrl, and id. 
     Currently returns the top 20 matches. We can trim this down if wanted. Also sorts by popularity.
-    
-    Usage: 
-    
-    In the router--
-    spotifyUtils.sendMatches(res, "Radioactive");
-    
-    In the frontend javascript--
-    $.get('...', function(response) {
-        var matches = response.content.songs;
-        for (var index=0; index<matches.length; index++){
-            console.log(matches[index]);
-        };
-	});
     */
      _spotifyUtils.getTrackMatches = function(searchString){
         return spotifyApi.searchTracks(searchString)
@@ -103,22 +93,9 @@ var spotifyUtils = (function () {
     
      /*
     Searches for artists whose names match the searchString. 
-    Returns an array of potential matches. Each potential match is a javascript object with 
+    Returns a promise of an array of potential matches. Each potential match is a javascript object with 
     properties name, popularity, and id. 
     Currently returns the top 20 matches. We can trim this down if wanted. Also sorts by popularity.
-    
-    Usage: 
-    
-    In the router--
-    spotifyUtils.sendArtistMatches(res, "Imagine Dragons");
-    
-    In the frontend javascript--
-    $.get('...', function(response) {
-        var matches = response.content.songs;
-        for (var index=0; index<matches.length; index++){
-            console.log(matches[index]);
-        };
-	});
     */
     _spotifyUtils.getArtistMatches = function(searchString){
         return spotifyApi.searchArtists(searchString, {limit: 10, offset: 0})
@@ -142,21 +119,8 @@ var spotifyUtils = (function () {
         });
     };
     
-    /*
-    Precondition: songID is a valid spotify song ID
-    Returns a promise of an object with properties title, popularity, previewUrl, id, artists, albumArtUrl
-    */
-    _spotifyUtils.getSongInfo = function(songID){
-         //   console.log('getting song info');
-            return spotifyApi.getTrack(songID)
-            .then(function(data){
-                var track=data.body;
-                return extractTrackInfo(track);
-            });
-    };
-    
-    /*
-    songIDs is a valid array of spotify song IDs
+/*
+    songIDs is an array of valid spotify song IDs
     Returns a promise of an array of objects with properties title, popularity, previewUrl, id, artists, albumArtUrl
     */
     _spotifyUtils.getSongsInfo = function(songIDs){
@@ -165,9 +129,8 @@ var spotifyUtils = (function () {
                 resolve([]);
             });
         }
-        console.log('getting tracks');
+        //We can only do at most fifty tracks in each call
         var getFiftyTracks = function(songChunkIDs){
-            
             return spotifyApi.getTracks(songChunkIDs)
             .then(function(data){
                 var tracks=data.body.tracks;
@@ -190,16 +153,10 @@ var spotifyUtils = (function () {
         
     };
     
-    /**artistObj is an object with property id and property topTracks **/
-    _spotifyUtils.getArtistInfo = function(artistObj){
-        var artistID = artistObj.id;
-        return spotifyApi.getArtist(artistID)
-        .then(function(data){
-            var artist=data.body;
-            return extractArtistInfo(artist);
-        });
-    };
-    
+    /*
+    songIDs is an array of artistObjs, which have property id, which is a valid spotify artist id
+    Returns a promise of an array of objects with properties name, popularity, imageUrl, id, artists
+    */
     _spotifyUtils.getArtistsInfo = function(artistOjbs){
         if (artistOjbs.length ===0){
             return new Promise(function(resolve, reject) {
@@ -208,6 +165,7 @@ var spotifyUtils = (function () {
         }
         var artistIDs = artistOjbs.map(function(artistObj){
                                       return artistObj.id});
+        //We can only do 50 artists per one call to the api
         var getFiftyArtists = function(){
             return spotifyApi.getArtists(artistIDs)
             .then(function(data){
@@ -220,7 +178,6 @@ var spotifyUtils = (function () {
                     return artistInfos;
             });
         };
-        
         var artistObjsSplit = [];
         for (var i=0; i<Math.ceil(artistOjbs.length/50); i++){
             artistObjsSplit.push(artistOjbs.splice(0,50));
@@ -251,21 +208,22 @@ var spotifyUtils = (function () {
         });
     };
     
+    /**
+    Gets the URL to send the user to, to ask for permissions
+    **/
     _spotifyUtils.getAuthorizeURL = function(){
         return spotifyApi.createAuthorizeURL(scopes, state);
     }
     
     /*
-    Returns a promise of when all the setting of stuff is complete
+    Sets information for authorization flow
+    Sets a timer so that before the access token expires, it gets refreshed
+    Returns a promise of when all the setting is complete
     */
     _spotifyUtils.setAuthorizeInfo = function(code, state){
         /* Get the access token! */
         return spotifyApi.authorizationCodeGrant(code)
         .then(function(data) {
-            console.log('The token expires in ' + data.body['expires_in']);
-            console.log('The access token is ' + data.body['access_token']);
-            console.log('The refresh token is ' + data.body['refresh_token']);
-      
             // Set the access token on the API object to use it in later calls
             spotifyApi.setAccessToken(data.body['access_token']);
             spotifyApi.setRefreshToken(data.body['refresh_token']);
@@ -280,19 +238,17 @@ var spotifyUtils = (function () {
                     console.log('Could not refresh the token!', err.message);
                   });
             }, 4*tokenExpirationEpoch/5);
-      
         });
     };
     
     /**
+    Get information about the current user's playlists
     Returns a promise of an array, where each element is a "playlist object"
     A playlist object has properties as follows:
         {name: name of Playlist, 
          id: id of Playlist, 
          ownerid: id of the owner}
     **/
-    
-    /**For now, is just {name, id} **/
     _spotifyUtils.getPlaylistInfo = function(){
           // Get the authenticated user
         return spotifyApi.getMe()
@@ -315,14 +271,12 @@ var spotifyUtils = (function () {
     };
     
     /**
+    Gets the tracks of a playlist
     Returns a promise of an array, where each element is a "playlist object"
     A playlist object has properties as follows:
         {name: name of Playlist, 
          id: id of Playlist, 
-         tracks: [{id: 'trackid', title:'title', artists:'artists'}]}
     **/
-    
-    /**For now, is just {name, id} **/
     _spotifyUtils.getPlaylistTracks = function(playlistObj){
         // Get a playlist
         console.log('inside get playlistTracks, playlistObj is');
@@ -343,7 +297,6 @@ var spotifyUtils = (function () {
             return trackIDs;
         });
     };
-    
     
     Object.freeze(_spotifyUtils);
     return _spotifyUtils;
