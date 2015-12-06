@@ -9,16 +9,8 @@
     <body id="gathering-body">
         <% include partials/header %>
         <h1><%=gatheringName %></h1>
-<!--
-        <img id="defaultGathering" src="/images/DefaultGathering.jpg" height = "150"/> 
--->
         <p>Host : <%=host %></p>
         <input type="hidden" name="key" value="<%=key%>" />
-<!--
-        <p>Invite more friends! :) <br>Send an invitation link to their email. </p>
-        <input type="text" name="invitee"/>
-        <button class="btn btn-default" type="button" id="gathering-invite">Invite!</button>
--->
 		<p>Key : <%=key %></p><br>
         <div class="error"></div>
         <div id="queuedSongs">
@@ -46,12 +38,14 @@
                         <h2>Members</h2>
                     </div>
                     <div class="modal-body">
+                      <table>
                         <% for(var i=0; i<members.length; i++) { %>
-                            <p>
-                                <img src="/images/user/<%=currentUser%>.jpg" width="60" height="60">
-                                <%= members[i] %>
-                            </p>
+                            <tr>
+                                <td><img src="/images/user/<%=currentUser%>.jpg" width="60" height="60"></td>
+                                <td><%= members[i] %></td>
+                            </tr>
                         <% } %>
+                      </table>
                     </div>
                     <div class="modal-footer">
                         <p>Invite more friends! :) <br>Send an invitation link to their email. </p>

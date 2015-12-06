@@ -86,11 +86,12 @@
                 $("#search-results").append("<p>Sorry, no matches found!</p>");
             }
             else{
-                $("#search-results").append("<h3>Choose which song you want:</h3")
-                $("#search-results").append("<p>(Click on the link to hear a preview.)<p>");
+                var search = $('#search-results');
+                search.append("<h3>Choose which song you want:</h3")
+                search.append("<p>(Click on the image to hear a preview.)<p>");
+                var table = $('<table/>', { class: 'search' });
                 for (var index=0; index<Math.min(matches.length, 8); index++){
                     console.log(matches[index]);
-                    var holderdiv = $("<div/>", {class:"search-results-div"});
                     var button = $("<button/>", {id: matches[index].id, 
                                                  class:'add-button btn btn-default',
                                                 text: 'Add Song', 
@@ -98,16 +99,23 @@
             
                     var link = $("<a/>", {href: matches[index].previewUrl,
                                           class:"song-link",
-                                          target:"_blank",
-                                         text: matches[index].title});
+                                          target:"_blank"});
                     var img = $("<img/>", {src: matches[index].albumArtUrl, class:"artistImage song-link"});
-                    $("#search-results").append(holderdiv);  
-                    holderdiv.append(img);
-                    holderdiv.append(button);
-                    holderdiv.append(link);
-                    holderdiv.append("Artist(s): " + matches[index].artists);
-                    $("#search-results").append("<br>");
-                };
+                    var row = $('<tr></tr>');
+                    link.append(img);
+                    var col1 = $('<td></td>');
+                    col1.append(link);
+                    var col2 = $('<td/>', { class: 'middle' });
+                    col2.append("Song: " + matches[index].title + "<br>");
+                    col2.append("Artist(s): " + matches[index].artists);
+                    var col3 = $('<td></td>');
+                    col3.append(button);
+                    row.append(col1);
+                    row.append(col2);
+                    row.append(col3);
+                    table.append(row);
+                }
+                search.append(table);
             }
             $('#searchModal').modal();
           }).fail(function(responseObject) {
@@ -136,20 +144,28 @@
             }
             else{
                 $("#search-results").append("<h3>Choose which artist you want: </h3>");
+                var table = $('<table/>', { class: 'search' });
                 for (var index=0; index<Math.min(matches.length, 5); index++){
                     console.log(matches[index]);
-                    var holderdiv = $("<div/>", {class:"search-results-div"});
                     var button = $("<button/>", {id: matches[index].id, 
                                                 text: 'Add Artist',
                                                  class:'add-button btn btn-default',
                                                 click: createAddArtistFunction(matches[index].id)});
             
                     var link = $("<img/>", {src: matches[index].imageUrl, class:"artistImage song-link"});
-                    $("#search-results").append(holderdiv);
-                    holderdiv.append(link);
-                    holderdiv.append(button);
-                    holderdiv.append("  " + matches[index].name);
+                    var row = $('<tr></tr>');
+                    var col1 = $('<td></td>');
+                    col1.append(link);
+                    var col2 = $('<td/>', { class: 'middle' });
+                    col2.append("  " + matches[index].name);
+                    var col3 = $('<td></td>');
+                    col3.append(button);
+                    row.append(col1);
+                    row.append(col2);
+                    row.append(col3);
+                    table.append(row);
                 }
+                $('#search-results').append(table);
             }
             $('#searchModal').modal();
           }).fail(function(responseObject) {

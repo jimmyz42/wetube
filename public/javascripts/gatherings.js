@@ -119,7 +119,6 @@
 
     //Opens the modal that shows the members
 	$(document).on('click', '#members-btn', function(evt) {
-		console.log('hi');
         $('#membersModal').modal();
         //window.location = '/members';
 		/*

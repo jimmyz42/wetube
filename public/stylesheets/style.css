@@ -20,10 +20,21 @@ body {
 
 table {
   table-layout: fixed;
+  width: 100%;
 }
 
 td {
   width: 50%;
+}
+
+table.search td {
+  width: 20%;
+  position: relative;
+}
+
+table.search td.middle {
+  width: 60%;
+  text-align: center;
 }
 
 a {
@@ -90,11 +101,6 @@ button:not(.add-button){
 
 .liked{
     position: relative
-}
-
-.search-results-div{
-    position: relative;
-    align:left;
 }
 
 #search-results{
