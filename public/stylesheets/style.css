@@ -59,3 +59,8 @@ button:not(.add-button){
     top:30%;
 }
 
+#logout-link{
+  float:right;
+  height: 45px;
+  width: 120px;
+}
