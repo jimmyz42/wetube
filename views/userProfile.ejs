@@ -16,10 +16,27 @@
         <span class="profile">Change Picture</span>
       </div>
     </div>
-    <form action="/upload" method="post" enctype="multipart/form-data">
-      <input type="file" name="file">
-      <input type="submit" name="submit" value="Upload!">
-    </form>
+    <br>
+    <div id="pictureModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">      
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">X</button>
+            <h2>Upload a New Profile Picture</h2> 
+          </div>
+          <div class="modal-body">
+            <p>Preview:</p>
+            <img id="profilePreview" src="/images/user/<%=currentUser%>.jpg" width="200" height="200">
+          </div>
+          <div class="modal-footer">
+            <form id="uploadForm" enctype="multipart/form-data">
+              <input type="file" name="file">
+              <input type="submit" id="uploadSubmit" value="Upload!">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="error"></div>
     <div id="searchModal" class="modal fade" role="dialog">
       <div class="modal-dialog">

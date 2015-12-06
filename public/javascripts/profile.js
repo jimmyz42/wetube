@@ -37,7 +37,33 @@
   $(document).on('click', '#back-main-btn', function(evt) {
     window.location='/';
   });
-  
+
+    $(document).on('click', 'div.profile', function(evt) {
+        $('#pictureModal').modal();
+    });
+
+    $(document).on('click', '#uploadSubmit', function(evt) {
+        evt.preventDefault();
+        var file = $('input[name="file"]')[0].files[0];
+        var formdata = new FormData();
+        if(file.type.startsWith('image')) {
+            formdata.append('file', file, file.name);
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                data: formdata,
+                processData: false,
+                contentType: false
+            }).done(function(data) {
+                // Reload preview and actual profile images
+                var newSrc = $('#profilePreview').attr('src').split('?')[0]+'?time='+(new Date()).getTime();
+                $('#profilePreview').attr('src', newSrc);
+                $('img.profile').attr('src', newSrc);
+            }).fail(function(err) {
+                //display error
+            });
+        }
+    });
 	
 	 $(document).on('click', '#search-song-btn', function(evt) {
           evt.preventDefault();
