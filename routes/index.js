@@ -150,8 +150,12 @@ router.post('/account', function(req, res) {
 router.get('/profile', function(req, res) {
     console.log('get profile');
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
+        console.log('songids length');
+        console.log(songids.length);
         spotifyUtils.getSongsInfo(songids)
             .then(function(songsArray) {
+                console.log('songsarray length');
+                console.log(songsArray.length);
                 userModel.getArtists(req.session.currentUser)
                 .then(function(artists){
                 spotifyUtils.getArtistsInfo(artists)

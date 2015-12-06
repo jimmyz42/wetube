@@ -38,7 +38,8 @@ exports.create = function(username, password) {
         return userModel.create({
             username: username,
             password: password,
-            songIDs: []
+            songIDs: [], 
+            artists:[]
         });
     });
 };

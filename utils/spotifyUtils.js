@@ -144,7 +144,7 @@ var spotifyUtils = (function () {
         }
         var songIdsSplit = [];
         for (var i=0; i<Math.ceil(songIDs.length/50); i++){
-            songIdsSplit.push(songIDs.splice(0,50));
+            songIdsSplit.push(songIDs.slice(50*i,50*i+50));
         }
         var promiseArray = songIdsSplit.map(getFiftyTracks);
         return Promise.reduce(promiseArray, function(total, tracks) {
@@ -180,7 +180,7 @@ var spotifyUtils = (function () {
         };
         var artistObjsSplit = [];
         for (var i=0; i<Math.ceil(artistOjbs.length/50); i++){
-            artistObjsSplit.push(artistOjbs.splice(0,50));
+            artistObjsSplit.push(artistOjbs.slice(50*i,50*i+50));
         }
         var promiseArray = artistObjsSplit.map(getFiftyArtists);
         return Promise.reduce(promiseArray, function(total, artists) {

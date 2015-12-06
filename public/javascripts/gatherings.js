@@ -97,8 +97,8 @@
     //Join the gatheirng of the key inputted
 	$(document).on('click', '#joingathering-btn', function(evt) {
 		var key = $("#key").val();
+        myGathering = key;
 		window.location = '/gathering/' + key;
-		myGathering = key;
 	});
 
     //Assumes this is the host (since only host will have this button)
