@@ -1,15 +1,43 @@
 <!DOCTYPE html>
 <html>
-<div class="content-box">
       <div align = "center">
+<div class="content-box" style="width:70%">
 
    <% include partials/head %>
    <body>
       <% include partials/header %>
-      <h1><%=currentUser %>'s profile</h1>
+      <br><br>
+      <h1><%=currentUser %>'s profile</h1> 
 <!--
       <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
 -->
+    <div class="profile">
+      <img class="profile" src="/images/user/<%=currentUser%>.jpg">
+      <div class="outer">
+        <span class="profile">Change Picture</span>
+      </div>
+    </div>
+    <br>
+    <div id="pictureModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">      
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">X</button>
+            <h2>Upload a New Profile Picture</h2> 
+          </div>
+          <div class="modal-body">
+            <p>Preview:</p>
+            <img id="profilePreview" src="/images/user/<%=currentUser%>.jpg" width="200" height="200">
+          </div>
+          <div class="modal-footer">
+            <form id="uploadForm" enctype="multipart/form-data">
+              <input type="file" name="file">
+              <input type="submit" id="uploadSubmit" value="Upload!">
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
       <div class="error"></div>
     <div id="searchModal" class="modal fade" role="dialog">
       <div class="modal-dialog">
@@ -41,7 +69,7 @@
                 <br>
                 <div> <button id="search-artist-btn" class="btn btn-default">Search for Artist</button></div>
             </td>
-          </tr>
+          </tr><br><br>
 <!--
             <tr>
                 <td><div id="search-results"></div></td>
@@ -101,4 +129,5 @@
            <button class="btn btn-default" onclick="location.href='<%=authlink%>'" id="spotify-auth">Import tracks from my Spotify playlists</button> </div>
    </body>
  </div>
+</div>
 </html>

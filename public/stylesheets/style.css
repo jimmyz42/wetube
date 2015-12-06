@@ -41,6 +41,44 @@ img.artistImage {
     vertical-align: top;
 }
 
+div.profile {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+}
+
+div.outer {
+    background: rgba(255, 255, 255, 0.5);
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    border-radius: 100px;
+}
+
+img.profile {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    box-shadow: 3px 3px 5px #666666;
+}
+
+span.profile {
+    vertical-align: middle;
+    text-align: center;
+    font-size: 20pt;
+    display: table-cell;
+    position: absolute;
+    left: 20px;
+    top: 60px;
+}
+
+div.outer:hover {
+    opacity: 1;
+}
 
 button:not(.add-button){
     margin:2%;
@@ -74,3 +112,8 @@ button:not(.add-button){
     top:30%;
 }
 
+#logout-link{
+  float:right;
+  height: 45px;
+  width: 120px;
+}

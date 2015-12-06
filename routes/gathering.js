@@ -33,25 +33,28 @@ router.all('*', requireAuthentication);
 router.post('/', function(req, res) {
     console.log('inside router post');
     console.log(req.body.key + req.session.currentUser);
-	userModel.getSongs(req.session.currentUser).then(function(songIDs){
-	created = false;
-	if(songIDs.length > 0)
+	gatheringModel.keyFree(req.body.key).then(function(isFree)
 	{
-		console.log("SONG IDS LENGTH" + songIDs.length);
-		gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
-		created = true;
-	}
-	console.log(created);
-    console.log('created thing, about to send response');
-    utils.sendSuccessResponse(res, {key: req.body.key, created: created});
+		userModel.getSongs(req.session.currentUser).then(function(songIDs){
+		created = false;
+		if(isFree)
+		{
+			if(songIDs.length > 0)
+			{
+				console.log("SONG IDS LENGTH" + songIDs.length);
+				gatheringModel.create(req.body.key, req.session.currentUser, req.body.name);
+				created = true;
+			}
+		}
+		console.log('created thing, about to send response');
+		utils.sendSuccessResponse(res, {key: req.body.key, created: created, keyFree: isFree});
+		});
 	});
 });
 
 /* GET gathering creation page */
 router.get('/', function(req, res) {
-    var key = (Math.random()*1e32).toString(36);
-    console.log("key" + key + "end of key");
-    res.render('createGathering', { key: key });
+    res.render('createGathering');
 });
 
 var addSongs = function(req, songsToAdd){

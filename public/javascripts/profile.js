@@ -37,12 +37,41 @@
   $(document).on('click', '#back-main-btn', function(evt) {
     window.location='/';
   });
-  
+
+    $(document).on('click', 'div.profile', function(evt) {
+        $('#pictureModal').modal();
+    });
+
+    $(document).on('click', '#uploadSubmit', function(evt) {
+        evt.preventDefault();
+        var file = $('input[name="file"]')[0].files[0];
+        var formdata = new FormData();
+        if(file.type.startsWith('image')) {
+            formdata.append('file', file, file.name);
+            $.ajax({
+                url: '/upload',
+                type: 'POST',
+                data: formdata,
+                processData: false,
+                contentType: false
+            }).done(function(data) {
+                // Reload preview and actual profile images
+                var newSrc = $('#profilePreview').attr('src').split('?')[0]+'?time='+(new Date()).getTime();
+                $('#profilePreview').attr('src', newSrc);
+                $('img.profile').attr('src', newSrc);
+            }).fail(function(err) {
+                //display error
+            });
+        }
+    });
 	
 	 $(document).on('click', '#search-song-btn', function(evt) {
           evt.preventDefault();
          $("#search-results").empty();
             searchString = $("#search-song-input").val();
+            if(searchString.length === 0) {
+                $('.error').text('Please enter a song name!');
+            }
             console.log("SEARCH STRING" + searchString);
           $.get(
               '/songs',
@@ -87,6 +116,9 @@
           evt.preventDefault();
          $("#search-results").empty();
             searchString = $("#search-artist-input").val();
+            if(searchString.length === 0) {
+                $('.error').text('Please enter an artist name!');
+            }
             console.log("SEARCH STRING" + searchString);
           $.get(
               '/artists',

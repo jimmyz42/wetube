@@ -218,6 +218,20 @@ exports.maintainSongQueue  = function(key){
     });
 };
 
+exports.keyFree = function(k) {
+    return gatheringModel.findOne({
+        key: k
+    }).exec().then(function(key) {
+        if(key)
+		{
+			return false;
+		}
+		else
+		{	
+			return true;
+		}
+    });
+};
 
 
 
