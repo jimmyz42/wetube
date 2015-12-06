@@ -16,6 +16,7 @@ var utils = require('../utils/utils');
 var Promise = require('bluebird');
 var sendgrid = require('sendgrid')('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');
 var multer = require('multer');
+var Hashes = require('jshashes');
 
 //var upload = multer({ dest: __dirname+'/../public/images/user/' });
 var storage = multer.diskStorage({
@@ -92,7 +93,9 @@ router.post('/email', function(req, res) { //change to post
 /* POST login 
 Checks that password is correct, and logs in the current user*/
 router.post('/login', function(req, res) {
-    userModel.verify(req.body.username, req.body.password)
+	var salt = new Hashes.SHA1().b64("");
+	var hashedPassword = new Hashes.SHA1().b64(req.body.password.concat(salt));
+    userModel.verify(req.body.username, hashedPassword)
     .then(function() {
         req.session.currentUser = req.body.username;
         utils.sendSuccessResponse(res, { user : req.body.username });
@@ -123,7 +126,9 @@ router.post('/account', function(req, res) {
 		if (free)
 		{
 			console.log("free equals" + free);
-			p1 = userModel.create(req.body.username, req.body.password);
+			var salt = new Hashes.SHA1().b64("");
+			var hashedPassword = new Hashes.SHA1().b64(req.body.password.concat(salt));
+			p1 = userModel.create(req.body.username, hashedPassword);
 			p2 = p1.then(function() {
 				console.log("and then");
 				req.session.currentUser = req.body.username;
