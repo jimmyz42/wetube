@@ -3,6 +3,7 @@
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 var spotifyUtils = require('../utils/spotifyUtils');
+var fs = require('fs');
 
 // A list of users, with their favorite songs
 /**
@@ -30,6 +31,8 @@ exports.create = function(username, password) {
         if(users.length > 0) throw 'username taken';
         else return 'okay';
     }).then(function() {
+        fs.createReadStream(__dirname+'/../public/images/DefaultProfile.jpg')
+            .pipe(fs.createWriteStream(__dirname+'/../public/images/user/'+username+'.jpg'));        
         return userModel.create({
             username: username,
             password: password,

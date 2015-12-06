@@ -47,7 +47,10 @@
                     </div>
                     <div class="modal-body">
                         <% for(var i=0; i<members.length; i++) { %>
-                            <p><%= members[i] %></p>
+                            <p>
+                                <img src="/images/user/<%=currentUser%>.jpg" width="60" height="60">
+                                <%= members[i] %>
+                            </p>
                         <% } %>
                     </div>
                     <div class="modal-footer">
