@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
-<div id="content-box">
       <div align = "center">
+<div class="content-box" style="width:70%">
 
    <% include partials/head %>
    <body>
       <% include partials/header %>
-      <h1><%=currentUser %>'s profile</h1>
+      <br><br>
+      <h1><%=currentUser %>'s profile</h1> 
 <!--
       <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
 -->
@@ -54,7 +55,6 @@
         </div>
       </div>
     </div>
-       <div class="content-box">
         <table id="searchtable">
             <tr>
             <td>
@@ -69,7 +69,7 @@
                 <br>
                 <div> <button id="search-artist-btn" class="btn btn-default">Search for Artist</button></div>
             </td>
-          </tr>
+          </tr><br><br>
 <!--
             <tr>
                 <td><div id="search-results"></div></td>
@@ -85,7 +85,7 @@
             <td>
                <div id="mySongs">
                   <% if(songs.length > 0){ %>
-                  <ol>
+                  <ol style="height: 500px; overflow: auto">
                      <% for(var i=0; i<songs.length; i++) {%>
                      <li data-id="<%=songs[i].id%>">
                         <div class="liked" data-id="<%=songs[i].id%>">
@@ -106,7 +106,7 @@
             <td>
                <div id="myArtists">
                   <% if(artists.length > 0){ %>
-                  <ol>
+                  <ol style="height: 500px; overflow: auto">
                      <% for(var i=0; i<artists.length; i++) {%>
                      <li>
                      <div class="liked" data-id="<%=artists[i].id%>">
@@ -125,8 +125,9 @@
             </td>
          </tr>
       </table>
-     <div> <button class="btn btn-default" id="back-main-btn">Back to Main Page</button></div>
-       </div>
+     <div> <button class="btn btn-default" id="back-main-btn">Back to Main Page</button>
+           <button class="btn btn-default" onclick="location.href='<%=authlink%>'" id="spotify-auth">Import tracks from my Spotify playlists</button> </div>
    </body>
  </div>
+</div>
 </html>

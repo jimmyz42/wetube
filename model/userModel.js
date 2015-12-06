@@ -81,6 +81,22 @@ exports.addSong = function(user, song) {
     }).exec();
 };
 
+// Add an array of songs for a user, will not add if already present
+// @param user Username of user
+// @param song ID of song to add
+// @return A promise fulfilled when update is complete
+exports.addSongs = function(user, songs) {
+    console.log('inside addSong');
+    console.log('user' + user);
+    console.log('song' + songs);
+    return userModel.update({
+        username: user
+    }, {
+        $addToSet: { songIDs: { $each: songs } } 
+    }).exec();
+};
+
+
 // Add a artist for a user, will not add if already present
 // @param user Username of user
 // @param artist ID of artist to add

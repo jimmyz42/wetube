@@ -29,7 +29,6 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-
 /*
   Require authentication on ALL access to /gathering/*
   Clients which are not logged in will receive a 403 error code.
@@ -142,19 +141,57 @@ router.post('/account', function(req, res) {
 
 /* GET profile page. */
 router.get('/profile', function(req, res) {
-
+    console.log('get profile');
     userModel.getSongs(req.session.currentUser).then(function(songids) { // alice don't delete me
-        var promiseArray = songids.map(spotifyUtils.getSongInfo);
-        Promise.all(promiseArray).then(function(songsArray) {
-            userModel.getArtists(req.session.currentUser).then(function(artists){
-                var artistPromiseArray = artists.map(spotifyUtils.getArtistInfo);
-                Promise.all(artistPromiseArray).then(function(artistsArray){
+        console.log(songids);
+        spotifyUtils.getSongsInfo(songids)
+            .then(function(songsArray) {
+                console.log(songsArray);
+                userModel.getArtists(req.session.currentUser)
+                .then(function(artists){
+                spotifyUtils.getArtistsInfo(artists)
+                .then(function(artistsArray){
                     res.render('userProfile', { currentUser: req.session.currentUser, 
                                                artists:artistsArray,
+                                               authlink: spotifyUtils.getAuthorizeURL(),
                                                songs:songsArray });
                 })
             })
-        });
+        }); 
+    });
+});
+
+/*Called after the user authenticates themselves with spotify
+Sets all the necessary authentication parameters, then redirects to 
+appropriate page */
+router.get('/callback', function(req, res){
+    var code  = req.query.code; // Read the authorization code from the query parameters
+    var state = req.query.state;
+    spotifyUtils.setAuthorizeInfo(code, state).then(function(){
+        res.redirect('/import');
+    });
+});
+    
+router.get('/import', function(req, res){
+    spotifyUtils.getPlaylistInfo().then(function(myPlaylists){
+          res.render('importplaylist', {playlists:myPlaylists});
+    });
+});
+
+
+router.post('/import', function(req, res){
+    var playlistObjs = JSON.parse(req.body.content);
+    console.log('post import content req');
+    console.log(playlistObjs);
+    var promiseArray = playlistObjs.map(spotifyUtils.getPlaylistTracks);
+    Promise.reduce(promiseArray, function(total, tracks) {
+        return total.concat(tracks);
+    }, []).then(function(allTracks) {
+        console.log('allTracks');
+        console.log(allTracks);
+        return userModel.addSongs(req.session.currentUser, allTracks);
+    }).then(function(){
+        utils.sendSuccessResponse(res, "success");
     });
 });
 
@@ -178,6 +215,7 @@ router.get('/mygathering', function(req, res){
     });
 });
 
+/*Get members page*/
 router.get('/members', function(req, res){
    gatheringModel.getGathering(req.session.currentUser).then(function(gathering){
 		if(gathering)
@@ -194,6 +232,7 @@ router.get('/members', function(req, res){
 	});	
 });
 
+/*Get find gathering page */
 router.get('/findgathering', function(req, res){
     res.render('joinGathering', {});
 });

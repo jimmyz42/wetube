@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<div id="content-box">
+      <div align = "center">
+
+   <% include partials/head %>
+   <body>
+       
+      <% include partials/header %>
+      <div class="content-box">
+      <h1>Import from Spotify playlists</h1>
+<!--
+      <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
+-->
+      <div class="error"></div>
+
+        <form id='import-playlist-form'>
+            <% for(var i=0; i<playlists.length; i++) {%>
+                <input type="checkbox" name="playlist" data-ownerid=<%=playlists[i].ownerid%> value=       <%=playlists[i].id%>><%=playlists[i].name%><br>
+            <% } %>
+          <input type="submit" value="Import">
+        </form>
+        
+       </div>
+   </body>
+ </div>
+</html>
