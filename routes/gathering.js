@@ -69,19 +69,29 @@ router.get('/:key', function(req, res) {
             console.log('KEY DOES NOT EXIST');
             res.render('error', {error:'Gathering does not exist'});
         }
-    });
-    gatheringModel.join(req.params.key, req.session.currentUser)
-    .then(function(){
+        else{
+            return;
+        }
+    }).then(function(){
+        return gatheringModel.join(req.params.key, req.session.currentUser)
+    }).then(function(){
         return gatheringModel.maintainSongQueue(req.params.key);
     }).then(function() {
         return gatheringModel.get(req.params.key);
     }).then(function(gathering){
         spotifyUtils.getSongsInfo(gathering.songQueue)
         .then(function(songsArray){
+            console.log('gathering');
+            console.log(gathering)
+            console.log('gathering.songQueue');
+            console.log(gathering.songQueue);
+            console.log(gathering.songQueue[0]);
             var tracksString = "";
             for (var i=0; i<gathering.songQueue.length; i++){
                 tracksString = tracksString + gathering.songQueue[i] + ",";
             }
+            
+            console.log('tracksstring');
             console.log(tracksString);
             res.render('gathering', {gatheringName:gathering.name, 
                                                  host:gathering.host, members:gathering.users, key:req.params.key,
