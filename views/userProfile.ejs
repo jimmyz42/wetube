@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
-<div class="content-box">
       <div align = "center">
+<div class="content-box" style="width:60%">
 
    <% include partials/head %>
    <body>
       <% include partials/header %>
-      <h1><%=currentUser %>'s profile</h1>
+      <br><br>
+      <h1><%=currentUser %>'s profile</h1> 
 <!--
       <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
 -->
@@ -41,7 +42,7 @@
                 <br>
                 <div> <button id="search-artist-btn" class="btn btn-default">Search for Artist</button></div>
             </td>
-          </tr>
+          </tr><br><br>
 <!--
             <tr>
                 <td><div id="search-results"></div></td>
@@ -101,4 +102,5 @@
            <button class="btn btn-default" onclick="location.href='<%=authlink%>'" id="spotify-auth">Import tracks from my Spotify playlists</button> </div>
    </body>
  </div>
+</div>
 </html>
