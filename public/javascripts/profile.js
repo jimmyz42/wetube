@@ -72,6 +72,7 @@
 	 $(document).on('submit', '#search-song-form', function(evt) {
           evt.preventDefault();
          $('#song-error').text('');
+         $('#artist-error').text('');
          $("#search-results").empty();
          $('#search-artist-input').val('');
             searchString = $("#search-song-input").val();
@@ -132,6 +133,7 @@
             evt.preventDefault();
             $("#search-results").empty();
             $('#artist-error').text('');
+            $("#song-error").text('');
             $('#search-song-input').val('');
             searchString = $("#search-artist-input").val();
             if(searchString.length === 0) {

@@ -39,12 +39,14 @@
     $(document).on('click', '#gathering-invite', function(evt) {
         if ($('input[name="invitee"]').val()===''){
             alert('Please enter some emails');
+            return;
         }
         $.post('/email', {
             email: $('input[name="invitee"]').val(),
             key: $('input[name="key"]').val()
         }).done(function(response) {
             alert('Your friends should receive an email shortly');
+            $('input[name="invitee"]').val('');
         }).fail(function(err) {
             console.log(err);
         });
@@ -61,7 +63,7 @@
   	});*/
   
     //Post to create a new gathering with the key inputted
-	$(document).on('click', '#create-gathering-btn', function(evt) {
+	$(document).on('submit', '#create-gathering-form', function(evt) {
 		evt.preventDefault();
         console.log("create gathering here");
         console.log($("#gatheringName").val());
