@@ -7,10 +7,7 @@
    <body>
       <% include partials/header %>
       <br><br>
-      <h1><%=currentUser %>'s profile</h1> 
-<!--
-      <img id="defaultProfile" src="/images/DefaultProfile.png" height = "180"/> 
--->
+      <h1><%=currentUser %>'s profile</h1> <br>
     <div class="profile">
       <img class="profile" src="/images/user/<%=currentUser%>.jpg">
       <div class="outer">
@@ -49,54 +46,33 @@
             <div id="search-results" style="height: 500px; overflow: auto"></div>
           </div>
           <div class="modal-footer">
-            <!-- we can put something here if we want -->
           </div>
         </div>
       </div>
     </div>
-        <table id="searchtable">
-            <tr>
-            <td>
-                <p>Add a Favorite Song!</p>
-                <div> Title : <input type="text" id="search-song-input"> </div>
-                <br>
-                <div class="error" id="song-error"></div>
-                <div> <button id="search-song-btn" class="btn btn-default">Search for Song</button></div>
-            </td>
-            <td>
-                <p>Add a Favorite Artist!</p>
-                <div> Name : <input type="text" id="search-artist-input"> </div>
-                <br>
-                <div class="error" id="artist-error"></div>
-                <div> <button id="search-artist-btn" class="btn btn-default">Search for Artist</button></div>
-            </td>
-          </tr><br><br>
-<!--
-            <tr>
-                <td><div id="search-results"></div></td>
-                </tr>
--->
+    <p> ("Click" me above to upload a new one!) </p>
+        <table id="searchtable"><br>
+            <button class="btn btn-default" onclick="location.href='<%=authlink%>'" id="spotify-auth">Import tracks from my Spotify playlists</button> 
+            <h3>====OR====</h3><br>
           <tr>
-              <td><h3>My Songs</h3>
-              </td>
-              <td><h3>My Artists</h3>
+              <td><h3>Songs I love: </h3>
+              </td> 
+              <td><h3>Artists I love: </h3>
               </td>
           </tr>
          <tr>
             <td>
                <div id="mySongs">
                   <% if(songs.length > 0){ %>
-                  <ol style="height: 500px; overflow: auto">
+                  <ol style="height: 300px; overflow: auto">
                      <% for(var i=0; i<songs.length; i++) {%>
                      <li data-id="<%=songs[i].id%>">
                         <div class="liked" data-id="<%=songs[i].id%>">
                         <image class="artistImage" src=<%=songs[i].albumArtUrl%>></image>
                         <button class="remove-song btn btn-default" id="remove-<%=songs[i].id%>">Remove</button>
-
                         <%= songs[i].title%> by <%= songs[i].artists %>
                          </div>
                      </li>
-                     <br>
                      <% } %>
                   </ol>
                   <% } else{ %>  
@@ -107,7 +83,7 @@
             <td>
                <div id="myArtists">
                   <% if(artists.length > 0){ %>
-                  <ol style="height: 500px; overflow: auto">
+                  <ol style="height: 300px; overflow: auto">
                      <% for(var i=0; i<artists.length; i++) {%>
                      <li>
                      <div class="liked" data-id="<%=artists[i].id%>">
@@ -116,7 +92,6 @@
                         <%= artists[i].name %> 
                     </div>
                      </li>
-                     <br>
                      <% } %>
                   </ol>
                   <% } else{ %>  
@@ -124,10 +99,29 @@
                   <% } %>
                </div>
             </td>
-         </tr>
+         </tr> 
+
+         <tr>
+            <td><br><br>
+                <p>Add a favorite song below!</p>
+                <div> Title : <input type="text" id="search-song-input"> </div>
+                <br>
+                <div class="error" id="song-error"></div>
+                <div> <button id="search-song-btn" class="btn btn-default">Search for Song</button></div>
+            </td>
+            <td><br><br>
+                <p>Add a favorite artist below!</p>
+                <div> Name : <input type="text" id="search-artist-input"> </div>
+                <br>
+                <div class="error" id="artist-error"></div>
+                <div> <button id="search-artist-btn" class="btn btn-default">Search for Artist</button></div>
+            </td>
+          </tr> 
       </table>
-     <div> <button class="btn btn-default" id="back-main-btn">Back to Main Page</button>
-           <button class="btn btn-default" onclick="location.href='<%=authlink%>'" id="spotify-auth">Import tracks from my Spotify playlists</button> </div>
+     <div> 
+    <br><br>
+    <button class="btn btn-default" id="back-main-btn">Back to Main Page</button>
+  </div>
    </body>
  </div>
 </div>

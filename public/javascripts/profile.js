@@ -36,10 +36,6 @@
         return clickFunction;
     };
 	
-/*	$(document).on('click', '#profile-btn', function(evt) {
-		window.location='/profile';
-	});*/
-
     $(document).on('click', 'div.profile', function(evt) {
         $('#pictureModal').modal();
     });
@@ -58,10 +54,7 @@
                 processData: false,
                 contentType: false
             }).done(function(data) {
-                // Reload preview and actual profile images
-                var newSrc = $('#profilePreview').attr('src').split('?')[0]+'?time='+(new Date()).getTime();
-                $('#profilePreview').attr('src', newSrc);
-                $('img.profile').attr('src', newSrc);
+                location.reload();
             }).fail(function(err) {
                 //display error
             });
@@ -94,7 +87,7 @@
                 for (var index=0; index<Math.min(matches.length, 8); index++){
                     console.log(matches[index]);
                     var button = $("<button/>", {id: matches[index].id, 
-                                                 class:'add-button btn btn-default',
+                                                class:'add-button btn btn-default',
                                                 text: 'Add Song', 
                                                 click: createAddSongFunction(matches[index].id)});
             
