@@ -67,6 +67,7 @@
           evt.preventDefault();
          $('#song-error').text('');
          $("#search-results").empty();
+         $('#search-artist-input').val('');
             searchString = $("#search-song-input").val();
             if(searchString.length === 0) {
                 $('#song-error').text('Please enter a song name!');
@@ -121,9 +122,10 @@
       //Search for an artist using spotify api, and display results with artists and 
     //an image, and a button to add that artist
      $(document).on('click', '#search-artist-btn', function(evt) {
-          evt.preventDefault();
-         $("#search-results").empty();
+            evt.preventDefault();
+            $("#search-results").empty();
             $('#artist-error').text('');
+            $('#search-song-input').val('');
             searchString = $("#search-artist-input").val();
             if(searchString.length === 0) {
                 $('#artist-error').text('Please enter an artist name!');
