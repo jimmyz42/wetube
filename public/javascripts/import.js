@@ -11,7 +11,6 @@
         for (var i=0; i<checkedBoxes.length; i++){
             checkedValues.push({playlistID:$(checkedBoxes[i]).val(), ownerID:$(checkedBoxes[i]).data('ownerid')});
         }
-        alert(checkedValues[0].ownerID + checkedValues[0].playlistID);
         $.post(
             '/import',
             {content: JSON.stringify(checkedValues)}
