@@ -27,7 +27,19 @@ var assertArrayDeepEqual = function(expected, result){
         assert.equal(expected[i], result[i])
     }
 };
-    
+
+var assertObjectDeepEqual = function(expected, result){
+    for (var property in expected) {
+        assert.ok(result[property]);
+        if (result[property]){
+            assert.equal(expected[property], result[property]);
+        }
+    }
+    for (var property in result) {
+        assert.ok(expected[property]);
+    }
+}
+
 describe('#registerNewUser', function(){
     it('should create a new user that doesnt already exist', function(){
         return userModel.create('alice', 'pw')
@@ -134,42 +146,51 @@ describe('#addSongs', function(){
     });
 });
     
-/*describe('#addArtist', function(){
-    it('should add an artist to a user with no current songs', function(){
+describe('#addArtist', function(){
+    it('should add an artist for a user', function(){
         return userModel.create('alice', 'pw')
         .then(function(){
             return userModel.addArtist('alice','53XhwfbYqKCa1cC15pYq2q');
         }).then(function(){
-            return userModel.getUser('alice');
-        }).then(function(user){
-            console.log()
-            assert.equal(1, songids.length);
-            assert.equal('98asdf654', songids[0]);
+            return userModel.getArtists('alice');
+        }).then(function(artists){
+            assert.equal(1, artists.length);
+            assert.equal('53XhwfbYqKCa1cC15pYq2q', artists[0].id);
+            assertArrayDeepEqual([ '4G8gkOterJn0Ywt6uhqbhp', '3LlAyCYU26dvFZBDUIMb7a',
+                                   '15DrrIod12Tc2IoMaHiwlQ','4XLm8FNvaTlmTAZmSrrV82',
+                                    '4GITtbZtRCQXhWLMXrWXHt', '1lgN0A2Vki2FTON5PYq42m',
+                                    '64MmobYNviePoiaINMrbMn','6KuHjfXHkfnIjdmcIvt9r0' ], artists[0].topTracks);
         });
     });
+});
     
-    it('should add a song to a user with a few currently liked songs', function(){
+describe('#remove Song', function(){
+    it('should remove a song that the user currently likes', function(){
         return userModel.create('alice', 'pw')
         .then(function(){
-            return userModel.addSong('alice', 'songid1');
+            return userModel.addSong('alice','songid1');
         }).then(function(){
-            return userModel.addSong('alice','songid2');
+            return userModel.removeSong('alice', 'songid1');
         }).then(function(){
-            return userModel.addSong('alice','songid3');
-        }).then(function(){
-            return userModel.getUser('alice');
-        }).then(function(user){
-            console.log(user.songIDs);
-            return user.songIDs;
-        }).then(function(songIDs){
-            assert.equal(3, songIDs.length);
-            assert.equal('songid1', songIDs[0]);
-            assert.equal('songid2', songIDs[1]);
-            assert.equal('songid3', songIDs[2]);
+            return userModel.getSongs('alice');
+        }).then(function(songids){
+            assert.equal(0, songids.length);
         });
     });
-});*/
     
-    
+    it('should remove a song that the user currently likes', function(){
+        return userModel.create('alice', 'pw')
+        .then(function(){
+            return userModel.addSong('alice','songid1');
+        }).then(function(){
+            return userModel.removeSong('alice', 'songid2');
+        }).then(function(){
+            return userModel.getSongs('alice');
+        }).then(function(songids){
+            assert.equal(1, songids.length);
+            assert.equal('songid1', songids[0]);
+        });
+    });
+});
     
 }); 
