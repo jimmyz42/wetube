@@ -26,7 +26,6 @@ var gatheringModel = mongoose.model("Gathering", gatheringSchema);
 // @param host Host/Creator of the gathering
 // @return A promise containing the gathering created
 exports.create = function(key, host, name) {
-    console.log("key model" + key + "end of key");
     return gatheringModel.create({
         key: key,
         name:name,
