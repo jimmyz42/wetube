@@ -11,18 +11,21 @@
         <header>
             <% include partials/header %>
             
-            <h3>Welcome, <%=currentUser %>! </h3>
+            <h3>Welcome, <%=currentUser %>! </h3><br>
+    <div class="profile">
+      <img class="profile" src="/images/user/<%=currentUser%>.jpg">
+    </div>
+    <br>
+        <button class="btn btn-default" id="profile-btn"> My Profile <br>
+        
+        <% if (isHost) { %>
+        <button class="btn btn-default" id="mygathering-link"> My Gathering  <br>
+        <% } else{ %>  
+        <button class="btn btn-default" id="create-gathering-link"> Create Gathering  <br>
+        <% } %>
+        <button class="btn btn-default" id="findgathering-btn"> Join Gathering <br>
 
-            <button class="btn btn-default" id="profile-btn"> My Profile <br>
-            
-            <% if (isHost) { %>
-            <button class="btn btn-default" id="mygathering-link"> My Gathering  <br>
-            <% } else{ %>  
-            <button class="btn btn-default" id="create-gathering-link"> Create Gathering  <br>
-            <% } %>
-            <button class="btn btn-default" id="findgathering-btn"> Join Gathering <br>
-
-        </header>
+    </header>
     
 
 
