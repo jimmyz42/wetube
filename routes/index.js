@@ -110,9 +110,9 @@ Logs out the current user */
 router.post('/logout', function(req, res) {
 	gatheringModel.getGathering(req.session.currentUser)
     .then(function(gathering) {
-		console.log(gathering.name);
 		if(gathering)
 		{
+            console.log(gathering.name);
 			return gatheringModel.leave(gathering.key, req.session.currentUser)
         }
         else{
@@ -122,7 +122,7 @@ router.post('/logout', function(req, res) {
             req.session.currentUser = undefined;
             utils.sendSuccessResponse(res, "success");
     }).catch(function(error) {
-		utils.sendErrResponse(res, 403, 'Unable to sign out.');
+		utils.sendErrResponse(res, 500, 'Unable to sign out.');
 	});
 });
 
