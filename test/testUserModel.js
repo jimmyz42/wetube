@@ -172,4 +172,31 @@ describe('#addSongs', function(){
     
     
     
+describe('#getUser', function() {
+    it('should return the correct user object', function() {
+        return userModel.create('santa', 'claus')
+        .then(function() {
+            return userModel.getUser('santa');
+        })
+        .then(function(user) {
+            assert.equal('santa', user.username);
+            assert.equal('claus', user.password);
+        });
+    });
+});
+
+describe('#usernameAvailable', function() {
+    it('should be true if username is available', function() {
+        return userModel.usernameFree('alice').should.become(true);
+    });
+
+    it('should be false if username is taken', function() {
+        return userModel.create('alice', 'pw')
+        .then(function(user) {
+            return userModel.usernameFree('alice');
+        }).should.become(false);
+    });  
+});
+
+
 }); 
