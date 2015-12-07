@@ -113,18 +113,15 @@ router.post('/logout', function(req, res) {
 		console.log(gathering.name);
 		if(gathering)
 		{
-			gatheringModel.leave(gathering.key, req.session.currentUser)
-			.then(function(){
-				req.session.currentUser = undefined;
-				utils.sendSuccessResponse(res, "success");
-			});
-		}
-		else
-		{
-			req.session.currentUser = undefined;
-			utils.sendSuccessResponse(res, "success");
-		}
-	}).catch(function(error) {
+			return gatheringModel.leave(gathering.key, req.session.currentUser)
+        }
+        else{
+            return "not in gathering now"
+        }
+    }).then(function(){
+            req.session.currentUser = undefined;
+            utils.sendSuccessResponse(res, "success");
+    }).catch(function(error) {
 		utils.sendErrResponse(res, 403, 'Unable to sign out.');
 	});
 });

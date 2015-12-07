@@ -95,25 +95,15 @@ exports.addArtist = function(user, artistid) {
         return userModel.findOne({
             username:user
         }).exec().then(function(user){
-            console.log('user.artists');
-            console.log(user.artists);
             var artistExists = false;
-            console.log('artistid');
-            console.log(artistid);
             for (var i=0; i<user.artists.length; i++){
-                console.log('user.artists[i]');
-                console.log(user.artists[i]);
                 if (user.artists[i].id===artistid){
-                    console.log('match');
                     artistExists = true;
                 }
             }
             return artistExists;
         }).then(function(artistExists){
-            console.log('artistExists')
-            console.log(artistExists);
             if (!(artistExists)){
-                console.log('adding');
                 return userModel.update({
                     username: user
                 }, {
