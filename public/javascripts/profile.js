@@ -63,7 +63,7 @@
 	
     //Search for a song using spotify api, and display results with links to song preview, artists, and 
     //an image of the album art
-	 $(document).on('click', '#search-song-btn', function(evt) {
+	 $(document).on('submit', '#search-song-form', function(evt) {
           evt.preventDefault();
          $('#song-error').text('');
          $("#search-results").empty();
@@ -71,6 +71,7 @@
             searchString = $("#search-song-input").val();
             if(searchString.length === 0) {
                 $('#song-error').text('Please enter a song name!');
+                return;
             }
           $.get(
               '/songs',
@@ -121,7 +122,7 @@
     
       //Search for an artist using spotify api, and display results with artists and 
     //an image, and a button to add that artist
-     $(document).on('click', '#search-artist-btn', function(evt) {
+     $(document).on('submit', '#search-artist-form', function(evt) {
             evt.preventDefault();
             $("#search-results").empty();
             $('#artist-error').text('');
@@ -129,6 +130,7 @@
             searchString = $("#search-artist-input").val();
             if(searchString.length === 0) {
                 $('#artist-error').text('Please enter an artist name!');
+                return;
             }
             console.log("SEARCH STRING" + searchString);
           $.get(

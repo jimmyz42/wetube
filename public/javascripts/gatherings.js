@@ -37,7 +37,9 @@
 
     //Post to send emails to the emails inputted
     $(document).on('click', '#gathering-invite', function(evt) {
-        console.log('hi');
+        if ($('input[name="invitee"]').val()===''){
+            alert('Please enter some emails');
+        }
         $.post('/email', {
             email: $('input[name="invitee"]').val(),
             key: $('input[name="key"]').val()
