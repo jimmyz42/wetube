@@ -16,6 +16,7 @@ body {
   background: rgba(255,255,255,.7);
   background-position: bottom;
   border: dotted 2px #FFAEB9;
+  font-family: Century Gothic, sans-serif;
 }
 
 table {
@@ -39,6 +40,7 @@ table.search td.middle {
 
 a {
   color: #00B7FF;
+  font-family: Century Gothic, sans-serif;
 }
 
 #logo {
