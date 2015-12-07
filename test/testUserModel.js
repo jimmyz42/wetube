@@ -1,7 +1,10 @@
 var assert = require("assert");
-var TweetModel = require('../model/userModel.js');
-var chai = require("chai"); // chai is a peer dependency of chai-as-promised
-var chaip = require("chai-as-promised")
+var userModel = require('../model/userModel.js');
+var chai = require("chai");
+var chaiAsPromised = require("chai-as-promised");
+
+chai.use(chaiAsPromised);
+chai.should();
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test2');
@@ -14,15 +17,18 @@ db.once('open', function (callback) {
 // Array is the module under test.
 describe('UserModel', function() {
 
-/*beforeEach(function(done){
-//Do stuff before each thing
-  done()
-});*/
+beforeEach(function(){
+    return userModel.clearAll();
+});
     
 describe('#registerNewUser', function(){
-    it('should create a new user that doesnt already exist', function(done){
-        assert.equal(true, true);
-        done();
+    it('should create a new user that doesnt already exist', function(){
+        return userModel.create('alice', 'pw')
+        .then(function(){
+            return userModel.getUser('alice');
+        }).then(function(user){
+            return user.username;
+        }).should.become('alice');
     });
 
     it('should not create a duplicate user if it already exists', function(done){

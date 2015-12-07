@@ -176,6 +176,14 @@ exports.usernameFree = function(uname) {
     });
 };
 
+/**
+Clears all the users in the database
+To run tests
+**/
+exports.clearAll = function(){
+    return userModel.remove({}).exec();
+}
+
 
 
 
