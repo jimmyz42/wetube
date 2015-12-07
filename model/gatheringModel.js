@@ -26,7 +26,6 @@ var gatheringModel = mongoose.model("Gathering", gatheringSchema);
 // @param host Host/Creator of the gathering
 // @return A promise containing the gathering created
 exports.create = function(key, host, name) {
-    console.log("key model" + key + "end of key");
     return gatheringModel.create({
         key: key,
         name:name,
@@ -92,7 +91,7 @@ exports.clearQueue = function(key){
 // @param key Key of gathering
 // @param song ID of song to remove from the song queue
 // @return A promise fulfilled when the update is complete
-exports.popSong = function(key, song) {
+exports.popSong = function(key) {
     return gatheringModel.update({
         key: key
     }, {
@@ -202,8 +201,13 @@ exports.keyFree = function(k) {
     });
 };
 
-
-
+/**
+Clears all the gatherings in the database
+To run tests
+**/
+exports.clearAll = function(){
+    return gatheringModel.remove({}).exec();
+}
 
 
 
