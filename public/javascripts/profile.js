@@ -54,10 +54,7 @@
                 processData: false,
                 contentType: false
             }).done(function(data) {
-                // Reload preview and actual profile images
-                var newSrc = $('#profilePreview').attr('src').split('?')[0]+'?time='+(new Date()).getTime();
-                $('#profilePreview').attr('src', newSrc);
-                $('img.profile').attr('src', newSrc);
+                location.reload();
             }).fail(function(err) {
                 //display error
             });
