@@ -52,13 +52,9 @@
       </div>
     </div>
     <p> ("Click" me above to upload a new one!) </p>
-        <table id="searchtable">
-            <br><br>
-<!--
-            <tr>
-                <td><div id="search-results"></div></td>
-                </tr>
--->
+        <table id="searchtable"><br>
+            <button class="btn btn-default" onclick="location.href='<%=authlink%>'" id="spotify-auth">Import tracks from my Spotify playlists</button> 
+            <h3>====OR====</h3><br>
           <tr>
               <td><h3>Songs I love: </h3>
               </td> 
@@ -122,9 +118,9 @@
                 <div> <button id="search-artist-btn" class="btn btn-default">Search for Artist</button></div>
             </td>
           </tr> 
-      </table><br><br><br><br>
+      </table>
      <div> 
-    <button class="btn btn-default" onclick="location.href='<%=authlink%>'" id="spotify-auth">Import tracks from my Spotify playlists</button> <br>
+    <br><br>
     <button class="btn btn-default" id="back-main-btn">Back to Main Page</button>
   </div>
    </body>
