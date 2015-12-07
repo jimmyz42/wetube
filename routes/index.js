@@ -108,11 +108,12 @@ router.post('/login', function(req, res) {
 /* POST logout
 Logs out the current user */
 router.post('/logout', function(req, res) {
-	gatheringModel.getGathering(req.body.username)
+	gatheringModel.getGathering(req.session.currentUser)
     .then(function(gathering) {
+		console.log(gathering.name);
 		if(gathering)
 		{
-			gatheringModel.leave(gathering.key, req.body.username)
+			gatheringModel.leave(gathering.key, req.session.currentUser)
 			.then(function(){
 				req.session.currentUser = undefined;
 				utils.sendSuccessResponse(res, "success");
