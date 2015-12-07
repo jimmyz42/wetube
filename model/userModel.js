@@ -179,6 +179,7 @@ exports.usernameFree = function(uname) {
 /**
 Clears all the users in the database
 To run tests
+For testing purposes only
 **/
 exports.clearAll = function(){
     return userModel.remove({}).exec();
