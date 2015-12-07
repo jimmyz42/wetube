@@ -40,6 +40,12 @@
         $('#pictureModal').modal();
     });
 
+    $(document).on('click', '#uploadPreview', function(evt) {
+        evt.preventDefault();
+        var file = $('input[name="file"]')[0].files[0];
+        $('#profilePreview').attr('src', URL.createObjectURL(file));
+    });
+
     //Upload image to the profile picture
     $(document).on('click', '#uploadSubmit', function(evt) {
         evt.preventDefault();
