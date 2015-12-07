@@ -15,7 +15,7 @@ var spotifyUtils = (function () {
     //create a new object with this info
     //TODO: CHANGE REDIRECT URI TO DEPLOYED VERSION
     var spotifyApi = new SpotifyWebApi({
-      redirectUri : 'http://localhost:3000/callback', 
+      redirectUri : 'https://mit-wetube.herokuapp.com/callback', 
         clientId : '5936eea86d9f4634b00534b79dde8b4c',
     clientSecret : '8e1ca161f7ca4b1d844509cf89903b01',
     });
