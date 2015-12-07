@@ -110,13 +110,21 @@ Logs out the current user */
 router.post('/logout', function(req, res) {
 	gatheringModel.getGathering(req.body.username)
     .then(function(gathering) {
-        gatheringModel.leave(gathering.key, req.body.username)
-		.then(function(){
+		if(gathering)
+		{
+			gatheringModel.leave(gathering.key, req.body.username)
+			.then(function(){
+				req.session.currentUser = undefined;
+				utils.sendSuccessResponse(res, "success");
+			});
+		}
+		else
+		{
 			req.session.currentUser = undefined;
 			utils.sendSuccessResponse(res, "success");
-		}).catch(function(error) {
-			utils.sendErrResponse(res, 403, 'Unable to sign out.');
-		});
+		}
+	}).catch(function(error) {
+		utils.sendErrResponse(res, 403, 'Unable to sign out.');
 	});
 });
 
