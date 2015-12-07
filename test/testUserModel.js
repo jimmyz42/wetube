@@ -193,6 +193,35 @@ describe('#remove Song', function(){
     });
 });
     
+describe('#removeArtist', function() {
+    it('should remove artist if it exists', function() {
+        return userModel.create('bob', 'thebuilder')
+        .then(function() {
+            return userModel.addArtist('bob', '53XhwfbYqKCa1cC15pYq2q');
+        }).then(function() {
+            return userModel.removeArtist('bob', '53XhwfbYqKCa1cC15pYq2q');
+        }).then(function() {
+            return userModel.getArtists('bob');
+        }).then(function(artists) {
+            assertArrayDeepEqual([], artists);
+        });
+    });
+
+    it('should not remove artist if it does not exist', function() {
+        return userModel.create('bob', 'thebuilder')
+        .then(function() {
+            return userModel.addArtist('bob', '79hrYiudVcFyyxyJW0ipTy');
+        }).then(function() {
+            return userModel.removeArtist('bob', '53XhwfbYqKCa1cC15pYq2q');
+        }).then(function() {
+            return userModel.getArtists('bob');
+        }).then(function(artists) {
+            assert.equal(1, artists.length);
+            assert.equal('79hrYiudVcFyyxyJW0ipTy', artists[0].id);
+        });
+    });
+});    
+    
 describe('#getUser', function() {
     it('should return the correct user object', function() {
         return userModel.create('santa', 'claus')
