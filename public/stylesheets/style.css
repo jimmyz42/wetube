@@ -133,17 +133,10 @@ button:not(.add-button){
     margin-left: 20%;
 }
 
-/*#register-form > label {
-    left:0%;
-    margin-bottom: 10%;
-}*/
-
-/*#register-form > input:not(.register-submit) {
-    position: absolute;
-    margin-bottom: 10%;
-    right:0%;
-}*/
-
 .error{
-    color: red
+    color: red;
+}
+
+.modal-footer .btn{
+    margin-bottom: 0px;
 }
