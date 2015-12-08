@@ -19,12 +19,12 @@ body {
   font-family: Century Gothic, sans-serif;
 }
 
-table {
+table{
   table-layout: fixed;
   width: 100%;
 }
 
-td {
+td{
   width: 50%;
 }
 
@@ -118,7 +118,7 @@ button:not(.add-button){
     float:right;
 }
 
-.liked .remove-song, .remove-artist .add-button{
+.liked .remove-song .remove-artist .add-button{
     position: absolute;
     top:30%;
 }
@@ -129,6 +129,15 @@ button:not(.add-button){
   width: 120px;
 }
 
-.error{
-    color: red
+#register-form{
+    margin-left: 20%;
 }
+
+.error{
+    color: red;
+}
+
+.modal-footer .btn{
+    margin-bottom: 0px;
+}
+

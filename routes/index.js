@@ -108,8 +108,22 @@ router.post('/login', function(req, res) {
 /* POST logout
 Logs out the current user */
 router.post('/logout', function(req, res) {
-    req.session.currentUser = undefined; 
-    utils.sendSuccessResponse(res, "success");
+	gatheringModel.getGathering(req.session.currentUser)
+    .then(function(gathering) {
+		if(gathering)
+		{
+            console.log(gathering.name);
+			return gatheringModel.leave(gathering.key, req.session.currentUser)
+        }
+        else{
+            return "not in gathering now"
+        }
+    }).then(function(){
+            req.session.currentUser = undefined;
+            utils.sendSuccessResponse(res, "success");
+    }).catch(function(error) {
+		utils.sendErrResponse(res, 500, 'Unable to sign out.');
+	});
 });
 
 /* GET account creation page. */

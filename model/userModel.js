@@ -92,12 +92,29 @@ exports.addSongs = function(user, songs) {
 // @return A promise fulfilled when update is complete
 exports.addArtist = function(user, artistid) {
     return spotifyUtils.getTopTracksForArtist(artistid).then(function(topTrackIds){
-        return userModel.update({
-            username: user
-        }, {
-            $addToSet: {artists: {id:artistid, topTracks:topTrackIds}}
-        }
-        ).exec();
+        return userModel.findOne({
+            username:user
+        }).exec().then(function(user){
+            var artistExists = false;
+            for (var i=0; i<user.artists.length; i++){
+                if (user.artists[i].id===artistid){
+                    artistExists = true;
+                }
+            }
+            return artistExists;
+        }).then(function(artistExists){
+            if (!(artistExists)){
+                return userModel.update({
+                    username: user
+                }, {
+                $addToSet: {artists: {id:artistid, topTracks:topTrackIds}}
+                }).exec();
+            }
+            else{
+                console.log('not adding');
+                return "artist already exists";
+            }
+        });     
     });
 };
 
